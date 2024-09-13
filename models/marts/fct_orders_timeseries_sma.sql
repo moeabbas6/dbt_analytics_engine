@@ -45,7 +45,3 @@ WITH
 
   SELECT *
     FROM bollinger_bands
-
-# testing slim ci
-# testing
-# testing again
