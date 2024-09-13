@@ -1,7 +1,7 @@
 
 # dbt_analytics_engine
 
-## Introduction 
+## Introduction  
 
 The **dbt_analytics_engine** project is an end-to-end demonstration of my capabilities in analytics engineering using dbt (data build tool). This project replicates a complete data pipeline, from data extraction, loading, and transformation, all the way to the end users' Business Intelligence (BI) tools, specifically Looker Studio.
 
