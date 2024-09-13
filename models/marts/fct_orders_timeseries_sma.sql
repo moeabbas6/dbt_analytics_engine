@@ -45,3 +45,5 @@ WITH
 
   SELECT *
     FROM bollinger_bands
+
+# Test
