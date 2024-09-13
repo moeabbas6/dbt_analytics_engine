@@ -1,0 +1,26 @@
+product_category_id,product_category,product_id,product_name,inbound_shipping_cost,product_cost
+1,Design Templates,1,Minimalist Website Template,2.50,25.00
+1,Design Templates,2,Modern Portfolio Template,2.50,27.50
+1,Design Templates,3,Creative Agency Template,2.75,30.00
+1,Design Templates,4,E-commerce Store Template,2.75,35.00
+1,Design Templates,5,Business Landing Page Template,2.50,22.50
+2,Stock Photography,1,High-Resolution Nature Photos (Pack of 20),1.00,15.00
+2,Stock Photography,2,Urban Landscape Collection,1.25,18.00
+2,Stock Photography,3,Creative Business People Photos,1.00,20.00
+2,Stock Photography,4,Abstract Backgrounds (Pack of 15),0.75,12.50
+2,Stock Photography,5,Food Photography Bundle,1.50,25.00
+3,Fonts & Typography,1,Handwritten Script Font,0.50,10.00
+3,Fonts & Typography,2,Modern Sans-Serif Font,0.75,12.50
+3,Fonts & Typography,3,Vintage Serif Font,0.50,11.00
+3,Fonts & Typography,4,Custom Brush Font,0.75,13.50
+3,Fonts & Typography,5,Monospace Display Font,0.50,9.00
+4,Graphic Assets,1,Vector Icons Pack,0.50,12.50
+4,Graphic Assets,2,Custom Illustrations Pack,1.00,20.00
+4,Graphic Assets,3,Infographic Templates,0.75,15.00
+4,Graphic Assets,4,Social Media Graphics Pack,0.75,18.00
+4,Graphic Assets,5,Branding Mockups Bundle,1.25,30.00
+5,Video & Animation,1,Intro Animation Template,1.25,25.00
+5,Video & Animation,2,Explainer Video Toolkit,1.50,40.00
+5,Video & Animation,3,YouTube Channel Branding Kit,1.25,22.50
+5,Video & Animation,4,Animated Logo Pack,1.00,20.00
+5,Video & Animation,5,Promo Video Template,1.50,35.00

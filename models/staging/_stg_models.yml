@@ -1,0 +1,183 @@
+version: 2
+
+models:
+  - name: stg_customers
+    columns:
+      - name: customer_id
+        data_type: string
+
+      - name: first_name
+        data_type: string
+
+      - name: last_name
+        data_type: string
+
+
+  - name: stg_nps
+    columns:
+      - name: order_id
+        data_type: string
+
+      - name: customer_id
+        data_type: string
+
+      - name: is_nps
+        data_type: boolean
+
+      - name: nps_score
+        data_type: int64
+
+      - name: nps_date
+        data_type: datetime
+        data_tests:
+          - dbt_utils.accepted_range:
+              name: stg_nps_unexpected_nps_date
+              max_value: "current_datetime()" 
+
+
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_type: string
+
+      - name: customer_id
+        data_type: string
+
+      - name: order_status
+        data_type: string
+
+      - name: order_date
+        data_type: datetime
+        data_tests:
+          - dbt_utils.accepted_range:
+              name: stg_orders_unexpected_order_date
+              max_value: "current_datetime()"
+
+      - name: product_category_id
+        data_type: int64
+
+      - name: product_id
+        data_type: int64
+
+
+  - name: stg_payment_fees
+    columns:
+      - name: payment_method_id
+        data_type: int64
+
+      - name: payment_method
+        data_type: string
+
+      - name: percentage_fee
+        data_type: float64
+
+      - name: fixed_fee
+        data_type: float64
+
+
+  - name: stg_payments
+    columns:
+      - name: order_id
+        data_type: string
+
+      - name: payment_id
+        data_type: int64
+
+      - name: order_payment_id
+        data_type: string
+        data-tests:
+          - unique
+          - not_null
+
+      - name: payment_method
+        data_type: string
+
+      - name: gross_revenue
+        data_type: float64
+
+      - name: payment_status
+        data_type: string
+
+      - name: created_at
+        data_type: datetime
+        data_tests:
+          - dbt_utils.accepted_range:
+              name: stg_payments_unexpected_created_at
+              max_value: "current_datetime()"
+
+
+  - name: stg_products
+    columns:
+      - name: product_category_id
+        data_type: int64
+
+      - name: product_category
+        data_type: string
+
+      - name: product_id
+        data_type: int64
+
+      - name: product_name
+        data_type: string
+
+      - name: inbound_shipping_cost
+        data_type: float64
+
+      - name: product_cost
+        data_type: float64
+
+
+  - name: stg_returns
+    columns:
+      - name: order_id
+        data_type: string
+
+      - name: return_id
+        data_type: string
+
+      - name: is_returned
+        data_type: boolean
+
+      - name: return_date
+        data_type: datetime
+        data_tests:
+          - dbt_utils.accepted_range:
+              name: stg_returns_unexpected_return_date
+              max_value: "current_datetime()"
+
+      - name: return_reason
+        data_type: string
+
+
+  - name: stg_shipping
+    columns:
+      - name: order_id
+        data_type: string
+
+      - name: shipping_id
+        data_type: string
+
+      - name: is_shipped
+        data_type: boolean
+
+      - name: shipping_date
+        data_type: datetime
+        data_tests:
+          - dbt_utils.accepted_range:
+              name: stg_shipping_unexpected_shipping_date
+              max_value: "current_datetime()"
+
+      - name: shipping_amount
+        data_type: float64
+
+
+  - name: stg_taxes
+    columns:
+      - name: country_id
+        data_type: int64
+
+      - name: country
+        data_type: string
+
+      - name: tax_rate
+        data_type: float64

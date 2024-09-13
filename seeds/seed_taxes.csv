@@ -1,0 +1,23 @@
+tax_id,tax_country,tax_rate
+1,United States,7.25
+2,Canada,5.0
+3,United Kingdom,20.0
+4,Australia,10.0
+5,New Zealand,15.0
+6,Ireland,23.0
+7,Germany,19.0
+8,France,20.0
+9,Italy,22.0
+10,Spain,21.0
+11,Netherlands,21.0
+12,Sweden,25.0
+13,Denmark,25.0
+14,Norway,25.0
+15,Finland,24.0
+16,Belgium,21.0
+17,Austria,20.0
+18,Portugal,23.0
+19,Greece,24.0
+20,Luxembourg,17.0
+21,Switzerland,7.7
+22,Iceland,24.0

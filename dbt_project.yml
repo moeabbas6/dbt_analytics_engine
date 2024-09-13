@@ -1,0 +1,48 @@
+name: 'dbt_analytics_engine'
+version: '1.0.0'
+
+profile: 'dbt_analytics_engine'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+docs-paths: ["docs"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+models:
+  dbt_analytics_engine:
+    +persist_docs:
+      relation: true
+      columns: true
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +required_tests: {"unique.*|not_null": 2}
+      +required_docs: true
+      +materialized: table
+      +docs:
+        node_color: '#000000'
+      +meta:
+        analytics_engineer: '@Moe Abbas'
+
+seeds:
+  dbt_analytics_engine:
+    +schema: 'seeds'
+
+data_tests:
+  dbt_analytics_engine:
+    +severity: error
+    +error_if: ">20"
+    +warn_if: ">1"
+    +limit: 20
+    +store_failures: true
+    +schema: 'failed_tests'

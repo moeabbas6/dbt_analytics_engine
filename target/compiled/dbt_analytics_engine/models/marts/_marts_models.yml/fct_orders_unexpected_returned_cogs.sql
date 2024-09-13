@@ -1,0 +1,10 @@
+
+
+
+
+select
+    *
+from (select * from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders` where returned_cogs > 0) dbt_subquery
+
+where not(returned_cogs = cogs)
+

@@ -1,0 +1,117 @@
+version: 2
+
+seeds:
+  - name: seed_payment_fees
+    columns:
+      - name: payment_method_id
+        data_type: int64
+        data_tests:
+          - unique
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_payment_fees_unexpected_payment_method_id
+              min_value: 0
+              max_value: 10
+
+      - name: payment_method
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              name: seed_payment_fees_unexpected_payment_method
+              values: ['amazon_pay', 'stripe', 'apple_pay', 'bitcoin']
+
+      - name: percentage_fee
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_payment_fees_unexpected_percentage_fee
+              min_value: 0
+              max_value: 100
+
+      - name: fixed_fee
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              name: seed_payment_fees_unexpected_fixed_fee
+              expression: "> 0"
+
+  - name: seed_products
+    columns:
+      - name: product_category_id
+        data_type: int64
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_products__unexpected_product_category_id
+              min_value: 0
+              max_value: 5
+
+      - name: product_category
+        data_type: string
+        data_tests:
+          - not_null
+          - accepted_values:
+              name: seed_products_unexpected_product_category
+              values: ['Design Templates', 'Fonts & Typography', 'Graphic Assets', 'Stock Photography', 'Video & Animation']
+
+      - name: product_id
+        data_type: int64
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_products_unexpected_product_id
+              min_value: 0
+              max_value: 5
+
+      - name: product_name
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+
+      - name: inbound_shipping_cost
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              name: seed_products_assert_positive_inbound_shipping_cost
+              expression: "> 0"
+
+      - name: product_cost
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              name: seed_products_assert_positive_product_cost
+              expression: "> 0"
+
+  - name: seed_taxes
+    columns:
+      - name: tax_id
+        data_type: int64
+        data_tests:
+          - unique
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_taxes_unexpected_tax_id
+              min_value: 0
+              max_value: 22
+
+      - name: tax_country
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+
+      - name: tax_rate
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              name: seed_taxes_unexpected_tax_rate
+              min_value: 0
+              max_value: 100

@@ -1,0 +1,5 @@
+payment_method_id,payment_method,percentage_fee,fixed_fee
+1,stripe,2.5,0.50
+2,apple_pay,2.2,0.30
+3,amazon_pay,2.9,0.30
+4,bitcoin,1.0,0.00

@@ -1,0 +1,228 @@
+version: 2
+
+models:
+  - name: int_orders
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_orders')
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: int_orders_unequal_agg_shipping_amount
+          expression: sum(shipping_amount)
+          compare_model: ref("stg_shipping")
+          compare_expression: sum(shipping_amount)
+    columns:
+      - name: product_category_id
+        data_type: int64
+        data_tests:
+          - not_null
+
+      - name: product_id
+        data_type: int64
+        data_tests:
+          - not_null
+
+      - name: order_id
+        data_type: string
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+
+      - name: customer_id
+        data_type: string
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+
+      - name: order_status
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: order_date
+        data_type: datetime
+        data_tests:
+          - not_null
+
+      - name: first_name
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: last_name
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: shipping_id
+        data_type: string
+        data_tests:
+          - unique
+          - relationships:
+              to: ref('stg_shipping')
+              field: shipping_id
+
+      - name: is_shipped
+        data_type: boolean
+        data_tests:
+          - not_null
+          - accepted_values:
+              name: int_orders_unexpected_is_shipped_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+      - name: shipping_date
+        data_type: datetime
+
+      - name: shipping_amount
+        data_type: float64
+
+      - name: return_id
+        data_type: string
+        data_tests:
+          - unique
+
+      - name: is_returned
+        data_type: boolean
+        data_tests:
+          - not_null
+          - accepted_values:
+              name: int_orders_unexpected_is_returned_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+      - name: return_date
+        data_type: datetime
+
+      - name: return_reason
+        data_type: string
+
+      - name: is_nps
+        data_type: boolean
+        data_tests:
+          - not_null
+          - accepted_values:
+              name: int_orders_unexpected_is_nps_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+      - name: nps_score
+        data_type: int64
+
+      - name: nps_date
+        data_type: datetime
+
+      - name: product_category
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: product_name
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: inbound_shipping_cost
+        data_type: float64
+        data_tests:
+          - not_null
+
+      - name: product_cost
+        data_type: float64
+        data_tests:
+          - not_null
+  
+
+
+
+  - name: int_payments
+    data_tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_payments')
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: int_payments_unequal_agg_gross_revenue
+          expression: sum(gross_revenue)
+          compare_model: ref("stg_payments")
+          compare_expression: sum(gross_revenue)
+    columns:
+      - name: order_id
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: payment_id
+        data_type: int64
+        data_tests:
+          - not_null
+
+      - name: order_payment_id
+        data_type: string
+        data-tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('stg_payments')
+              field: order_payment_id
+
+      - name: payment_method
+        data_type: string
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_payment_fees')
+              field: payment_method
+
+      - name: payment_status
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: country_id
+        data_type: int64
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_taxes')
+              field: country_id
+
+      - name: country
+        data_type: string
+        data_tests:
+          - not_null
+
+      - name: created_at
+        data_type: datetime
+        data_tests:
+          - not_null
+
+      - name: gross_revenue
+        data_type: float64
+        data_tests:
+          - not_null
+
+      - name: tax_rate
+        data_type: float64
+        data_tests:
+          - not_null
+
+      - name: percentage_fee
+        data_type: float64
+        data_tests:
+          - not_null
+
+      - name: fixed_fee
+        data_type: float64
+        data_tests:
+          - not_null
+
+      - name: payment_fee
+        data_type: float64
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              name: int_payments_unexpected_payment_fee
+              expression: "= ROUND((gross_revenue * (percentage_fee / 100)) + fixed_fee, 2)"
