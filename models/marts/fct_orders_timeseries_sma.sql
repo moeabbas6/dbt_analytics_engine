@@ -10,7 +10,6 @@ WITH
           ,SUM(net_revenue_after_tax) AS sales
       FROM {{ ref('fct_orders') }}
       GROUP BY date)
-# Adding comment for slim ci
 
   ,simple_moving_averages AS (
     SELECT date
