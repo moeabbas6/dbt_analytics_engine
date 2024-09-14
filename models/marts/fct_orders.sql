@@ -24,7 +24,7 @@ WITH
           ,SUM(payment_fee) AS payment_fee
       FROM {{ ref('int_payments') }}
       GROUP BY order_id)
-
+# Adding comment for slim ci
 
   ,joins AS (
       SELECT country_id
@@ -94,5 +94,3 @@ WITH
 
   SELECT *
     FROM final
-
-# test
