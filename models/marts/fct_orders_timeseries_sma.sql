@@ -47,3 +47,4 @@ WITH
     FROM bollinger_bands
 
 # Test
+# Testing Slim ci
