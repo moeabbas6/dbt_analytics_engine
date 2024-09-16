@@ -5,7 +5,7 @@
         
         sum(gross_revenue) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+        `moes-dbt-layer`.`staging`.`int_payments`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(gross_revenue) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payments`
+        `moes-dbt-layer`.`staging`.`stg_payments`
     
 
     ),

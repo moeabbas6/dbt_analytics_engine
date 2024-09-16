@@ -6,8 +6,8 @@ WITH
           ,return_date
           ,return_reason
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`returns`
-      WHERE return_date <= CURRENT_DATETIME('America/Toronto') 
-         OR return_date IS NULL)
+      WHERE return_date < CURRENT_DATE
+        )
 
 
   SELECT *

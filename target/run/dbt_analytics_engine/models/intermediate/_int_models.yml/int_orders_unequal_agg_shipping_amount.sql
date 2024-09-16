@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`int_orders_unequal_agg_shipping_amount`
+        from `moes-dbt-layer`.`failed_tests`.`int_orders_unequal_agg_shipping_amount`
     
       limit 20
     ) dbt_internal_test

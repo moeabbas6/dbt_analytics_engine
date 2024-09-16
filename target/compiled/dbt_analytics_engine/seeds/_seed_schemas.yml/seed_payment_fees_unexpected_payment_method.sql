@@ -8,7 +8,7 @@ with all_values as (
         payment_method as value_field,
         count(*) as n_records
 
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_payment_fees`
+    from `moes-dbt-layer`.`seeds`.`seed_payment_fees`
     group by payment_method
 
 )

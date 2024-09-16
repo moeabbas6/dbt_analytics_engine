@@ -9,7 +9,8 @@ WITH
           ,payment_status
           ,created_at
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`payments`
-      WHERE created_at <= CURRENT_DATETIME('America/Toronto'))
+      WHERE created_at <= CURRENT_DATETIME('America/Toronto')
+        )
 
 
   SELECT *

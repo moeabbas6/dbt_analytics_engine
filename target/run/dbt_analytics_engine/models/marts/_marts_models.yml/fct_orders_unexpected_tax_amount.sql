@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`fct_orders_unexpected_tax_amount`
+        from `moes-dbt-layer`.`failed_tests`.`fct_orders_unexpected_tax_amount`
     
       limit 20
     ) dbt_internal_test

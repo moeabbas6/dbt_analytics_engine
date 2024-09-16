@@ -25,7 +25,7 @@ WITH
           ,ROUND(SUM(refund_amount), 2) AS total_refund_amount
           ,ROUND(SUM(payment_fee), 2) AS total_payment_fee
           ,ROUND(SUM(cm), 2) AS total_cm
-          FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+          FROM `moes-dbt-layer`.`dbt_analytics_engine_prod`.`fct_orders`
       GROUP BY date
               ,country_id
               ,country

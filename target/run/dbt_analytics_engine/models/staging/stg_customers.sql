@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_customers`
+  create or replace view `moes-dbt-layer`.`staging`.`stg_customers`
   OPTIONS(
       description=""""""
     )

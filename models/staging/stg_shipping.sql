@@ -8,8 +8,10 @@ WITH
           ,shipping_date
           ,shipping_amount
       FROM {{ source("raw", "shipping")}}
-      WHERE shipping_date <= CURRENT_DATETIME('America/Toronto')
-         OR shipping_date IS NULL)
+      WHERE shipping_date < CURRENT_DATE
+        {% if target.name != 'prod' -%}
+        AND shipping_date > CURRENT_DATE - INTERVAL 7 DAY
+        {%- endif %})
 
 
   SELECT *

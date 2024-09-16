@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`not_null_dim_products_product_category`
+        from `moes-dbt-layer`.`failed_tests`.`not_null_dim_products_product_category`
     
       limit 20
     ) dbt_internal_test

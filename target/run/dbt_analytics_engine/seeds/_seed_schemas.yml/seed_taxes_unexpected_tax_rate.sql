@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`seed_taxes_unexpected_tax_rate`
+        from `moes-dbt-layer`.`failed_tests`.`seed_taxes_unexpected_tax_rate`
     
       limit 20
     ) dbt_internal_test

@@ -7,7 +7,8 @@ WITH
           ,product_category_id
           ,product_id
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`orders`
-      WHERE order_date <= CURRENT_DATETIME('America/Toronto'))
+      WHERE order_date <= CURRENT_DATETIME('America/Toronto')
+        )
 
 
   SELECT *

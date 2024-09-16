@@ -8,7 +8,10 @@ WITH
           ,nps_score
           ,nps_date
       FROM {{ source("raw", "nps")}}
-      WHERE nps_date <= CURRENT_DATETIME('America/Toronto'))
+      WHERE nps_date <= CURRENT_DATETIME('America/Toronto')
+        {% if target.name != 'prod' -%}
+        AND nps_date > CURRENT_DATE - INTERVAL 7 DAY
+        {%- endif %})
 
 
   SELECT *

@@ -23,8 +23,10 @@ models:
       columns: true
     staging:
       +materialized: view
+      +schema: 'staging'
     intermediate:
       +materialized: view
+      +schema: 'staging'
     marts:
       +required_tests: {"unique.*|not_null": 2}
       +required_docs: true
@@ -33,6 +35,12 @@ models:
         node_color: '#000000'
       +meta:
         analytics_engineer: '@Moe Abbas'
+      finance:
+        +schema: 'finance'
+      sales:
+        +schema: 'sales'
+      product:
+        +schema: 'product'
 
 seeds:
   dbt_analytics_engine:
@@ -43,6 +51,6 @@ data_tests:
     +severity: error
     +error_if: ">20"
     +warn_if: ">1"
-    +limit: 20
+    +limit: 100
     +store_failures: true
     +schema: 'failed_tests'

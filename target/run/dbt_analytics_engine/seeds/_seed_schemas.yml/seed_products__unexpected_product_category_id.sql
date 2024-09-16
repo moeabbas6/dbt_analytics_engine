@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`seed_products__unexpected_product_category_id`
+        from `moes-dbt-layer`.`failed_tests`.`seed_products__unexpected_product_category_id`
     
       limit 20
     ) dbt_internal_test

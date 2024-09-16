@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`stg_payments_unexpected_created_at`
+        from `moes-dbt-layer`.`failed_tests`.`stg_payments_unexpected_created_at`
     
       limit 20
     ) dbt_internal_test

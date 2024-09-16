@@ -5,7 +5,7 @@
 with dbt_test__target as (
 
   select return_id as unique_field
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
+  from `moes-dbt-layer`.`staging`.`int_orders`
   where return_id is not null
 
 )

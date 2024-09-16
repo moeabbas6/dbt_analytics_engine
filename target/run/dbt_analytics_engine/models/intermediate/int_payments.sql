@@ -1,23 +1,23 @@
 
 
-  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+  create or replace view `moes-dbt-layer`.`staging`.`int_payments`
   OPTIONS(
       description=""""""
     )
   as WITH
   stg_payments AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payments`)
+      FROM `moes-dbt-layer`.`staging`.`stg_payments`)
 
 
   ,stg_taxes AS (
     SELECT * 
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_taxes`)
+      FROM `moes-dbt-layer`.`staging`.`stg_taxes`)
 
 
   ,stg_payment_fees AS (
     SELECT * 
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payment_fees`)
+      FROM `moes-dbt-layer`.`staging`.`stg_payment_fees`)
 
 
   ,final AS (

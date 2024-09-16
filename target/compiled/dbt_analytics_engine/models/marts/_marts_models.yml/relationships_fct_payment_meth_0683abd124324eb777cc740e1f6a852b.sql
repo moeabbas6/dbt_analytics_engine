@@ -4,13 +4,13 @@
 
 with child as (
     select order_id as from_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_payment_methods`
+    from `moes-dbt-layer`.`finance`.`fct_payment_methods`
     where order_id is not null
 ),
 
 parent as (
     select order_id as to_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+    from `moes-dbt-layer`.`staging`.`int_payments`
 )
 
 select

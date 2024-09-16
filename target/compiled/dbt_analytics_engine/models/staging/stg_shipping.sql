@@ -6,8 +6,8 @@ WITH
           ,shipping_date
           ,shipping_amount
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`shipping`
-      WHERE shipping_date <= CURRENT_DATETIME('America/Toronto')
-         OR shipping_date IS NULL)
+      WHERE shipping_date < CURRENT_DATE
+        )
 
 
   SELECT *

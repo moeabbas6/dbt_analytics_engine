@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`not_null_seed_payment_fees_fixed_fee`
+        from `moes-dbt-layer`.`failed_tests`.`not_null_seed_payment_fees_fixed_fee`
     
       limit 20
     ) dbt_internal_test

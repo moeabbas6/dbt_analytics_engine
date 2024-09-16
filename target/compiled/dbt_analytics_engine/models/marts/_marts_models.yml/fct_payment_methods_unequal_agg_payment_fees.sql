@@ -5,7 +5,7 @@
         
         sum(total_payment_fees) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_payment_methods`
+        `moes-dbt-layer`.`finance`.`fct_payment_methods`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(payment_fee) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+        `moes-dbt-layer`.`staging`.`int_payments`
     
 
     ),

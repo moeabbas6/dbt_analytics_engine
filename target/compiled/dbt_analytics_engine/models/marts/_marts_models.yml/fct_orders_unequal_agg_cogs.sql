@@ -5,7 +5,7 @@
         
         sum(cogs) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+        `moes-dbt-layer`.`sales`.`fct_orders`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(inbound_shipping_cost) + sum(product_cost) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
+        `moes-dbt-layer`.`staging`.`int_orders`
     
 
     ),

@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`
+  create or replace view `moes-dbt-layer`.`staging`.`stg_shipping`
   OPTIONS(
       description=""""""
     )
@@ -12,8 +12,8 @@
           ,shipping_date
           ,shipping_amount
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`shipping`
-      WHERE shipping_date <= CURRENT_DATETIME('America/Toronto')
-         OR shipping_date IS NULL)
+      WHERE shipping_date < CURRENT_DATE
+        )
 
 
   SELECT *

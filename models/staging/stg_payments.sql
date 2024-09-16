@@ -11,7 +11,10 @@ WITH
           ,payment_status
           ,created_at
       FROM {{ source("raw", "payments")}}
-      WHERE created_at <= CURRENT_DATETIME('America/Toronto'))
+      WHERE created_at <= CURRENT_DATETIME('America/Toronto')
+        {% if target.name != 'prod' -%}
+        AND created_at > CURRENT_DATE - INTERVAL 7 DAY
+        {%- endif %})
 
 
   SELECT *

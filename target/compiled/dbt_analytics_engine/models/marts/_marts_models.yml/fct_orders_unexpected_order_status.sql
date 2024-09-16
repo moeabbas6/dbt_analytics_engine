@@ -8,7 +8,7 @@ with all_values as (
         order_status as value_field,
         count(*) as n_records
 
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+    from `moes-dbt-layer`.`sales`.`fct_orders`
     group by order_status
 
 )

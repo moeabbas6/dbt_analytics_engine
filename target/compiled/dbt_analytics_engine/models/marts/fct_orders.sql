@@ -4,7 +4,7 @@
 WITH
   int_orders AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_prod`.`int_orders`)
 
 
   ,int_payments AS (
@@ -16,9 +16,8 @@ WITH
           ,SUM(gross_revenue) AS gross_revenue
           ,MAX(tax_rate) AS tax_rate
           ,SUM(payment_fee) AS payment_fee
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_prod`.`int_payments`
       GROUP BY order_id)
-
 
   ,joins AS (
       SELECT country_id

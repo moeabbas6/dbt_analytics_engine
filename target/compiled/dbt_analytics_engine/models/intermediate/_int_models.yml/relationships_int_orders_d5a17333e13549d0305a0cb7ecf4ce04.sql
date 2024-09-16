@@ -4,13 +4,13 @@
 
 with child as (
     select customer_id as from_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
+    from `moes-dbt-layer`.`staging`.`int_orders`
     where customer_id is not null
 ),
 
 parent as (
     select customer_id as to_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_customers`
+    from `moes-dbt-layer`.`staging`.`stg_customers`
 )
 
 select

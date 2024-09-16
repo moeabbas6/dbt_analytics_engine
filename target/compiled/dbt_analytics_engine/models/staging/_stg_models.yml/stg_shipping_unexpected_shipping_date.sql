@@ -2,7 +2,7 @@
 
 with meet_condition as(
   select *
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`
+  from (select * from `moes-dbt-layer`.`staging`.`stg_shipping` where shipping_date IS NOT NULL) dbt_subquery
 ),
 
 validation_errors as (

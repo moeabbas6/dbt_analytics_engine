@@ -4,13 +4,13 @@
 
 with child as (
     select payment_method as from_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+    from `moes-dbt-layer`.`staging`.`int_payments`
     where payment_method is not null
 ),
 
 parent as (
     select payment_method as to_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payment_fees`
+    from `moes-dbt-layer`.`staging`.`stg_payment_fees`
 )
 
 select

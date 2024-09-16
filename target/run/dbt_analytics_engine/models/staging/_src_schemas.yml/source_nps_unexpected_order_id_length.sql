@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`source_nps_unexpected_order_id_length`
+        from `moes-dbt-layer`.`failed_tests`.`source_nps_unexpected_order_id_length`
     
       limit 20
     ) dbt_internal_test

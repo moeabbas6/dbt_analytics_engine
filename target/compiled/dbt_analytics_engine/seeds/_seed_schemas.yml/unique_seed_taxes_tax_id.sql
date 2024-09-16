@@ -5,7 +5,7 @@
 with dbt_test__target as (
 
   select tax_id as unique_field
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_taxes`
+  from `moes-dbt-layer`.`seeds`.`seed_taxes`
   where tax_id is not null
 
 )

@@ -1,32 +1,32 @@
 WITH
   stg_orders AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_orders`)
+      FROM `moes-dbt-layer`.`staging`.`stg_orders`)
 
 
   ,stg_customers AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_customers`)
+      FROM `moes-dbt-layer`.`staging`.`stg_customers`)
 
 
   ,stg_shipping AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`)
+      FROM `moes-dbt-layer`.`staging`.`stg_shipping`)
 
 
   ,stg_returns AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_returns`)
+      FROM `moes-dbt-layer`.`staging`.`stg_returns`)
 
 
   ,stg_nps AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_nps`)
+      FROM `moes-dbt-layer`.`staging`.`stg_nps`)
 
 
   ,stg_products AS (
     SELECT *
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_products`)
+      FROM `moes-dbt-layer`.`staging`.`stg_products`)
 
 
   ,final AS (
