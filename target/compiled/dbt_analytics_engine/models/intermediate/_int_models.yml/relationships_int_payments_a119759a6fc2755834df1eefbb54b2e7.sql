@@ -4,13 +4,13 @@
 
 with child as (
     select country_id as from_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+    from `moes-dbt-layer`.`staging`.`int_payments`
     where country_id is not null
 ),
 
 parent as (
     select country_id as to_field
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_taxes`
+    from `moes-dbt-layer`.`staging`.`stg_taxes`
 )
 
 select

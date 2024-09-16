@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`relationships_int_payments_a119759a6fc2755834df1eefbb54b2e7`
+        from `moes-dbt-layer`.`failed_tests`.`relationships_int_payments_a119759a6fc2755834df1eefbb54b2e7`
     
       limit 20
     ) dbt_internal_test

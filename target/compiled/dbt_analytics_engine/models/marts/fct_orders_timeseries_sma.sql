@@ -6,9 +6,8 @@ WITH
   fct_orders_timeseries_sma AS (
     SELECT DATE(order_date) AS date
           ,SUM(net_revenue_after_tax) AS sales
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_prod`.`fct_orders`
       GROUP BY date)
-
 
   ,simple_moving_averages AS (
     SELECT date
@@ -77,7 +76,3 @@ WITH
 
   SELECT *
     FROM bollinger_bands
-
-# testing slim ci
-# testing
-# testing again

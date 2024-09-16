@@ -6,7 +6,8 @@ WITH
           ,nps_score
           ,nps_date
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`nps`
-      WHERE nps_date <= CURRENT_DATETIME('America/Toronto'))
+      WHERE nps_date <= CURRENT_DATETIME('America/Toronto')
+        )
 
 
   SELECT *

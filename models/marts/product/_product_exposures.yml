@@ -1,0 +1,10 @@
+exposures:
+  - name: product_performance
+    type: dashboard
+    owner:
+      name: "Moe Abbas"
+    description: "A detailed dashboard utilized by the product and sales teams to analyze the performance of individual products across different categories. The dashboard provides insights into key metrics such as product sales volume, revenue, and profit margins. It helps identify top-performing products, underperforming items, and overall trends in product categories, enabling teams to make data-driven decisions about inventory management, pricing strategies, and promotional efforts. Built on the dim_products table, this dashboard ensures that all product-related data is accurate and updated in real-time."
+    depends_on:
+      - ref('dim_products')
+    maturity: high
+    url: "https://lookerstudio.google.com/reporting/6ad69971-0993-4db3-ad40-026bdc428629"

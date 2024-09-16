@@ -4,7 +4,7 @@ WITH
           ,payment_method
           ,percentage_fee
           ,fixed_fee
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_payment_fees`)
+      FROM `moes-dbt-layer`.`seeds`.`seed_payment_fees`)
 
 
   SELECT *

@@ -5,7 +5,7 @@
 with dbt_test__target as (
 
   select order_id as unique_field
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_payment_methods`
+  from `moes-dbt-layer`.`finance`.`fct_payment_methods`
   where order_id is not null
 
 )

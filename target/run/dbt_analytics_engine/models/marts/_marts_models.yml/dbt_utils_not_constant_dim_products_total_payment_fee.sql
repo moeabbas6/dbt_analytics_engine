@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`dbt_utils_not_constant_dim_products_total_payment_fee`
+        from `moes-dbt-layer`.`failed_tests`.`dbt_utils_not_constant_dim_products_total_payment_fee`
     
       limit 20
     ) dbt_internal_test

@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`dbt_utils_not_constant_fct_ord_d0a225e71dc2a317acffbf2075634182`
+        from `moes-dbt-layer`.`failed_tests`.`dbt_utils_not_constant_fct_ord_d0a225e71dc2a317acffbf2075634182`
     
       limit 20
     ) dbt_internal_test

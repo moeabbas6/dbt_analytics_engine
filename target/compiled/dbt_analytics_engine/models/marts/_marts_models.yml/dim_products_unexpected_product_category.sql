@@ -8,7 +8,7 @@ with all_values as (
         product_category as value_field,
         count(*) as n_records
 
-    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`dim_products`
+    from `moes-dbt-layer`.`product`.`dim_products`
     group by product_category
 
 )

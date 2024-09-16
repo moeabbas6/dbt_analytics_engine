@@ -2,7 +2,7 @@
 
 with meet_condition as(
   select *
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_taxes`
+  from `moes-dbt-layer`.`seeds`.`seed_taxes`
 ),
 
 validation_errors as (

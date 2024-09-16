@@ -5,7 +5,7 @@
 with dbt_test__target as (
 
   select product_name as unique_field
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_products`
+  from `moes-dbt-layer`.`seeds`.`seed_products`
   where product_name is not null
 
 )

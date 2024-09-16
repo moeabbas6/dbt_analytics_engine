@@ -5,7 +5,7 @@
         
         sum(shipping_amount) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
+        `moes-dbt-layer`.`staging`.`int_orders`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(shipping_amount) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`
+        `moes-dbt-layer`.`staging`.`stg_shipping`
     
 
     ),

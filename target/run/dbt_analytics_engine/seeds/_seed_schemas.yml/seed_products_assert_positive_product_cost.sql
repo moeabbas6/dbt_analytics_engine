@@ -5,7 +5,7 @@ select
     from (
       
         select *
-        from `moes-dbt-layer`.`dbt_analytics_engine_dev_failed_tests`.`seed_products_assert_positive_product_cost`
+        from `moes-dbt-layer`.`failed_tests`.`seed_products_assert_positive_product_cost`
     
       limit 20
     ) dbt_internal_test

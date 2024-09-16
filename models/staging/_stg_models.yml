@@ -30,6 +30,7 @@ models:
       - name: nps_date
         data_type: datetime
         data_tests:
+          - not_null
           - dbt_utils.accepted_range:
               name: stg_nps_unexpected_nps_date
               max_value: "current_datetime()" 
@@ -49,6 +50,7 @@ models:
       - name: order_date
         data_type: datetime
         data_tests:
+          - not_null
           - dbt_utils.accepted_range:
               name: stg_orders_unexpected_order_date
               max_value: "current_datetime()"
@@ -101,6 +103,7 @@ models:
       - name: created_at
         data_type: datetime
         data_tests:
+          - not_null
           - dbt_utils.accepted_range:
               name: stg_payments_unexpected_created_at
               max_value: "current_datetime()"
@@ -141,6 +144,7 @@ models:
       - name: return_date
         data_type: datetime
         data_tests:
+          - not_null
           - dbt_utils.accepted_range:
               name: stg_returns_unexpected_return_date
               max_value: "current_datetime()"
@@ -166,6 +170,8 @@ models:
           - dbt_utils.accepted_range:
               name: stg_shipping_unexpected_shipping_date
               max_value: "current_datetime()"
+              config:
+                where: "shipping_date IS NOT NULL"
 
       - name: shipping_amount
         data_type: float64

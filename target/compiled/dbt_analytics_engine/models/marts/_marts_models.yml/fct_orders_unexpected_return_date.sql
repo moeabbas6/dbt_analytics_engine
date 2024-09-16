@@ -2,7 +2,7 @@
 
 with meet_condition as(
   select *
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+  from `moes-dbt-layer`.`sales`.`fct_orders`
 ),
 
 validation_errors as (

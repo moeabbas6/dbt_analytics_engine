@@ -6,7 +6,7 @@ WITH
           ,product_name
           ,inbound_shipping_cost
           ,product_cost
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_products`)
+      FROM `moes-dbt-layer`.`seeds`.`seed_products`)
 
 
   SELECT *

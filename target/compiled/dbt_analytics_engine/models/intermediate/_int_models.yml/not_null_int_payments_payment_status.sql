@@ -5,7 +5,7 @@
 
 
 select *
-from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
+from `moes-dbt-layer`.`staging`.`int_payments`
 where payment_status is null
 
 

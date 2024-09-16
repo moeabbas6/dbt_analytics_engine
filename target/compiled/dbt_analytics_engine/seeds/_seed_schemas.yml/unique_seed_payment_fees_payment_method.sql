@@ -5,7 +5,7 @@
 with dbt_test__target as (
 
   select payment_method as unique_field
-  from `moes-dbt-layer`.`dbt_analytics_engine_dev_seeds`.`seed_payment_fees`
+  from `moes-dbt-layer`.`seeds`.`seed_payment_fees`
   where payment_method is not null
 
 )

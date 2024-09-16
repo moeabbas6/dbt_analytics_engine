@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_nps`
+  create or replace view `moes-dbt-layer`.`staging`.`stg_nps`
   OPTIONS(
       description=""""""
     )
@@ -12,7 +12,8 @@
           ,nps_score
           ,nps_date
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`nps`
-      WHERE nps_date <= CURRENT_DATETIME('America/Toronto'))
+      WHERE nps_date <= CURRENT_DATETIME('America/Toronto')
+        )
 
 
   SELECT *

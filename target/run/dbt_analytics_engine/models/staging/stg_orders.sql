@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_orders`
+  create or replace view `moes-dbt-layer`.`staging`.`stg_orders`
   OPTIONS(
       description=""""""
     )
@@ -13,7 +13,8 @@
           ,product_category_id
           ,product_id
       FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`orders`
-      WHERE order_date <= CURRENT_DATETIME('America/Toronto'))
+      WHERE order_date <= CURRENT_DATETIME('America/Toronto')
+        )
 
 
   SELECT *

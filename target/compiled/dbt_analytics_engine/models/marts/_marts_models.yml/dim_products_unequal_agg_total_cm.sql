@@ -5,7 +5,7 @@
         
         sum(total_cm) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`dim_products`
+        `moes-dbt-layer`.`product`.`dim_products`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(cm) as expression
     from
-        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
+        `moes-dbt-layer`.`sales`.`fct_orders`
     
 
     ),
