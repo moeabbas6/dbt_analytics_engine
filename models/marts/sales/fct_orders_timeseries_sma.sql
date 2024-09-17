@@ -40,3 +40,5 @@ WITH
 
   SELECT *
     FROM bollinger_bands
+
+# Adding comment for slim ci test (schema)
