@@ -6,9 +6,9 @@ WITH
           ,order_date
           ,product_category_id
           ,product_id
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`orders`
+      FROM `moes-dbt-layer`.`dae_sources`.`orders`
       WHERE order_date <= CURRENT_DATETIME('America/Toronto')
-        )
+        AND order_date > CURRENT_DATE - INTERVAL 7 DAY)
 
 
   SELECT *

@@ -1,38 +1,38 @@
 
 
-  create or replace view `moes-dbt-layer`.`staging`.`int_orders`
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
   OPTIONS(
       description=""""""
     )
   as WITH
   stg_orders AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_orders`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_orders`)
 
 
   ,stg_customers AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_customers`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_customers`)
 
 
   ,stg_shipping AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_shipping`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`)
 
 
   ,stg_returns AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_returns`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_returns`)
 
 
   ,stg_nps AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_nps`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_nps`)
 
 
   ,stg_products AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`stg_products`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_products`)
 
 
   ,final AS (

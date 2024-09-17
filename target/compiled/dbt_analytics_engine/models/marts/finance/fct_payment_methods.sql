@@ -5,7 +5,7 @@
 WITH
   int_payments AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`int_payments`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`)
 
 
   ,fct_payment_methods AS (

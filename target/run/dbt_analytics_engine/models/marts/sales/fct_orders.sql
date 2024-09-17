@@ -2,7 +2,7 @@
   
     
 
-    create or replace table `moes-dbt-layer`.`sales`.`fct_orders`
+    create or replace table `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
       
     partition by range_bucket(
             country_id,
@@ -20,7 +20,7 @@
 WITH
   int_orders AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`int_orders`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`)
 
 
   ,int_payments AS (
@@ -32,7 +32,7 @@ WITH
           ,SUM(gross_revenue) AS gross_revenue
           ,MAX(tax_rate) AS tax_rate
           ,SUM(payment_fee) AS payment_fee
-      FROM `moes-dbt-layer`.`staging`.`int_payments`
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`
       GROUP BY order_id)
 
   ,joins AS (

@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`staging`.`stg_shipping`
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_shipping`
   OPTIONS(
       description=""""""
     )
@@ -11,9 +11,9 @@
           ,is_shipped
           ,shipping_date
           ,shipping_amount
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`shipping`
+      FROM `moes-dbt-layer`.`dae_sources`.`shipping`
       WHERE shipping_date < CURRENT_DATE
-        )
+        AND shipping_date > CURRENT_DATE - INTERVAL 7 DAY)
 
 
   SELECT *
