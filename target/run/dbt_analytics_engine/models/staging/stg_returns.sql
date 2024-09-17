@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`staging`.`stg_returns`
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_returns`
   OPTIONS(
       description=""""""
     )
@@ -11,9 +11,9 @@
           ,is_returned
           ,return_date
           ,return_reason
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`returns`
+      FROM `moes-dbt-layer`.`dae_sources`.`returns`
       WHERE return_date < CURRENT_DATE
-        )
+        AND return_date > CURRENT_DATE - INTERVAL 7 DAY)
 
 
   SELECT *

@@ -2,7 +2,7 @@
   
     
 
-    create or replace table `moes-dbt-layer`.`product`.`dim_products`
+    create or replace table `moes-dbt-layer`.`dbt_analytics_engine_dev`.`dim_products`
       
     partition by range_bucket(
             country_id,
@@ -41,7 +41,7 @@ WITH
           ,ROUND(SUM(refund_amount), 2) AS total_refund_amount
           ,ROUND(SUM(payment_fee), 2) AS total_payment_fee
           ,ROUND(SUM(cm), 2) AS total_cm
-          FROM `moes-dbt-layer`.`sales`.`fct_orders`
+          FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
       GROUP BY date
               ,country_id
               ,country

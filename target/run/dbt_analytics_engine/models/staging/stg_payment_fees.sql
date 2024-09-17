@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`staging`.`stg_payment_fees`
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payment_fees`
   OPTIONS(
       description=""""""
     )
@@ -10,7 +10,7 @@
           ,payment_method
           ,percentage_fee
           ,fixed_fee
-      FROM `moes-dbt-layer`.`seeds`.`seed_payment_fees`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`seed_payment_fees`)
 
 
   SELECT *

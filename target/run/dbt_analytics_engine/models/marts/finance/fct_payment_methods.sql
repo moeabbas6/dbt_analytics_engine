@@ -2,7 +2,7 @@
   
     
 
-    create or replace table `moes-dbt-layer`.`finance`.`fct_payment_methods`
+    create or replace table `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_payment_methods`
       
     partition by range_bucket(
             country_id,
@@ -21,7 +21,7 @@
 WITH
   int_payments AS (
     SELECT *
-      FROM `moes-dbt-layer`.`staging`.`int_payments`)
+      FROM `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_payments`)
 
 
   ,fct_payment_methods AS (

@@ -25,6 +25,7 @@ WITH
       FROM {{ ref('int_payments') }}
       GROUP BY order_id)
 
+
   ,joins AS (
       SELECT country_id
             ,country

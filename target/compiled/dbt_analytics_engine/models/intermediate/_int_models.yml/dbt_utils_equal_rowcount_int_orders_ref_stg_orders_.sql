@@ -9,7 +9,7 @@ with a as (
       
       1 as id_dbtutils_test_equal_rowcount,
       count(*) as count_a 
-    from `moes-dbt-layer`.`staging`.`int_orders`
+    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`int_orders`
     group by id_dbtutils_test_equal_rowcount
 
 
@@ -20,7 +20,7 @@ b as (
       
       1 as id_dbtutils_test_equal_rowcount,
       count(*) as count_b 
-    from `moes-dbt-layer`.`staging`.`stg_orders`
+    from `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_orders`
     group by id_dbtutils_test_equal_rowcount
 
 ),

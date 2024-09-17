@@ -11,13 +11,12 @@ WITH
       FROM {{ ref('fct_orders') }}
       GROUP BY date)
 
+
   ,simple_moving_averages AS (
     SELECT date
           ,sales
           {%- for period in periods %}
-          ,AVG(sales) OVER (ORDER BY date 
-             ROWS BETWEEN {{ period }} PRECEDING 
-                  AND CURRENT ROW) AS sales_sma_{{ period }}
+          ,AVG(sales) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_sma_{{ period }}
           {%- endfor %}
       FROM fct_orders_timeseries_sma)
 
@@ -25,9 +24,7 @@ WITH
   ,standard_deviations AS (
     SELECT *
            {%- for period in periods %}
-           ,STDDEV(sales) OVER (ORDER BY date 
-              ROWS BETWEEN {{ period }} PRECEDING 
-                   AND CURRENT ROW) AS sales_stddev_{{ period }}
+           ,STDDEV(sales) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_stddev_{{ period }}
            {%- endfor %}
       FROM simple_moving_averages)
 
@@ -35,10 +32,8 @@ WITH
   ,bollinger_bands AS (
     SELECT *
            {%- for period in periods %}
-           ,sales_sma_{{ period }} 
-            + (2 * sales_stddev_{{ period }}) AS sales_sma_upper_{{ period }}
-           ,sales_sma_{{ period }} 
-            - (2 * sales_stddev_{{ period }}) AS sales_sma_lower_{{ period }}
+           ,sales_sma_{{ period }} + (2 * sales_stddev_{{ period }}) AS sales_sma_upper_{{ period }}
+           ,sales_sma_{{ period }} - (2 * sales_stddev_{{ period }}) AS sales_sma_lower_{{ period }}
            {%- endfor %}
       FROM standard_deviations)
 

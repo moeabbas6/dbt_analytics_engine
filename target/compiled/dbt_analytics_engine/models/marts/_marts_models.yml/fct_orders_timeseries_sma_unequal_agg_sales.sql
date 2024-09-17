@@ -5,7 +5,7 @@
         
         sum(sales) as expression
     from
-        `moes-dbt-layer`.`sales`.`fct_orders_timeseries_sma`
+        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders_timeseries_sma`
     
 
     ),
@@ -15,7 +15,7 @@
         
         sum(net_revenue_after_tax) as expression
     from
-        `moes-dbt-layer`.`sales`.`fct_orders`
+        `moes-dbt-layer`.`dbt_analytics_engine_dev`.`fct_orders`
     
 
     ),

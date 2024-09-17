@@ -1,6 +1,6 @@
 
 
-  create or replace view `moes-dbt-layer`.`staging`.`stg_payments`
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_payments`
   OPTIONS(
       description=""""""
     )
@@ -14,9 +14,9 @@
           ,payment_country_id AS country_id
           ,payment_status
           ,created_at
-      FROM `moes-dbt-layer`.`dbt_analytics_engine_sources`.`payments`
+      FROM `moes-dbt-layer`.`dae_sources`.`payments`
       WHERE created_at <= CURRENT_DATETIME('America/Toronto')
-        )
+        AND created_at > CURRENT_DATE - INTERVAL 7 DAY)
 
 
   SELECT *
