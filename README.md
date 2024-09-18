@@ -150,7 +150,7 @@ This deployment strategy is also ideal for teams working in either direct or ind
 
 ## Results
 
-You can explore the full live demo of the **dbt_analytics_engine** project on [Looker Studio](https://lookerstudio.google.com/reporting/6ad69971-0993-4db3-ad40-026bdc428629). Below is a preview of the dashboard:
+You can explore the full live demo of the **dbt_analytics_engine** project on [Looker Studio](https://lookerstudio.google.com/s/lLJKHojOQ_M). Below is a preview of the dashboard:
 
 ![Sales Performance Dashboard](images/scrnshot.png)
 

@@ -51,6 +51,11 @@ data_tests:
     +severity: error
     +error_if: ">20"
     +warn_if: ">1"
-    +limit: 100
+    +limit: 1000
     +store_failures: true
     +schema: 'failed_tests'
+
+flags:
+  printer_width: 100
+  send_anonymous_usage_stats: false
+  indirect_selection: cautious
