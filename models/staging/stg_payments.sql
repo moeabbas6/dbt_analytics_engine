@@ -13,7 +13,7 @@ WITH
       FROM {{ source("raw", "payments")}}
       WHERE created_at <= CURRENT_DATETIME('America/Toronto')
         {% if target.name != 'prod' -%}
-        AND created_at > CURRENT_DATE - INTERVAL 7 DAY
+        AND created_at > CURRENT_DATE - INTERVAL 3 DAY
         {%- endif %})
 
 
