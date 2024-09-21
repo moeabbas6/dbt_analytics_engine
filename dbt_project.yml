@@ -22,12 +22,15 @@ models:
       relation: true
       columns: true
     staging:
+      +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +materialized: view
       +schema: 'staging'
     intermediate:
+      +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +materialized: view
       +schema: 'staging'
     marts:
+      +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +required_tests: {"unique.*|not_null": 2}
       +required_docs: true
       +materialized: table
