@@ -1,6 +1,5 @@
-**/.DS_Store
-**/TODO
 venv/
 dbt_packages/
 logs/
 target/
+**/.DS_Store
