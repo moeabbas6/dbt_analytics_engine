@@ -31,7 +31,7 @@ The **dbt_analytics_engine** project utilizes a set of custom SQL-based tables a
 
 During the initial stages of the project, I dedicated significant time to finding suitable data sources available via public APIs. Although I implemented some of these sources, I discovered that the transformation opportunities were rather limited, and the data couldn't effectively relate to one another. To overcome these limitations and fully leverage my 7+ years of SQL experience, I decided to create the data sources myself. This approach allowed me to design tables that support a wide range of transformation opportunities and showcase my technical skills to their fullest extent.
 
-The views in this project include the SQL code, and I created tables from these views using `CREATE OR REPLACE table` statements. To load the data into BigQuery, I ran a custom Python script, which can be found in my public repository, [bq_data_loader](https://github.com/moe-abbas-ghub/bq_data_loader).
+The views in this project include the SQL code, and I created tables from these views using `CREATE OR REPLACE table` statements. To load the data into BigQuery, I ran a custom Python script, which can be found in my public repository, [bq_data_loader](https://github.com/moeabbas6/bq_data_loader).
 
 ### Views:
 - **Customers View**: Captures customer-related data, including customer IDs, names, and relevant demographic information. It serves as a primary source for analyzing customer behaviors and trends.
