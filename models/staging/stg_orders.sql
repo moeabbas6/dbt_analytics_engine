@@ -11,10 +11,9 @@ WITH
       FROM {{ source("raw", "orders")}}
       WHERE order_date <= CURRENT_DATETIME('America/Toronto')
         {% if target.name != 'prod' -%}
-        AND order_date > CURRENT_DATE - INTERVAL 7 DAY
+        AND order_date > CURRENT_DATE - INTERVAL 3 DAY
         {%- endif %})
 
 
   SELECT *
-        ,'{{ target.name }}' AS target_name
     FROM stg_orders

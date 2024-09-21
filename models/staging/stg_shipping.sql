@@ -10,7 +10,7 @@ WITH
       FROM {{ source("raw", "shipping")}}
       WHERE shipping_date < CURRENT_DATE
         {% if target.name != 'prod' -%}
-        AND shipping_date > CURRENT_DATE - INTERVAL 7 DAY
+        AND shipping_date > CURRENT_DATE - INTERVAL 3 DAY
         {%- endif %})
 
 
