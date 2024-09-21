@@ -1,4 +1,7 @@
 {{ config(
+    materialized = "incremental",
+    unique_key = "order_id",
+    on_schema_change = 'append_new_columns',
     partition_by = {
       "field": "country_id",
       "data_type": "int64",
@@ -38,5 +41,13 @@ WITH
               ,order_id)
 
 
+  ,final AS (
   SELECT *
     FROM fct_payment_methods
+      {%- if is_incremental() %}
+      WHERE order_date >= (SELECT DATE_SUB(MAX(order_date), INTERVAL 3 DAY) FROM {{ this }})
+      {%- endif -%})
+
+
+  SELECT *
+    FROM final
