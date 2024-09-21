@@ -16,4 +16,5 @@ WITH
 
 
   SELECT *
+        ,'{{ target.name }}' AS target_name
     FROM stg_orders
