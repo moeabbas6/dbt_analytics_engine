@@ -8,7 +8,6 @@ analysis-paths: ["analyses"]
 test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
-snapshot-paths: ["snapshots"]
 docs-paths: ["docs"]
 
 clean-targets:
@@ -55,7 +54,7 @@ data_tests:
     +error_if: ">20"
     +warn_if: ">1"
     +limit: 1000
-    +store_failures: true
+    +store_failures: "{{ true if target.name in ['prod', 'ci'] else false }}"
     +schema: 'failed_tests'
 
 flags:
