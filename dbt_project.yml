@@ -46,6 +46,9 @@ models:
 
 seeds:
   dbt_analytics_engine:
+    +persist_docs:
+      relation: true
+      columns: true
     +schema: 'seeds'
 
 data_tests:

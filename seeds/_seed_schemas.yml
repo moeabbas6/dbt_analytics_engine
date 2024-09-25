@@ -5,6 +5,7 @@ seeds:
     columns:
       - name: payment_method_id
         data_type: int64
+        description: "Unique identifier for the payment method."
         data_tests:
           - unique
           - not_null
@@ -15,6 +16,7 @@ seeds:
 
       - name: payment_method
         data_type: string
+        description: "The payment method used for transactions (e.g., amazon_pay, stripe, apple_pay, bitcoin)."
         data_tests:
           - unique
           - not_null
@@ -24,6 +26,7 @@ seeds:
 
       - name: percentage_fee
         data_type: float64
+        description: "The percentage fee applied to transactions using the specified payment method."
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -33,16 +36,21 @@ seeds:
 
       - name: fixed_fee
         data_type: float64
+        description: "The fixed fee applied to transactions using the specified payment method."
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
               name: seed_payment_fees_unexpected_fixed_fee
               expression: "> 0"
 
+
+
+
   - name: seed_products
     columns:
       - name: product_category_id
         data_type: int64
+        description: "Unique identifier for the category of the product."
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -52,6 +60,7 @@ seeds:
 
       - name: product_category
         data_type: string
+        description: "The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets)."
         data_tests:
           - not_null
           - accepted_values:
@@ -60,6 +69,7 @@ seeds:
 
       - name: product_id
         data_type: int64
+        description: "Unique identifier for the product."
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -69,12 +79,14 @@ seeds:
 
       - name: product_name
         data_type: string
+        description: "The name of the product."
         data_tests:
           - unique
           - not_null
 
       - name: inbound_shipping_cost
         data_type: float64
+        description: "The cost incurred for shipping the product to the warehouse."
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
@@ -83,16 +95,21 @@ seeds:
 
       - name: product_cost
         data_type: float64
+        description: "The cost incurred to acquire or produce the product."
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
               name: seed_products_assert_positive_product_cost
               expression: "> 0"
 
+
+
+
   - name: seed_taxes
     columns:
       - name: tax_id
         data_type: int64
+        description: "Unique identifier for the tax record."
         data_tests:
           - unique
           - not_null
@@ -103,12 +120,14 @@ seeds:
 
       - name: tax_country
         data_type: string
+        description: "The name of the billing country associated with the order."
         data_tests:
           - unique
           - not_null
 
       - name: tax_rate
         data_type: float64
+        description: "The tax rate applied to the order, based on the billing country."
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
