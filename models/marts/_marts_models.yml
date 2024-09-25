@@ -265,7 +265,7 @@ models:
 
       - name: return_reason
         data_type: string
-        description: "The reason provided for returning the order, if applicable; accepted values include 'undersized', 'oversized', and 'defective'."
+        description: '{{ doc("return_reason") }}'
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
@@ -448,6 +448,8 @@ models:
           - accepted_values:
               name: fct_orders_unexpected_customer_type
               values: ['Returning', 'New']
+
+
 
 
   - name: fct_payment_methods
@@ -665,6 +667,7 @@ models:
           - dbt_utils.expression_is_true:
               name: fct_payment_methods_unexpected_stripe_amount
               expression: ">= 0"
+
 
 
 
@@ -956,6 +959,8 @@ models:
                 error_if: ">3"
                 warn_if: ">1"
           - dbt_utils.not_constant
+
+
 
 
   - name: dim_products

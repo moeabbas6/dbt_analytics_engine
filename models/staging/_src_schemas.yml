@@ -9,6 +9,7 @@ sources:
         columns:
           - name: customer_id
             data_type: string
+            description: "Unique identifier for each customer."
             data_tests:
               - unique
               - not_null
@@ -18,6 +19,7 @@ sources:
 
           - name: first_name
             data_type: string
+            description: "The first name of the customer."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -32,6 +34,7 @@ sources:
 
           - name: last_name
             data_type: string
+            description: "The last name of the customer."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -53,6 +56,7 @@ sources:
         columns:
           - name: order_id
             data_type: string
+            description: "Unique identifier for each order in the NPS feedback."
             data_tests:
               - unique
               - not_null
@@ -62,6 +66,7 @@ sources:
 
           - name: customer_id
             data_type: string
+            description: "Unique identifier for the customer providing the NPS feedback."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -71,6 +76,7 @@ sources:
 
           - name: is_nps
             data_type: boolean
+            description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -81,6 +87,7 @@ sources:
 
           - name: nps_score
             data_type: int64
+            description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -91,9 +98,12 @@ sources:
 
           - name: nps_date
             data_type: datetime
+            description: "The date on which the customer provided their Net Promoter Score (NPS)."
             data_tests:
               - not_null
               - dbt_utils.not_constant
+
+
 
 
       - name: orders
@@ -104,6 +114,7 @@ sources:
         columns:
           - name: order_id
             data_type: string
+            description: "Unique identifier for the order."
             data_tests:
               - unique
               - not_null
@@ -113,6 +124,7 @@ sources:
 
           - name: customer_id
             data_type: string
+            description: "Unique identifier for the customer placing the order."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -122,6 +134,7 @@ sources:
 
           - name: order_status
             data_type: string
+            description: '{{ doc("orders_status") }}'
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -131,12 +144,14 @@ sources:
 
           - name: order_date
             data_type: datetime
+            description: "The date on which the order was created."
             data_tests:
               - not_null
               - dbt_utils.not_constant
 
           - name: product_category_id
             data_type: int64
+            description: "Unique identifier for the product's category."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -147,6 +162,7 @@ sources:
 
           - name: product_id
             data_type: int64
+            description: "Unique identifier for the product."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -154,6 +170,8 @@ sources:
                   name: source_orders_unexpected_product__id
                   min_value: 0
                   max_value: 5
+
+
 
 
       - name: payments
@@ -164,6 +182,7 @@ sources:
         columns:
           - name: order_id
             data_type: string
+            description: "Unique identifier for the order."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -173,12 +192,14 @@ sources:
 
           - name: payment_id
             data_type: int64
+            description: "Unique identifier for the payment."
             data_tests:
               - not_null
               - dbt_utils.not_constant
 
           - name: payment_method
             data_type: string
+            description: "The payment method used for the order."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -188,6 +209,7 @@ sources:
 
           - name: payment_amount
             data_type: float64
+            description: "The total gross amount paid by the customer, including tax and shipping."
             data_tests:
               - not_null
               - dbt_utils.expression_is_true:
@@ -196,6 +218,7 @@ sources:
 
           - name: payment_country_id
             data_type: string
+            description: "Identifier for the country from which the payment originated."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -206,6 +229,7 @@ sources:
 
           - name: payment_status
             data_type: string
+            description: "The current status of the payment (e.g., pending, completed, failed)."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -215,9 +239,12 @@ sources:
 
           - name: created_at
             data_type: datetime
+            description: "The timestamp when the payment was created."
             data_tests:
               - not_null
               - dbt_utils.not_constant
+
+
 
 
       - name: returns
@@ -228,6 +255,7 @@ sources:
         columns:
           - name: order_id
             data_type: string
+            description: "Unique identifier for the order."
             data_tests:
               - unique
               - not_null
@@ -237,6 +265,7 @@ sources:
 
           - name: return_id
             data_type: string
+            description: "Unique identifier for the return."
             data_tests:
               - unique
               - not_null
@@ -246,6 +275,7 @@ sources:
 
           - name: is_returned
             data_type: boolean
+            description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -256,18 +286,22 @@ sources:
 
           - name: return_date
             data_type: datetime
+            description: "The date on which the order was returned, if applicable."
             data_tests:
               - not_null
               - dbt_utils.not_constant
 
           - name: return_reason
             data_type: string
+            description: '{{ doc("return_reason") }}'
             data_tests:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
                   name: source_returns_unexpected_return_reason
                   values: ['Not as Described', 'Compatibility Issues', 'Quality Concerns', 'Technical Difficulties']
+
+
 
 
       - name: shipping
@@ -278,6 +312,7 @@ sources:
         columns:
           - name: order_id
             data_type: string
+            description: "Unique identifier for the order."
             data_tests:
               - unique
               - not_null
@@ -287,6 +322,9 @@ sources:
 
           - name: shipping_id
             data_type: string
+            description: >
+              A unique identifier for each shipping transaction. This field ensures that each shipment is 
+              tracked individually and is essential for linking sales orders to their corresponding shipping details.
             data_tests:
               - unique
               - dbt_utils.not_constant
@@ -296,6 +334,7 @@ sources:
 
           - name: is_shipped
             data_type: boolean
+            description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
             data_tests:
               - not_null
               - dbt_utils.not_constant
@@ -306,11 +345,13 @@ sources:
 
           - name: shipping_date
             data_type: datetime
+            description: "The date on which the order was shipped."
             data_tests:
               - dbt_utils.not_constant
 
           - name: shipping_amount
             data_type: float64
+            description: "The total gross amount charged for shipping the order."
             data_tests:
               - dbt_utils.not_constant
               - dbt_utils.expression_is_true:

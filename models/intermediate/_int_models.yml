@@ -13,16 +13,19 @@ models:
     columns:
       - name: product_category_id
         data_type: int64
+        description: "Unique identifier for the product's category."
         data_tests:
           - not_null
 
       - name: product_id
         data_type: int64
+        description: "Unique identifier for the product."
         data_tests:
           - not_null
 
       - name: order_id
         data_type: string
+        description: "Unique identifier for the order."
         data_tests:
           - unique
           - not_null
@@ -32,6 +35,7 @@ models:
 
       - name: customer_id
         data_type: string
+        description: "Unique identifier for the customer placing the order."
         data_tests:
           - not_null
           - relationships:
@@ -40,26 +44,33 @@ models:
 
       - name: order_status
         data_type: string
+        description: '{{ doc("orders_status") }}'
         data_tests:
           - not_null
 
       - name: order_date
         data_type: datetime
+        description: "The date on which the order was created."
         data_tests:
           - not_null
 
       - name: first_name
         data_type: string
+        description: "The first name of the customer."
         data_tests:
           - not_null
 
       - name: last_name
         data_type: string
+        description: "The last name of the customer."
         data_tests:
           - not_null
 
       - name: shipping_id
         data_type: string
+        description: >
+          A unique identifier for each shipping transaction. This field ensures that each shipment is 
+          tracked individually and is essential for linking sales orders to their corresponding shipping details.
         data_tests:
           - unique
           - relationships:
@@ -68,6 +79,7 @@ models:
 
       - name: is_shipped
         data_type: boolean
+        description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
         data_tests:
           - not_null
           - accepted_values:
@@ -76,18 +88,22 @@ models:
               quote: false
 
       - name: shipping_date
+        description: "The date on which the order was shipped."
         data_type: datetime
 
       - name: shipping_amount
+        description: "The total gross amount charged for shipping the order."
         data_type: float64
 
       - name: return_id
         data_type: string
+        description: "Unique identifier for the return."
         data_tests:
           - unique
 
       - name: is_returned
         data_type: boolean
+        description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
         data_tests:
           - not_null
           - accepted_values:
@@ -97,12 +113,15 @@ models:
 
       - name: return_date
         data_type: datetime
+        description: "The date on which the order was returned, if applicable."
 
       - name: return_reason
         data_type: string
+        description: '{{ doc("return_reason") }}'
 
       - name: is_nps
         data_type: boolean
+        description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
         data_tests:
           - not_null
           - accepted_values:
@@ -112,27 +131,33 @@ models:
 
       - name: nps_score
         data_type: int64
+        description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
 
       - name: nps_date
         data_type: datetime
+        description: "The date on which the customer provided their Net Promoter Score (NPS)."
 
       - name: product_category
         data_type: string
+        description: "The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets)."
         data_tests:
           - not_null
 
       - name: product_name
         data_type: string
+        description: "The name of the product."
         data_tests:
           - not_null
 
       - name: inbound_shipping_cost
         data_type: float64
+        description: "The cost of shipping the product to the warehouse."
         data_tests:
           - not_null
 
       - name: product_cost
         data_type: float64
+        description: "The cost incurred to acquire or produce the product."
         data_tests:
           - not_null
   
@@ -151,16 +176,19 @@ models:
     columns:
       - name: order_id
         data_type: string
+        description: "Unique identifier for the order."
         data_tests:
           - not_null
 
       - name: payment_id
         data_type: int64
+        description: "Unique identifier for the payment."
         data_tests:
           - not_null
 
       - name: order_payment_id
         data_type: string
+        description: "Unique identifier for the specific payment associated with the order."
         data-tests:
           - unique
           - not_null
@@ -170,6 +198,7 @@ models:
 
       - name: payment_method
         data_type: string
+        description: "The payment method used for the order."
         data_tests:
           - not_null
           - relationships:
@@ -178,11 +207,13 @@ models:
 
       - name: payment_status
         data_type: string
+        description: "The current status of the payment (e.g., pending, completed, failed)."
         data_tests:
           - not_null
 
       - name: country_id
         data_type: int64
+        description: "Identifier for the country from which the payment originated."
         data_tests:
           - not_null
           - relationships:
@@ -191,36 +222,43 @@ models:
 
       - name: country
         data_type: string
+        description: "The name of the billing country associated with the order."
         data_tests:
           - not_null
 
       - name: created_at
         data_type: datetime
+        description: "The timestamp when the payment was created."
         data_tests:
           - not_null
 
       - name: gross_revenue
         data_type: float64
+        description: "The total gross amount paid by the customer, including tax and shipping."
         data_tests:
           - not_null
 
       - name: tax_rate
         data_type: float64
+        description: "The tax rate applied to the order, based on the billing country."
         data_tests:
           - not_null
 
       - name: percentage_fee
         data_type: float64
+        description: "The percentage fee applied to transactions using the specified payment method."
         data_tests:
           - not_null
 
       - name: fixed_fee
         data_type: float64
+        description: "The fixed fee applied to transactions using the specified payment method."
         data_tests:
           - not_null
 
       - name: payment_fee
         data_type: float64
+        description: "The total fee applied to the payment, calculated as a percentage of the gross revenue plus a fixed fee."
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
