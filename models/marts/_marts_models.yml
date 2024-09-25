@@ -703,8 +703,6 @@ models:
 
       - name: sales
         data_type: float64
-        constraints: 
-          - type: not_null
         description: >
           The total net revenue after tax for each day, representing the sum of all sales transactions. 
           This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
