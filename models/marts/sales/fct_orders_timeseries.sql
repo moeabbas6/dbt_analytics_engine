@@ -16,7 +16,9 @@ WITH
       FROM {{ ref('fct_orders') }}
       WHERE order_date < CURRENT_DATE
       {%- if is_incremental() %}
-        AND order_date >= (SELECT DATE_SUB(MAX(date), INTERVAL 3 DAY) FROM {{ this }})
+        AND order_date >= (SELECT DATE_SUB(MAX(date), INTERVAL 3 DAY) 
+                              FROM {{ this }}
+                              WHERE sales IS NOT NULL)
       {%- endif %}
       GROUP BY date)
 
@@ -38,9 +40,9 @@ WITH
 
 
   ,sales_with_indices AS (
-    SELECT swfd.*
-          ,DATE_DIFF(swfd.date, (SELECT MIN(date) FROM fct_orders_timeseries), DAY) AS date_index
-      FROM sales_with_future_dates swfd)
+    SELECT *
+          ,DATE_DIFF(date, (SELECT MIN(date) FROM fct_orders_timeseries), DAY) AS date_index
+      FROM sales_with_future_dates)
 
 
   ,sales_forecast AS (
@@ -73,51 +75,46 @@ WITH
             WHEN sf.date <= CURRENT_DATE() THEN sf.sales_forecasted
             ELSE c.slope * sf.date_index + c.intercept END AS sales_forecasted_trend
       FROM sales_forecast sf
-      CROSS JOIN coefficients c)
+          ,coefficients c)
 
 
   ,weighted_moving_average AS (
     SELECT *
-      ,COALESCE(
-        ({% for lag_value in range(weights | length) -%}
-            {{ weights[lag_value] }} * LAG(sales_forecasted_trend, {{ lag_value }}) OVER (ORDER BY date)
-            {% if not loop.last %} + {% endif %}
-          {%- endfor -%}), sales_forecasted_trend) AS sales_wma_7
+           ,COALESCE(
+            ({% for lag_value in range(weights | length) -%}
+                {{ weights[lag_value] }} * LAG(sales_forecasted_trend, {{ lag_value }}) OVER (ORDER BY date)
+                {% if not loop.last %} + {% endif %}
+              {%- endfor -%}), sales_forecasted_trend) AS sales_wma_7
       FROM sales_forecast_with_trend)
 
 
   ,simple_moving_averages AS (
     SELECT *
-      {%- for period in periods %}
-      ,AVG(sales_forecasted_trend) OVER (
-        ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW
-      ) AS sales_sma_{{ period }}
-      {%- endfor %}
+          {%- for period in periods %}
+          ,AVG(sales_forecasted_trend) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_sma_{{ period }}
+          {%- endfor %}
       FROM weighted_moving_average)
 
   
   ,standard_deviations AS (
     SELECT *
-      {%- for period in periods %}
-      ,STDDEV(sales_forecasted_trend) OVER (
-        ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW
-      ) AS sales_stddev_{{ period }}
-      {%- endfor %}
+          {%- for period in periods %}
+          ,STDDEV(sales_forecasted_trend) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_stddev_{{ period }}
+          {%- endfor %}
       FROM simple_moving_averages)
 
 
   ,bollinger_bands AS (
     SELECT date
-      ,sales
-      ,sales_forecasted_trend AS sales_forecasted
-      ,sales_wma_7
-      {%- for period in periods %}
-      ,sales_sma_{{ period }}
-      ,sales_sma_{{ period }} + (2 * sales_stddev_{{ period }}) AS sales_sma_upper_{{ period }}
-      ,sales_sma_{{ period }} - (2 * sales_stddev_{{ period }}) AS sales_sma_lower_{{ period }}
-      {%- endfor %}
+          ,sales
+          ,sales_wma_7
+          {%- for period in periods %}
+          ,sales_sma_{{ period }}
+          ,sales_sma_{{ period }} + (2 * sales_stddev_{{ period }}) AS sales_sma_upper_{{ period }}
+          ,sales_sma_{{ period }} - (2 * sales_stddev_{{ period }}) AS sales_sma_lower_{{ period }}
+          {%- endfor %}
       FROM standard_deviations)
 
 
-  SELECT * EXCEPT(sales_forecasted)
+  SELECT *
   FROM bollinger_bands
