@@ -1,4 +1,7 @@
 {{ config(
+    materialized = "incremental",
+    unique_key = "date",
+    on_schema_change = 'append_new_columns',
     cluster_by = 'date'
 )}}
 
@@ -12,6 +15,9 @@ WITH
           ,SUM(net_revenue_after_tax) AS sales
       FROM {{ ref('fct_orders') }}
       WHERE order_date < CURRENT_DATE
+      {%- if is_incremental() %}
+        AND order_date >= (SELECT DATE_SUB(MAX(date), INTERVAL 3 DAY) FROM {{ this }})
+      {%- endif %}
       GROUP BY date)
 
 
