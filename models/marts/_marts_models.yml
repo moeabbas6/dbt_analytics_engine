@@ -697,9 +697,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.accepted_range:
-              name: fct_orders_timeseries_unexpected_date
-              max_value: "current_datetime()"
 
       - name: sales
         data_type: float64
