@@ -7,7 +7,7 @@
 
 
 WITH
-  fct_orders_timeseries_sma AS (
+  fct_orders_timeseries AS (
     SELECT DATE(order_date) AS date
           ,SUM(net_revenue_after_tax) AS sales
       FROM {{ ref('fct_orders') }}
@@ -20,7 +20,7 @@ WITH
               {{ weights[lag_value] }} * LAG(sales, {{ lag_value }}) OVER (ORDER BY date)
               {% if not loop.last %} + {% endif -%}
             {%- endfor -%}), sales) AS sales_wma_7
-      FROM fct_orders_timeseries_sma)
+      FROM fct_orders_timeseries)
 
 
   ,simple_moving_averages AS (
