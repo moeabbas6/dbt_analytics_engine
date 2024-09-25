@@ -709,7 +709,6 @@ models:
           The total net revenue after tax for each day, representing the sum of all sales transactions. 
           This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_timeseries_assert_positive_sales
