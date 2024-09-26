@@ -974,6 +974,17 @@ models:
           compare_expression: sum(cm)
 
     columns:
+      - name: dim_product_id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: "Unique identifier of the dim_product record"
+        data_tests:
+          - unique
+          - not_null
+
       - name: date
         data_type: date
         constraints: 
