@@ -30,6 +30,7 @@ WITH
           ,percentage_fee
           ,fixed_fee
           ,ROUND((gross_revenue * (percentage_fee / 100)) + fixed_fee, 2) AS payment_fee
+          #Adding comment for slim cd test
       FROM stg_payments
       LEFT JOIN stg_taxes USING (country_id)
       LEFT JOIN stg_payment_fees USING (payment_method))
@@ -37,4 +38,3 @@ WITH
 
   SELECT *
     FROM final
-  #Adding comment for slim cd test
