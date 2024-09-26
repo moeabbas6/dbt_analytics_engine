@@ -55,6 +55,7 @@ WITH
           ,product_name
           ,inbound_shipping_cost
           ,product_cost
+          #Adding comment for slim cd test
       FROM stg_orders
       LEFT JOIN stg_customers USING (customer_id)
       LEFT JOIN stg_shipping USING (order_id)
@@ -65,4 +66,3 @@ WITH
 
   SELECT *
     FROM final
-  #Adding comment for slim cd test
