@@ -21,7 +21,6 @@ WITH
                               WHERE sales IS NOT NULL)
       {%- endif %}
       GROUP BY date)
-      # Adding comment for slim cd test
 
   ,date_series AS (
     SELECT date
