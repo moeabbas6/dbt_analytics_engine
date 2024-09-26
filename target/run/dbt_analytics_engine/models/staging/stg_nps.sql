@@ -1,0 +1,23 @@
+
+
+  create or replace view `moes-dbt-layer`.`dbt_analytics_engine_dev`.`stg_nps`
+  OPTIONS(
+      expiration_timestamp=TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 72 hour),
+    
+      description=""""""
+    )
+  as WITH
+  stg_nps AS (
+    SELECT order_id
+          ,customer_id
+          ,is_nps
+          ,nps_score
+          ,nps_date
+      FROM `moes-dbt-layer`.`dae_sources`.`nps`
+      WHERE nps_date <= CURRENT_DATETIME('America/Toronto')
+        AND nps_date > CURRENT_DATE - INTERVAL 3 DAY)
+
+
+  SELECT *
+    FROM stg_nps;
+
