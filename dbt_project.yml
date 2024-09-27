@@ -6,7 +6,7 @@ profile: 'dbt_analytics_engine'
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
-seed-paths: ["seeds"]
+seed-paths: ["models"]
 macro-paths: ["macros"]
 docs-paths: ["docs"]
 
