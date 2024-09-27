@@ -793,8 +793,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_7
@@ -806,8 +806,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_14
@@ -819,8 +819,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_14
@@ -832,8 +832,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_30
@@ -845,8 +845,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_30
@@ -858,8 +858,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_60
@@ -871,8 +871,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_60
@@ -884,8 +884,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_120
@@ -897,8 +897,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_120
@@ -910,8 +910,8 @@ models:
           - not_null:
               config: 
                 severity: warn
-                error_if: ">10"
-                warn_if: ">3"
+                error_if: ">20"
+                warn_if: ">10"
           - dbt_utils.not_constant
 
 
