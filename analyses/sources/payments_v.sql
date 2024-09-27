@@ -1,5 +1,3 @@
-
-
 WITH
   order_ids_current_year AS (
     SELECT GENERATE_UUID() AS order_id

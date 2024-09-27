@@ -1,5 +1,3 @@
-
-
 WITH
   payments AS (
     SELECT order_id
@@ -8,14 +6,14 @@ WITH
             WHEN COUNTIF(payment_status = 'failed') > 0 THEN 'failed'
             ELSE 'completed'
           END AS order_status
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.payments`
+      FROM `moes-dbt-layer.dae_sources.payments`
       GROUP BY order_id)
 
 
   ,customers AS (
     SELECT customer_id
           ,ROW_NUMBER() OVER (ORDER BY RAND()) AS rn
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.customers`)
+      FROM `moes-dbt-layer.dae_sources.customers`)
 
 
   ,customer_replicated AS (
