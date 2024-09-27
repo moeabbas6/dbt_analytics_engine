@@ -27,22 +27,19 @@ The available options include:
 
 {% docs segment %}
 
-Customer segments are based on both the recency of their last order and the frequency of orders placed. 
-This segmentation helps categorize customers based on their purchasing behavior.
+Customer segments are based on the recency of their last order and frequency of orders placed:
 
-The available segments are:
-
-| segment                | description                            |
-|------------------------|----------------------------------------|
-| Champion               | 3+ orders, last purchase <= 90 days.   |
-| Rising Star            | 2 orders, last purchase <= 90 days.    |
-| Active Newbie          | 1 order, last purchase <= 90 days.     |
-| Occasional             | 3+ orders, last purchase 91-180 days.  |
-| Need Attention         | 2 orders, last purchase 91-180 days.   |
-| Newbies About to Sleep | 1 order, last purchase 91-180 days.    |
-| Cannot Lose Them       | 3+ orders, last purchase 181-365 days. |
-| At Risk                | 2 orders, last purchase 181-365 days.  |
-| Unhappy                | 1 order, last purchase 181-365 days.   |
-| Hibernating            | No orders in the last 365+ days.       |
+| segment                | description                          |
+|------------------------|--------------------------------------|
+| Champion               | 3+ orders, last purchase <= 90 days. |
+| Rising Star            | 2 orders, last purchase <= 90 days.  |
+| Active Newbie          | 1 order, last purchase <= 90 days.   |
+| Occasional             | 3+ orders, purchase 91-180 days ago. |
+| Need Attention         | 2 orders, purchase 91-180 days ago.  |
+| Newbies About to Sleep | 1 order, purchase 91-180 days ago.   |
+| Cannot Lose Them       | 3+ orders, purchase 181-365 days ago.|
+| At Risk                | 2 orders, purchase 181-365 days ago. |
+| Unhappy                | 1 order, purchase 181-365 days ago.  |
+| Hibernating            | No orders in the last 365+ days.     |
 
 {% enddocs %}
