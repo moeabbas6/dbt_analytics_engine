@@ -3,7 +3,7 @@ WITH
     SELECT order_id
           ,is_shipped
           ,shipping_date
-      FROM `moes-dbt-layer.dae_sources.shipping`
+      FROM `moes-dbt-layer.zzz_sources.shipping`
       WHERE is_shipped IS TRUE
       GROUP BY ALL)
 
@@ -67,6 +67,6 @@ WITH
           END AS _loaded_at
       FROM transformation)
 
+
   SELECT *
     FROM final
-    WHERE 1=1

@@ -3,20 +3,20 @@ WITH
     SELECT order_id
           ,customer_id
           ,order_date
-      FROM `moes-dbt-layer.dae_sources.orders`)
+      FROM `moes-dbt-layer.zzz_sources.orders`)
 
 
   ,shipping AS (
     SELECT order_id
           ,shipping_date
-      FROM `moes-dbt-layer.dae_sources.shipping`
+      FROM `moes-dbt-layer.zzz_sources.shipping`
       WHERE is_shipped IS TRUE)
 
 
   ,returns AS (
     SELECT order_id
           ,return_date
-      FROM `moes-dbt-layer.dae_sources.returns`
+      FROM `moes-dbt-layer.zzz_sources.returns`
       WHERE is_returned IS TRUE)
 
 
@@ -86,5 +86,3 @@ WITH
 
   SELECT *
   FROM final
-  WHERE 1=1
-    #AND nps_date <= CURRENT_DATE()
