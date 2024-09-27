@@ -20,6 +20,8 @@ models:
     +persist_docs:
       relation: true
       columns: true
+    +meta:
+      analytics_engineer: 'Moe Abbas'
     staging:
       +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +materialized: view
@@ -28,21 +30,21 @@ models:
       +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +materialized: view
       +schema: 'staging'
+      +docs:
+        node_color: '#DEB41F'
     marts:
       +hours_to_expiration: "{{ 72 if target.name != 'prod' else none }}"
       +required_tests: {"unique.*|not_null": 2}
       +required_docs: true
       +materialized: table
-      +docs:
-        node_color: '#000000'
-      +meta:
-        analytics_engineer: '@Moe Abbas'
       finance:
         +schema: 'finance'
       sales:
         +schema: 'sales'
       product:
         +schema: 'product'
+      +docs:
+        node_color: '#000000'
 
 seeds:
   dbt_analytics_engine:
@@ -50,6 +52,8 @@ seeds:
       relation: true
       columns: true
     +schema: 'seeds'
+    +docs:
+      node_color: '#60BC24'
 
 data_tests:
   dbt_analytics_engine:
@@ -61,6 +65,6 @@ data_tests:
     +schema: 'failed_tests'
 
 flags:
-  printer_width: 100
+  printer_width: 95
   send_anonymous_usage_stats: false
   indirect_selection: cautious
