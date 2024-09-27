@@ -24,3 +24,22 @@ The available options include:
 | Technical Difficulties | The customer experienced issues with the product's functionality or usage. |
 
 {% enddocs %}
+
+{% docs segment %}
+
+Customer segments are based on the recency of their last order and frequency of orders placed:
+
+| segment                | description                          |
+|------------------------|--------------------------------------|
+| Champion               | 3+ orders, last purchase <= 90 days. |
+| Rising Star            | 2 orders, last purchase <= 90 days.  |
+| Active Newbie          | 1 order, last purchase <= 90 days.   |
+| Occasional             | 3+ orders, purchase 91-180 days ago. |
+| Need Attention         | 2 orders, purchase 91-180 days ago.  |
+| Newbies About to Sleep | 1 order, purchase 91-180 days ago.   |
+| Cannot Lose Them       | 3+ orders, purchase 181-365 days ago.|
+| At Risk                | 2 orders, purchase 181-365 days ago. |
+| Unhappy                | 1 order, purchase 181-365 days ago.  |
+| Hibernating            | No orders in the last 365+ days.     |
+
+{% enddocs %}
