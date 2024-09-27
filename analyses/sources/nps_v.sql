@@ -1,24 +1,22 @@
-
-
 WITH 
   orders AS (
     SELECT order_id
           ,customer_id
           ,order_date
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.orders`)
+      FROM `moes-dbt-layer.dae_sources.orders`)
 
 
   ,shipping AS (
     SELECT order_id
           ,shipping_date
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.shipping`
+      FROM `moes-dbt-layer.dae_sources.shipping`
       WHERE is_shipped IS TRUE)
 
 
   ,returns AS (
     SELECT order_id
           ,return_date
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.returns`
+      FROM `moes-dbt-layer.dae_sources.returns`
       WHERE is_returned IS TRUE)
 
 

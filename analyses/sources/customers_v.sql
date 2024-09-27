@@ -1,5 +1,3 @@
-
-
 WITH
   first_names AS (
     SELECT 'James' AS first_name UNION ALL

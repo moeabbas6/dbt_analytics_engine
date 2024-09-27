@@ -1,10 +1,8 @@
-
-
 WITH
   payments AS (
     SELECT order_id
           ,MAX(created_at) AS created_at
-    FROM `moes-dbt-layer.dbt_analytics_engine_sources.payments`
+    FROM `moes-dbt-layer.dae_sources.payments`
     GROUP BY order_id)
 
 

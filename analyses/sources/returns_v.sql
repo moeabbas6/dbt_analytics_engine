@@ -1,11 +1,9 @@
-
-
 WITH
   shipping AS (
     SELECT order_id
           ,is_shipped
           ,shipping_date
-      FROM `moes-dbt-layer.dbt_analytics_engine_sources.shipping`
+      FROM `moes-dbt-layer.dae_sources.shipping`
       WHERE is_shipped IS TRUE
       GROUP BY ALL)
 
