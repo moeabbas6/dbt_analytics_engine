@@ -24,3 +24,25 @@ The available options include:
 | Technical Difficulties | The customer experienced issues with the product's functionality or usage. |
 
 {% enddocs %}
+
+{% docs segment %}
+
+Customer segments are based on both the recency of their last order and the frequency of orders placed. 
+This segmentation helps categorize customers based on their purchasing behavior.
+
+The available segments are:
+
+| segment                         | description                                                                                          |
+|---------------------------------|------------------------------------------------------------------------------------------------------|
+| Champion                        | Customers who have placed more than 2 orders and made their last purchase within the last 90 days.   |
+| Rising Star                     | Customers who have placed 2 orders and made their last purchase within the last 90 days.             |
+| Active Newbie                   | Customers who have placed 1 order and made their last purchase within the last 90 days.              |
+| Occasional                      | Customers who have placed more than 2 orders, with their last purchase between 90 and 180 days ago.  |
+| Need Attention                  | Customers who have placed 2 orders, with their last purchase between 90 and 180 days ago.            |
+| Newbies About to Sleep / Asleep | Customers who have placed 1 order, with their last purchase between 90 and 180 days ago.             |
+| Cannot / Almost Lose Them       | Customers who have placed more than 2 orders, with their last purchase between 180 and 365 days ago. |
+| At Risk / Lost 2nd Buyer        | Customers who have placed 2 orders, with their last purchase between 180 and 365 days ago.           |
+| Unhappy / Lost 1st Buyer        | Customers who have placed 1 order, with their last purchase between 180 and 365 days ago.            |
+| Hibernating Customers           | Customers who have not placed any orders in the past 365 days.                                       |
+
+{% enddocs %}
