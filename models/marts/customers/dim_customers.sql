@@ -21,6 +21,8 @@ WITH
 
   ,customers AS (
     SELECT customer_id
+          ,first_name
+          ,last_name
           ,COUNT(order_id) AS nb_orders
           ,DATE_DIFF(CURRENT_DATE, MAX(order_date), DAY) AS last_order_days
           ,MIN(order_date) AS first_order
@@ -35,7 +37,9 @@ WITH
           ,ROUND(SUM({{ sum_field }}), 2) AS total_{{ sum_field }}
           {% endfor %}
       FROM orders
-      GROUP BY customer_id)
+      GROUP BY customer_id
+              ,first_name
+              ,last_name)
 
 
   ,rfm AS (
