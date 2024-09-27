@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: raw
     database: moes-dbt-layer
-    schema: dae_sources
+    schema: zzz_sources
     tables:
       - name: customers
         columns:

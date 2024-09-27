@@ -24,17 +24,12 @@ WITH
       FROM UNNEST(GENERATE_ARRAY(1, 275000)))
 
 
-  ,customers AS (
+  ,final AS (
     SELECT GENERATE_UUID() AS customer_id
           ,fn.first_name
           ,CONCAT(SUBSTR(UPPER(CHR(65 + CAST(FLOOR(RAND() * 26) AS INT64))), 1, 1), '.') AS last_name
       FROM random_numbers AS rn
       JOIN first_name_with_row_num AS fn ON rn.rand_num = fn.row_num)
-
-
-  ,final AS (
-    SELECT *
-    FROM customers)
 
 
   SELECT *

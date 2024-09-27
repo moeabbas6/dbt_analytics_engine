@@ -112,5 +112,3 @@ WITH
 
   SELECT *
     FROM final
-    WHERE 1=1
-      #AND created_at <= CURRENT_DATE

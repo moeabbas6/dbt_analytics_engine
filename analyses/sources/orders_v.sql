@@ -6,21 +6,21 @@ WITH
             WHEN COUNTIF(payment_status = 'failed') > 0 THEN 'failed'
             ELSE 'completed'
           END AS order_status
-      FROM `moes-dbt-layer.dae_sources.payments`
+      FROM `moes-dbt-layer.zzz_sources.payments`
       GROUP BY order_id)
 
 
   ,customers AS (
     SELECT customer_id
           ,ROW_NUMBER() OVER (ORDER BY RAND()) AS rn
-      FROM `moes-dbt-layer.dae_sources.customers`)
+      FROM `moes-dbt-layer.zzz_sources.customers`)
 
 
   ,customer_replicated AS (
     SELECT customer_id
           ,ROW_NUMBER() OVER (ORDER BY RAND()) AS rn
       FROM customers
-      CROSS JOIN UNNEST(GENERATE_ARRAY(1, CEIL(375000 / 250000))) AS x)
+          ,UNNEST(GENERATE_ARRAY(1, 10)) AS x)
 
 
   ,order_numbers AS (
@@ -56,19 +56,19 @@ WITH
 
 
   ,product_assignment_with_ids AS (
-    SELECT pa.order_id
-          ,pa.customer_id
-          ,pa.order_status
-          ,pa.order_date
-          ,pa.product_category_id
+    SELECT order_id
+          ,customer_id
+          ,order_status
+          ,order_date
+          ,product_category_id
           ,CASE
-            WHEN pa.product_category_id = 1 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
-            WHEN pa.product_category_id = 2 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
-            WHEN pa.product_category_id = 3 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
-            WHEN pa.product_category_id = 4 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
+            WHEN product_category_id = 1 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
+            WHEN product_category_id = 2 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
+            WHEN product_category_id = 3 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
+            WHEN product_category_id = 4 THEN CAST(1 + FLOOR(RAND() * 5) AS INT64)
             ELSE CAST(1 + FLOOR(RAND() * 5) AS INT64)
           END AS product_id
-      FROM product_assignment pa)
+      FROM product_assignment)
 
 
   ,final AS (
@@ -80,6 +80,7 @@ WITH
           ,product_id
           ,DATETIME_ADD(DATETIME_TRUNC(DATETIME_ADD(order_date, INTERVAL 6 HOUR), HOUR), INTERVAL -MOD(EXTRACT(HOUR FROM order_date), 6) HOUR) AS _loaded_at
       FROM product_assignment_with_ids)
+
 
   SELECT *
     FROM final
