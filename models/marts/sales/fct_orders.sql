@@ -53,7 +53,7 @@ WITH
             ,order_date
             ,shipping_date
             ,DATE_DIFF(shipping_date, order_date, DAY) AS fulfillment_days
-            ,IF(is_nps IS NULL, FALSE, TRUE) AS is_nps
+            ,is_nps
             ,nps_score
             ,nps_date
             ,product_category_id
@@ -62,7 +62,7 @@ WITH
             ,product_name
             ,SAFE_ADD(inbound_shipping_cost, product_cost) AS cogs
             ,return_id
-            ,IF(is_returned IS NULL, FALSE, TRUE) AS is_returned
+            ,is_returned
             ,return_date
             ,return_reason
             ,IF(is_returned IS TRUE, SAFE_ADD(inbound_shipping_cost, product_cost), 0) AS returned_cogs
