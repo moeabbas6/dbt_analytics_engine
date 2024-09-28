@@ -29,17 +29,17 @@ The available options include:
 
 Customer segments are based on the recency of their last order and frequency of orders placed:
 
-| segment                | description                          |
-|------------------------|--------------------------------------|
-| Champion               | 3+ orders, last purchase <= 90 days. |
-| Rising Star            | 2 orders, last purchase <= 90 days.  |
-| Active Newbie          | 1 order, last purchase <= 90 days.   |
-| Occasional             | 3+ orders, purchase 91-180 days ago. |
-| Need Attention         | 2 orders, purchase 91-180 days ago.  |
-| Newbies About to Sleep | 1 order, purchase 91-180 days ago.   |
-| Cannot Lose Them       | 3+ orders, purchase 181-365 days ago.|
-| At Risk                | 2 orders, purchase 181-365 days ago. |
-| Unhappy                | 1 order, purchase 181-365 days ago.  |
-| Hibernating            | No orders in the last 365+ days.     |
+| segment           | description                          |
+|-------------------|--------------------------------------|
+| Loyal Leader      | 3+ orders, last purchase <= 90 days. |
+| Growing Patron    | 2 orders, last purchase <= 90 days.  |
+| New Enthusiast    | 1 order, last purchase <= 90 days.   |
+| Casual Shopper    | 3+ orders, purchase 91-180 days ago. |
+| Waning Loyalty    | 2 orders, purchase 91-180 days ago.  |
+| Slipping Newcomer | 1 order, purchase 91-180 days ago.   |
+| At-Risk Regular   | 3+ orders, purchase 181-365 days ago.|
+| Vanished Buyer    | 2 orders, purchase 181-365 days ago. |
+| One-Time Buyer    | 1 order, purchase 181-365 days ago.  |
+| Dormant Customer  | No orders in the last 365+ days.     |
 
 {% enddocs %}
