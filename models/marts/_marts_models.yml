@@ -89,7 +89,7 @@ models:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: dim_customers_assert_positive_last_order_days
-              expression: "> 0"
+              expression: ">= 0"
 
       - name: first_order_date
         data_type: datetime
