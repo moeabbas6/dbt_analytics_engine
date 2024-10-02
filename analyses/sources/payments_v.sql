@@ -2,17 +2,12 @@ WITH
   order_ids_current_year AS (
     SELECT GENERATE_UUID() AS order_id
           ,DATETIME_ADD(
+            DATETIME_ADD(
               DATETIME_ADD(
-                DATETIME_ADD(
-                  CASE
-                    WHEN RAND() < 0.20 THEN DATETIME(TIMESTAMP('2024-01-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    WHEN RAND() < 0.50 THEN DATETIME(TIMESTAMP('2024-04-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    WHEN RAND() < 0.70 THEN DATETIME(TIMESTAMP('2024-07-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    ELSE DATETIME(TIMESTAMP('2024-10-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                  END,
-                  INTERVAL CAST(FLOOR(RAND() * 24) AS INT64) HOUR),
-                INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) MINUTE),
-              INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) SECOND) AS created_at
+                DATETIME(TIMESTAMP('2024-01-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 365) AS INT64) DAY),
+                INTERVAL CAST(FLOOR(RAND() * 24) AS INT64) HOUR),
+              INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) MINUTE),
+            INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) SECOND) AS created_at
           ,CASE
             WHEN RAND() < 0.15 THEN 1
             WHEN RAND() < 0.30 THEN 2
@@ -31,17 +26,12 @@ WITH
   ,order_ids_previous_year AS (
     SELECT GENERATE_UUID() AS order_id
           ,DATETIME_ADD(
+            DATETIME_ADD(
               DATETIME_ADD(
-                DATETIME_ADD(
-                  CASE
-                    WHEN RAND() < 0.25 THEN DATETIME(TIMESTAMP('2023-01-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    WHEN RAND() < 0.55 THEN DATETIME(TIMESTAMP('2023-04-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    WHEN RAND() < 0.75 THEN DATETIME(TIMESTAMP('2023-07-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                    ELSE DATETIME(TIMESTAMP('2023-10-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 90) AS INT64) DAY)
-                  END,
-                  INTERVAL CAST(FLOOR(RAND() * 24) AS INT64) HOUR),
-                INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) MINUTE),
-              INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) SECOND) AS created_at
+                DATETIME(TIMESTAMP('2023-01-01 00:00:00') + INTERVAL CAST(FLOOR(RAND() * 365) AS INT64) DAY),
+                INTERVAL CAST(FLOOR(RAND() * 24) AS INT64) HOUR),
+              INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) MINUTE),
+            INTERVAL CAST(FLOOR(RAND() * 60) AS INT64) SECOND) AS created_at
           ,CASE
             WHEN RAND() < 0.10 THEN 1
             WHEN RAND() < 0.22 THEN 2
@@ -99,7 +89,7 @@ WITH
     SELECT order_id
           ,payment_id
           ,payment_method
-          ,ROUND(50 + RAND() * 75) AS payment_amount
+          ,ROUND((50 + RAND() * 75) * (1 + 0.2 * SIN(EXTRACT(DAYOFYEAR FROM created_at) / 365 * 2 * 3.141592653589793))) AS payment_amount
           ,payment_country_id
           ,CASE 
             WHEN RAND() < 0.90 THEN 'successful'
