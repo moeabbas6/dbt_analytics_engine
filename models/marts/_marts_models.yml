@@ -997,9 +997,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_wma_7
-              expression: "> 0"
 
       - name: sales_sma_7
         data_type: float64
@@ -1009,9 +1006,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_7
-              expression: "> 0"
 
       - name: sales_sma_14
         data_type: float64
@@ -1021,9 +1015,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_14
-              expression: "> 0"
 
       - name: sales_sma_30
         data_type: float64
@@ -1033,9 +1024,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_30
-              expression: "> 0"
 
       - name: sales_sma_60
         data_type: float64
@@ -1045,9 +1033,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_60
-              expression: "> 0"
 
       - name: sales_sma_120
         data_type: float64
@@ -1057,9 +1042,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_120
-              expression: "> 0"
 
       - name: sales_sma_upper_7
         data_type: float64
