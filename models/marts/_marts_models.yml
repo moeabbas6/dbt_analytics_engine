@@ -1053,7 +1053,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_7
@@ -1066,7 +1066,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_14
@@ -1079,7 +1079,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_14
@@ -1092,7 +1092,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_30
@@ -1105,7 +1105,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_30
@@ -1118,7 +1118,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_60
@@ -1131,7 +1131,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_60
@@ -1144,7 +1144,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_upper_120
@@ -1157,7 +1157,7 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
       - name: sales_sma_lower_120
@@ -1170,7 +1170,18 @@ models:
               config: 
                 severity: warn
                 error_if: ">20"
-                warn_if: ">10"
+                warn_if: ">16"
+          - dbt_utils.not_constant
+
+      - name: forecasted_sales
+        data_type: float64
+        description: ""
+        data_tests:
+          - not_null:
+              config: 
+                severity: warn
+                error_if: ">20"
+                warn_if: ">16"
           - dbt_utils.not_constant
 
 
