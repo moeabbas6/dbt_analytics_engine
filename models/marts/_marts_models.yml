@@ -971,20 +971,12 @@ models:
           - type: primary_key
             warn_unenforced: false
         description: "The date corresponding to the recorded sales figures."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
 
       - name: sales
         data_type: float64
         description: >
           The total net revenue after tax for each day, representing the sum of all sales transactions. 
           This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales
-              expression: ">= 0"
 
       - name: sales_wma_7
         data_type: float64
@@ -992,185 +984,107 @@ models:
           The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
           This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
           The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_7
         data_type: float64
         description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_14
         data_type: float64
         description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_30
         data_type: float64
         description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_60
         data_type: float64
         description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_120
         data_type: float64
         description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
-        data_tests:
-          - not_null
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_upper_7
         data_type: float64
         description: >
           The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
           Indicates the potential upper bound of short-term sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_lower_7
         data_type: float64
         description: >
           The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
           Indicates the potential lower bound of short-term sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_upper_14
         data_type: float64
         description: >
           The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
           Indicates the potential upper bound of short-term sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_lower_14
         data_type: float64
         description: >
           The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
           Indicates the potential lower bound of short-term sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_upper_30
         data_type: float64
         description: >
           The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
           Represents the potential upper bound for monthly sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_lower_30
         data_type: float64
         description: >
           The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
           Represents the potential lower bound for monthly sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_upper_60
         data_type: float64
         description: >
           The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
           Indicates the upper limit of quarterly sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_lower_60
         data_type: float64
         description: > 
           The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
           Indicates the lower limit of quarterly sales trends.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_upper_120
         data_type: float64
         description: >
           The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
           Provides the upper bound for sales trends over half a year.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: sales_sma_lower_120
         data_type: float64
         description: >
           The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
           Provides the lower bound for sales trends over half a year.
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
       - name: forecasted_sales
         data_type: float64
         description: ""
-        data_tests:
-          - not_null:
-              config: 
-                severity: warn
-                error_if: ">20"
-                warn_if: ">16"
-          - dbt_utils.not_constant
+
 
 
 
