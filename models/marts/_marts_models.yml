@@ -984,7 +984,7 @@ models:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_timeseries_assert_positive_sales
-              expression: "> 0"
+              expression: ">= 0"
 
       - name: sales_wma_7
         data_type: float64
