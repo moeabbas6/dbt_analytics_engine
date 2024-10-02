@@ -18,7 +18,7 @@ WITH
       {%- if is_incremental() %}
         AND order_date >= (SELECT DATE_SUB(MAX(date), INTERVAL 3 DAY) 
                               FROM {{ this }}
-                              WHERE sales IS NOT NULL)
+                              WHERE date < CURRENT_DATE)
       {%- endif %}
       GROUP BY date)
 
