@@ -1,11 +1,10 @@
 WITH
   daily_sales AS (
-    SELECT DATE(order_date) AS date
-          ,SUM(net_revenue_after_tax) AS sales
-      FROM {{ ref('fct_orders') }}
-      WHERE order_date >= DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH)
-        AND order_date <= LAST_DAY(DATE_TRUNC(DATE_ADD(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH))
-      GROUP BY date),
+    SELECT date
+          ,sales
+      FROM {{ ref('fct_orders_timeseries') }}
+      WHERE date >= DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH)
+        AND date <= LAST_DAY(DATE_TRUNC(DATE_ADD(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH))),
 
 
   avg_daily_sales AS (

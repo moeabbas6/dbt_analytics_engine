@@ -10,7 +10,7 @@
 {% set forecast_horizon = 14 %}
 
 WITH
-  fct_orders_timeseries AS (
+  daily_sales AS (
     SELECT DATE(order_date) AS date
           ,SUM(net_revenue_after_tax) AS sales
       FROM {{ ref('fct_orders') }}
@@ -22,75 +22,21 @@ WITH
       {%- endif %}
       GROUP BY date)
 
-  ,date_series AS (
-    SELECT date
-      FROM UNNEST(
-        GENERATE_DATE_ARRAY(
-          (SELECT MIN(date) FROM fct_orders_timeseries),
-          DATE_ADD(CURRENT_DATE(), INTERVAL {{ forecast_horizon }} DAY),
-          INTERVAL 1 DAY)) AS date)
-
-  
-  ,sales_with_future_dates AS (
-    SELECT date
-          ,sales
-      FROM date_series
-      LEFT JOIN fct_orders_timeseries USING (date))
-
-
-  ,sales_with_indices AS (
-    SELECT *
-          ,DATE_DIFF(date, (SELECT MIN(date) FROM fct_orders_timeseries), DAY) AS date_index
-      FROM sales_with_future_dates)
-
-
-  ,sales_forecast AS (
-    SELECT date
-          ,sales
-          ,COALESCE(sales, LAST_VALUE(sales IGNORE NULLS) OVER (ORDER BY date)) AS sales_forecasted
-          ,date_index
-      FROM sales_with_indices)
-
-
-  ,linear_regression AS (
-    SELECT SUM(CASE WHEN date <= CURRENT_DATE() THEN date_index * sales_forecasted ELSE 0 END) AS sum_xy
-          ,SUM(CASE WHEN date <= CURRENT_DATE() THEN date_index ELSE 0 END) AS sum_x
-          ,SUM(CASE WHEN date <= CURRENT_DATE() THEN sales_forecasted ELSE 0 END) AS sum_y
-          ,SUM(CASE WHEN date <= CURRENT_DATE() THEN date_index * date_index ELSE 0 END) AS sum_xx
-          ,COUNT(CASE WHEN date <= CURRENT_DATE() THEN 1 END) AS n
-      FROM sales_forecast)
-
-
-  ,coefficients AS (
-    SELECT (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x) AS slope
-          ,(sum_y - ((n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x)) * sum_x) / n AS intercept
-      FROM linear_regression)
-
-  
-  ,sales_forecast_with_trend AS (
-    SELECT sf.date
-          ,sf.sales
-          ,CASE
-            WHEN sf.date <= CURRENT_DATE() THEN sf.sales_forecasted
-            ELSE c.slope * sf.date_index + c.intercept END AS sales_forecasted_trend
-      FROM sales_forecast sf
-          ,coefficients c)
-
 
   ,weighted_moving_average AS (
     SELECT *
            ,COALESCE(
             ({% for lag_value in range(weights | length) -%}
-                {{ weights[lag_value] }} * LAG(sales_forecasted_trend, {{ lag_value }}) OVER (ORDER BY date)
+                {{ weights[lag_value] }} * LAG(sales, {{ lag_value }}) OVER (ORDER BY date)
                 {% if not loop.last %} + {% endif %}
-              {%- endfor -%}), sales_forecasted_trend) AS sales_wma_7
-      FROM sales_forecast_with_trend)
+              {%- endfor -%}), sales) AS sales_wma_7
+      FROM daily_sales)
 
 
   ,simple_moving_averages AS (
     SELECT *
           {%- for period in periods %}
-          ,AVG(sales_forecasted_trend) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_sma_{{ period }}
+          ,AVG(sales) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_sma_{{ period }}
           {%- endfor %}
       FROM weighted_moving_average)
 
@@ -98,7 +44,7 @@ WITH
   ,standard_deviations AS (
     SELECT *
           {%- for period in periods %}
-          ,STDDEV(sales_forecasted_trend) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_stddev_{{ period }}
+          ,STDDEV(sales) OVER (ORDER BY date ROWS BETWEEN {{ period }} PRECEDING AND CURRENT ROW) AS sales_stddev_{{ period }}
           {%- endfor %}
       FROM simple_moving_averages)
 
@@ -115,5 +61,70 @@ WITH
       FROM standard_deviations)
 
 
+## Forecaster
+  ,avg_daily_sales AS (
+    SELECT AVG(sales) as avg_daily_net_revenue
+      FROM daily_sales
+      WHERE date >= CURRENT_DATE - INTERVAL 1 MONTH)
+
+
+  ,avg_weekday_sales AS (
+    SELECT EXTRACT(DAYOFWEEK FROM date) AS weekday
+          ,AVG(sales) as avg_weekday_net_revenue
+      FROM daily_sales
+      WHERE date >= CURRENT_DATE - INTERVAL 1 MONTH
+      GROUP BY weekday)
+
+
+  ,weekday_adjustment AS (
+    SELECT weekday
+          ,SAFE_DIVIDE(avg_weekday_net_revenue, avg_daily_net_revenue) AS weekday_effect
+        FROM avg_weekday_sales
+            ,avg_daily_sales)
+
+
+  ,avg_recent_sales AS (
+    SELECT AVG(sales) as avg_net_revenue
+      FROM daily_sales
+      WHERE date >= CURRENT_DATE - INTERVAL 15 DAY)
+
+
+  ,sales_forecast AS (
+    SELECT weekday
+          ,avg_net_revenue * weekday_effect AS forecasted_sales
+      FROM weekday_adjustment
+          ,avg_recent_sales)
+
+/*
+  ,future_dates AS (
+    SELECT date
+          ,EXTRACT(DAYOFWEEK FROM date) AS weekday
+      FROM UNNEST(GENERATE_DATE_ARRAY(
+                   DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH),
+                   LAST_DAY(CURRENT_DATE(), MONTH),
+                   INTERVAL 1 DAY)) AS date) */
+
+  ,future_dates AS (
+    SELECT date
+          ,EXTRACT(DAYOFWEEK FROM date) AS weekday
+      FROM UNNEST(GENERATE_DATE_ARRAY(
+                   CURRENT_DATE,
+                   DATE_ADD(CURRENT_DATE, INTERVAL 15 DAY),
+                   INTERVAL 1 DAY)) AS date) 
+                   
+
+  ,forecast_with_dates AS (
+    SELECT future_dates.date
+          ,forecasted_sales
+      FROM future_dates
+      LEFT JOIN sales_forecast USING (weekday))
+
+
+  ,final AS (
+    SELECT *
+      FROM bollinger_bands
+      FULL JOIN forecast_with_dates USING (date))
+
+
   SELECT *
-  FROM bollinger_bands
+    FROM final
