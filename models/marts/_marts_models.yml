@@ -988,8 +988,6 @@ models:
 
       - name: sales_wma_7
         data_type: float64
-        constraints: 
-          - type: not_null
         description: >
           The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
           This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
@@ -1000,8 +998,6 @@ models:
 
       - name: sales_sma_7
         data_type: float64
-        constraints: 
-          - type: not_null
         description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
         data_tests:
           - not_null
@@ -1009,8 +1005,6 @@ models:
 
       - name: sales_sma_14
         data_type: float64
-        constraints: 
-          - type: not_null
         description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
         data_tests:
           - not_null
@@ -1018,8 +1012,6 @@ models:
 
       - name: sales_sma_30
         data_type: float64
-        constraints: 
-          - type: not_null
         description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
         data_tests:
           - not_null
@@ -1027,8 +1019,6 @@ models:
 
       - name: sales_sma_60
         data_type: float64
-        constraints: 
-          - type: not_null
         description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
         data_tests:
           - not_null
@@ -1036,8 +1026,6 @@ models:
 
       - name: sales_sma_120
         data_type: float64
-        constraints: 
-          - type: not_null
         description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
         data_tests:
           - not_null
