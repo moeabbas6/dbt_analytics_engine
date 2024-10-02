@@ -105,7 +105,7 @@ WITH
 
   ,bollinger_bands AS (
     SELECT date
-          ,COALESCE(sales, 0) AS sales
+          ,IF(date < CURRENT_DATE AND sales IS NULL, 0, sales) AS sales
           ,sales_wma_7
           {%- for period in periods %}
           ,sales_sma_{{ period }}
