@@ -1201,6 +1201,177 @@ models:
 
 
 
+  - name: fct_sales_forecast
+    config:
+      contract:
+        enforced: true
+    description: >
+      Fact table capturing the daily sales time series data, including the total net revenue after tax (`sales`). 
+      The table also includes various Simple Moving Averages (SMA) and Bollinger Bands calculated over different 
+      periods (14, 30, 60, 120, and 250 days). This table is essential for analyzing sales trends, understanding 
+      market volatility, and smoothing out fluctuations in daily sales data."
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales
+          expression: sum(sales)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_wma_7
+          expression: sum(sales_wma_7)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_wma_7)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_7
+          expression: sum(sales_sma_7)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_7)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_14
+          expression: sum(sales_sma_14)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_14)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_30
+          expression: sum(sales_sma_30)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_30)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_60
+          expression: sum(sales_sma_60)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_60)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_120
+          expression: sum(sales_sma_120)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_120)
+    columns:
+      - name: date
+        data_type: date
+        description: "The date corresponding to the recorded sales figures."
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+
+      - name: sales
+        data_type: float64
+        description: >
+          The total net revenue after tax for each day, representing the sum of all sales transactions. 
+          This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
+
+      - name: sales_wma_7
+        data_type: float64
+        description: >
+          The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
+          This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
+          The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
+
+
+      - name: sales_sma_7
+        data_type: float64
+        description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+
+
+      - name: sales_sma_14
+        data_type: float64
+        description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+
+
+      - name: sales_sma_30
+        data_type: float64
+        description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
+
+
+      - name: sales_sma_60
+        data_type: float64
+        description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
+
+
+      - name: sales_sma_120
+        data_type: float64
+        description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
+
+
+      - name: sales_sma_upper_7
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+
+
+      - name: sales_sma_lower_7
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+
+
+      - name: sales_sma_upper_14
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+
+
+      - name: sales_sma_lower_14
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+
+
+      - name: sales_sma_upper_30
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Represents the potential upper bound for monthly sales trends.
+
+
+      - name: sales_sma_lower_30
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Represents the potential lower bound for monthly sales trends.
+
+
+      - name: sales_sma_upper_60
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the upper limit of quarterly sales trends.
+
+
+      - name: sales_sma_lower_60
+        data_type: float64
+        description: > 
+          The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the lower limit of quarterly sales trends.
+
+
+      - name: sales_sma_upper_120
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Provides the upper bound for sales trends over half a year.
+
+
+      - name: sales_sma_lower_120
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Provides the lower bound for sales trends over half a year.
+
+
+      - name: sales_forecast
+        data_type: float64
+        description: >
+          The predicted future sales generated using the ARIMA forecasting model in BigQuery. This model leverages historical 
+          sales data to forecast upcoming trends. 
+
+
+
 
 
   - name: dim_products
