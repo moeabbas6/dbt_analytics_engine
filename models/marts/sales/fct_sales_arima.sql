@@ -11,4 +11,4 @@
 
   SELECT date
         ,sales
-    FROM {{ ref('fct_orders_timeseries') }}
+    FROM {{ ref('fct_sales_timeseries') }}
