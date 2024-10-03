@@ -64,7 +64,7 @@ data_tests:
     +warn_if: ">1"
     +limit: 1000
     +store_failures: "{{ true if target.name in ['prod', 'ci'] else false }}"
-    +schema: 'failed_tests'
+    +schema: 'zzz_failures'
 
 flags:
   printer_width: 95
