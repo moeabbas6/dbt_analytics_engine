@@ -55,8 +55,8 @@ WITH
           ,sales_wma_7
           {%- for period in periods %}
           ,sales_sma_{{ period }}
-          ,sales_sma_{{ period }} + (2 * sales_stddev_{{ period }}) AS sales_sma_upper_{{ period }}
-          ,sales_sma_{{ period }} - (2 * sales_stddev_{{ period }}) AS sales_sma_lower_{{ period }}
+          ,COALESCE(sales_sma_{{ period }} + (2 * sales_stddev_{{ period }}), sales) AS sales_sma_upper_{{ period }}
+          ,COALESCE(sales_sma_{{ period }} - (2 * sales_stddev_{{ period }}), sales) AS sales_sma_lower_{{ period }}
           {%- endfor %}
       FROM standard_deviations)
 
