@@ -29,7 +29,7 @@ The detailed documentation for the **dbt_analytics_engine** project, including d
 
 The **dbt_analytics_engine** project leverages a robust and modern technology stack to manage and transform data effectively. The key components of the stack include:
 
-- **Google BigQuery**: Serves as the data warehouse, enabling efficient storage and querying of large datasets using SQL.
+- **Google BigQuery**: Serves as the data warehouse, enabling efficient storage and querying of large datasets using SQL. It also allows the use of BigQuery ML models, such as the ARIMA model, to generate sales forecasts, making it a powerful tool for both data management and predictive analytics.
 - **dbt (data build tool)**: Used for data transformation, testing, lineage tracking, and documentation. dbt enables the creation of complex data models and ensures data quality throughout the pipeline.
 - **Looker Studio**: Utilized for data visualization, providing clear and actionable insights through interactive dashboards that reflect the transformed data.
 - **Surge**: dbt documentation is hosted on Surge, allowing external viewers without a dbt Cloud account to access the data documentation and lineage. Special thanks to Brock, Co-founder at Surge, for creating this amazing service.
@@ -64,17 +64,11 @@ The **dbt_analytics_engine** project is built on a well-structured architecture 
 To enhance the functionality and efficiency of the **dbt_analytics_engine** project, I integrated several dbt packages that provided additional capabilities and streamlined various aspects of the development process.
 
 #### Packages Used:
+- **dbt_expectations**: This package includes more advanced tests. One of the tests extensively used in the project is `expect_table_aggregation_to_equal_other_table`, which ensures that the metrics aggregation in a model matches the aggregation from an upstream model. This test plays a crucial role in verifying that no transformations have inadvertently corrupted the values in any metric.
 - **dbt-utils**: This package includes the `expression_is_true` test, which is used to validate the business logic in any calculation. For example, it can be applied to check that the net revenue before tax is calculated correctly by ensuring that the gross revenue minus the shipping amount results in the expected value. This ensures that any transformation or calculation logic remains accurate and reliable.
 - **dbt_meta_testing**: This package was crucial in ensuring that required tests and documentation were included in the project. The `required_tests` feature allowed me to check for models where tests were missing, ensuring comprehensive coverage.
 - **codegen**: I leveraged this package to generate YAML foundations for sources and models, significantly saving time and reducing manual work during the setup phase.
-- **dbt_expectations**: This package includes more advanced tests. One of the tests extensively used in the project is expect_table_aggregation_to_equal_other_table, which ensures that the metrics aggregation in a model matches the aggregation from an upstream model. This test plays a crucial role in verifying that no transformations have inadvertently corrupted the values in any metric.
 - **dbt_ml**: This package provides a framework to train, audit and use BigQuery ML (Machine Learning) models. It implements a `model` materialization that trains a BigQuery ML (Machine Learning) model from a select statement and a set of parameters.
-
-#### Benefits:
-- **Efficiency**: Using these packages allowed me to automate and streamline various tasks, such as generating YAML files and checking for missing tests, which saved considerable time and effort.
-- **Enhanced Data Quality**: By integrating robust testing frameworks and audit tools, I was able to maintain high data quality throughout the pipeline.
-- **Simplified Code Maintenance**: These packages helped to simplify the codebase, making it easier to maintain and extend the project over time.
-
 
 ## Results
 
