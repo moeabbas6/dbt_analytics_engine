@@ -5,7 +5,7 @@ WITH actuals AS (
     date,
     sales
   FROM
-    {{ ref('fct_orders_timeseries') }}
+    {{ ref('fct_sales_timeseries') }}
 ),
 forecasts AS (
   SELECT
