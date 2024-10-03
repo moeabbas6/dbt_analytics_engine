@@ -22,6 +22,6 @@ exposures:
       fluctuations. It relies on the `fct_orders_timeseries` table to deliver key metrics such as Simple Moving Averages (SMA) 
       and Bollinger Bands, making it an essential tool for data-driven decision-making in sales strategy.
     depends_on:
-      - ref('fct_orders_timeseries')
+      - ref('fct_sales_timeseries')
     maturity: high
     url: "https://lookerstudio.google.com/s/pIi467TudNc"

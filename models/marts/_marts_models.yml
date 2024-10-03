@@ -948,7 +948,7 @@ models:
 
 
 
-  - name: fct_orders_timeseries
+  - name: fct_sales_timeseries
     config:
       contract:
         enforced: true
@@ -959,7 +959,7 @@ models:
       market volatility, and smoothing out fluctuations in daily sales data."
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_orders_timeseries_unequal_agg_sales
+          name: fct_sales_timeseries_unequal_agg_sales
           expression: sum(sales)
           compare_model: ref("fct_orders")
           compare_expression: sum(net_revenue_after_tax)
@@ -985,7 +985,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales
+              name: fct_sales_timeseries_assert_positive_sales
               expression: ">= 0"
 
       - name: sales_wma_7
@@ -1002,7 +1002,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_wma_7
+              name: fct_sales_timeseries_assert_positive_sales_wma_7
               expression: ">= 0"
 
 
@@ -1017,7 +1017,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_7
+              name: fct_sales_timeseries_assert_positive_sales_sma_7
               expression: ">= 0"
 
 
@@ -1032,7 +1032,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_14
+              name: fct_sales_timeseries_assert_positive_sales_sma_14
               expression: ">= 0"
 
 
@@ -1047,7 +1047,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_30
+              name: fct_sales_timeseries_assert_positive_sales_sma_30
               expression: ">= 0"
 
 
@@ -1062,7 +1062,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_60
+              name: fct_sales_timeseries_assert_positive_sales_sma_60
               expression: ">= 0"
 
 
@@ -1077,7 +1077,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_120
+              name: fct_sales_timeseries_assert_positive_sales_sma_120
               expression: ">= 0"
 
 
@@ -1094,7 +1094,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_upper_7
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_7
               expression: ">= 0"
 
 
@@ -1111,7 +1111,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_lower_7
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_7
               expression: ">= 0"
 
 
@@ -1128,7 +1128,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_upper_14
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_14
               expression: ">= 0"
 
 
@@ -1145,7 +1145,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_lower_14
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_14
               expression: ">= 0"
 
 
@@ -1162,7 +1162,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_upper_30
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_30
               expression: ">= 0"
 
 
@@ -1179,7 +1179,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_lower_30
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_30
               expression: ">= 0"
 
 
@@ -1196,7 +1196,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_upper_60
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_60
               expression: ">= 0"
 
 
@@ -1213,7 +1213,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_lower_60
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_60
               expression: ">= 0"
 
 
@@ -1230,7 +1230,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_upper_120
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_120
               expression: ">= 0"
 
 
@@ -1247,20 +1247,7 @@ models:
                 warn_if: ">20"
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_sales_sma_lower_120
-              expression: ">= 0"
-
-
-      - name: forecasted_sales
-        data_type: float64
-        description: >
-          The predicted sales amount based on historical trends and forecasting models. This value is calculated to anticipate 
-          future sales performance. It is always expected to be a non-negative number, with data validation ensuring no constant 
-          or negative values.
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              name: fct_orders_timeseries_assert_positive_forecasted_sales
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_120
               expression: ">= 0"
 
 

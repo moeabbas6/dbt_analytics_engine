@@ -61,69 +61,9 @@ WITH
       FROM standard_deviations)
 
 
-## Forecaster
-  ,avg_daily_sales AS (
-    SELECT AVG(sales) as avg_daily_net_revenue
-      FROM daily_sales
-      WHERE date >= CURRENT_DATE - INTERVAL 1 MONTH)
-
-
-  ,avg_weekday_sales AS (
-    SELECT EXTRACT(DAYOFWEEK FROM date) AS weekday
-          ,AVG(sales) as avg_weekday_net_revenue
-      FROM daily_sales
-      WHERE date >= CURRENT_DATE - INTERVAL 1 MONTH
-      GROUP BY weekday)
-
-
-  ,weekday_adjustment AS (
-    SELECT weekday
-          ,SAFE_DIVIDE(avg_weekday_net_revenue, avg_daily_net_revenue) AS weekday_effect
-        FROM avg_weekday_sales
-            ,avg_daily_sales)
-
-
-  ,avg_recent_sales AS (
-    SELECT AVG(sales) as avg_net_revenue
-      FROM daily_sales
-      WHERE date >= CURRENT_DATE - INTERVAL 15 DAY)
-
-
-  ,sales_forecast AS (
-    SELECT weekday
-          ,avg_net_revenue * weekday_effect AS forecasted_sales
-      FROM weekday_adjustment
-          ,avg_recent_sales)
-
-/*
-  ,future_dates AS (
-    SELECT date
-          ,EXTRACT(DAYOFWEEK FROM date) AS weekday
-      FROM UNNEST(GENERATE_DATE_ARRAY(
-                   DATE_TRUNC(DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH), MONTH),
-                   LAST_DAY(CURRENT_DATE(), MONTH),
-                   INTERVAL 1 DAY)) AS date) */
-
-  ,future_dates AS (
-    SELECT date
-          ,EXTRACT(DAYOFWEEK FROM date) AS weekday
-      FROM UNNEST(GENERATE_DATE_ARRAY(
-                   CURRENT_DATE,
-                   DATE_ADD(CURRENT_DATE, INTERVAL 15 DAY),
-                   INTERVAL 1 DAY)) AS date) 
-                   
-
-  ,forecast_with_dates AS (
-    SELECT future_dates.date
-          ,forecasted_sales
-      FROM future_dates
-      LEFT JOIN sales_forecast USING (weekday))
-
-
   ,final AS (
     SELECT *
-      FROM bollinger_bands
-      FULL JOIN forecast_with_dates USING (date))
+      FROM bollinger_bands)
 
 
   SELECT *

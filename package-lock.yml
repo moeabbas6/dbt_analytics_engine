@@ -7,6 +7,8 @@ packages:
     version: 0.12.1
   - package: calogica/dbt_expectations
     version: 0.10.4
+  - package: kristeligt-dagblad/dbt_ml
+    version: 0.6.1
   - package: calogica/dbt_date
     version: 0.10.1
-sha1_hash: 59bb95976ac9de7d80034857807fb4ed4056239e
+sha1_hash: b781b898f6839bf8e6f53778b86434134684476e
