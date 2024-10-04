@@ -59,7 +59,7 @@ The **dbt_analytics_engine** project is built on a well-structured architecture 
 4. **Automation and Workflow**:
    - The entire pipeline is fully automated using dbt Cloud. The combination of environments and jobs ensures that the data is always up to date. A daily build job runs to build the entire DAG, leveraging incremental models so that only updated and new records are inserted. This ensures that the pipeline remains efficient and scalable. The CI/CD workflow is triggered during pull requests and merges. This workflow ensures that any changes are validated before being deployed, guaranteeing that the data in production is always accurate and up to date.
 
-### dbt Packages
+## dbt Packages
 
 To enhance the functionality and efficiency of the **dbt_analytics_engine** project, I integrated several dbt packages that provided additional capabilities and streamlined various aspects of the development process.
 
