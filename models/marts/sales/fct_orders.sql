@@ -91,11 +91,19 @@ WITH
         GROUP BY ALL)
 
 
+    ,first_order_customers AS (
+      SELECT customer_id
+            ,DATE(MIN(customer_order_date)) AS first_order_date
+        FROM customers
+        GROUP BY customer_id)
+
+
     ,final AS (
       SELECT * EXCEPT(customer_order_date)
             ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
         FROM contribution_margin
-        LEFT JOIN customers USING (customer_id, order_id))
+        LEFT JOIN customers USING (customer_id, order_id)
+        LEFT JOIN first_order_customers USING (customer_id))
 
 
   SELECT *
