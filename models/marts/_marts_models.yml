@@ -309,7 +309,6 @@ models:
           - type: not_null
         description: "Identifier for the billing country of the order and used as the partition field."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               name: fct_orders_unexpected_country_id
@@ -322,7 +321,6 @@ models:
           - type: not_null
         description: "The billing country associated with the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: order_id
@@ -333,7 +331,6 @@ models:
             warn_unenforced: false
         description: "Unique identifier for the order."
         data_tests:
-          - not_null
           - unique
           - relationships:
               to: ref('int_orders')
@@ -345,7 +342,6 @@ models:
           - type: not_null
         description: '{{ doc("orders_status") }}'
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - accepted_values:
               name: fct_orders_unexpected_order_status
@@ -357,7 +353,6 @@ models:
           - type: not_null
         description: "Unique identifier for the customer placing the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: nb_payments
@@ -366,7 +361,6 @@ models:
           - type: not_null
         description: "The number of payments made by the customer for the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_nb_payments
@@ -378,7 +372,6 @@ models:
           - type: not_null
         description: "The first name of the customer."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: last_name
@@ -387,7 +380,6 @@ models:
           - type: not_null
         description: "The last name of the customer."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: is_shipped
@@ -422,7 +414,6 @@ models:
           - type: not_null
         description: "The payment method used for the order; accepted values include 'amazon_pay', 'stripe', 'apple_pay', and 'bitcoin'."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - accepted_values:
               name: fct_orders_unexpected_payment_method
@@ -434,7 +425,6 @@ models:
           - type: not_null
         description: "The total gross amount paid by the customer, including tax and shipping."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_assert_positive_gross_revenue
@@ -446,7 +436,6 @@ models:
           - type: not_null
         description: "The tax rate applied to the order, based on the billing country."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               name: fct_orders_unexpected_tax_rate
@@ -462,7 +451,6 @@ models:
           - type: not_null
         description: "The total amount of tax charged on the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_tax_amount
@@ -474,7 +462,6 @@ models:
           - type: not_null
         description: "The gross revenue from the order minus the shipping amount."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_net_revenue_before_tax
@@ -486,7 +473,6 @@ models:
           - type: not_null
         description: "The gross revenue from the order minus both shipping and tax amounts."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_net_revenue_after_tax
@@ -498,7 +484,6 @@ models:
           - type: not_null
         description: "The date on which the order was created."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               name: fct_orders_unexpected_order_date
@@ -592,7 +577,6 @@ models:
           - type: not_null
         description: "Unique identifier for the product's category."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               name: fct_orders_unexpected_product_category_id
@@ -605,7 +589,6 @@ models:
           - type: not_null
         description: "The name of the category to which the product belongs."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - accepted_values:
               name: fct_orders_unexpected_product_category
@@ -617,7 +600,6 @@ models:
           - type: not_null
         description: "Unique identifier for the product."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               name: fct_orders_unexpected_product_id
@@ -630,7 +612,6 @@ models:
           - type: not_null
         description: "The name of the product."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: cogs
@@ -641,7 +622,6 @@ models:
           The cost of goods sold (COGS) for the product, representing the direct costs 
           attributable to the production of the product sold in the order.
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_cogs
@@ -655,7 +635,6 @@ models:
           The cost of goods sold (COGS) associated with returned products, representing 
           the direct costs of the returned items.
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_returned_cogs
@@ -669,7 +648,6 @@ models:
           - type: not_null
         description: "The amount refunded to the customer for returned products or order cancellations."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_refund_amount
@@ -683,7 +661,6 @@ models:
           - type: not_null
         description: "The fee charged by the payment processor for handling the transaction associated with the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_assert_positive_payment_fee
@@ -695,7 +672,6 @@ models:
           - type: not_null
         description: "The fee charged by the payment processor for handling the transaction associated with the order."
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               name: fct_orders_unexpected_cm
@@ -709,7 +685,6 @@ models:
           The customer's order number. 1 indicates a first-time order (new customer), while any number 
           greater than 1 indicates that the customer has placed multiple orders (returning customer).
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: first_order_date
@@ -718,7 +693,6 @@ models:
           - type: not_null
         description: ""
         data_tests:
-          - not_null
           - dbt_utils.not_constant
 
       - name: customer_type
@@ -729,7 +703,6 @@ models:
           Indicates whether a customer is new or returning. The values can be 'new' for first-time 
           customers and 'returning' for customers who have made previous purchases.
         data_tests:
-          - not_null
           - dbt_utils.not_constant
           - accepted_values:
               name: fct_orders_unexpected_customer_type
