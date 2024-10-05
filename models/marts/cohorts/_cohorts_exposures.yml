@@ -1,0 +1,13 @@
+exposures:
+  - name: cohort_analysis
+    type: dashboard
+    owner:
+      name: "Moe Abbas"
+    description: 
+      A dashboard that visualizes customer retention over time using cohort analysis. It displays both cumulative 
+      and point-in-time retention rates, allowing stakeholders to understand customer behavior patterns, identify 
+      trends, and make data-driven decisions to improve customer engagement and retention strategies.
+    depends_on:
+      - ref('fct_cohort_retention')
+    maturity: high
+    url: "https://lookerstudio.google.com/s/v4Lk9hWljjQ"
