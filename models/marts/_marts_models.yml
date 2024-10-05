@@ -785,8 +785,26 @@ models:
         constraints: 
           - type: not_null
         description: >
-          Date of the customer’s first recorded order, indicating when the initial transaction occurred. 
+          Date of the customers first recorded order, indicating when the initial transaction occurred. 
           This field is used for cohort analysis.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: cohort_month
+        data_type: date
+        constraints: 
+          - type: not_null
+        description: ""
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: cohort_size
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: ""
         data_tests:
           - dbt_utils.not_constant
 
