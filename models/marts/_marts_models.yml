@@ -1882,6 +1882,22 @@ models:
               expression: "<= cohort_size"
 
 
+      - name: churned_users
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of customers from the original cohort who have churned.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_churned_users
+              expression: ">= 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_churned_users
+              expression: "<= cohort_size"
+
+
       - name: cumulative_retention_rate
         data_type: float64
         constraints: 
