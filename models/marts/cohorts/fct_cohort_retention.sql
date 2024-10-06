@@ -95,6 +95,7 @@ WITH
     SELECT ctr.cohort_month
           ,ctr.elapsed_month
           ,ctr.customers_retained
+          ,(ctr.cohort_size - ctr.customers_retained) AS churned_users
           ,ctr.cohort_size
           ,ctr.cumulative_retention_rate
           ,ptr.active_customers
@@ -112,6 +113,7 @@ WITH
           ,elapsed_month
           ,cohort_size
           ,customers_retained
+          ,churned_users
           ,cumulative_retention_rate
           ,active_customers
           ,point_in_time_retention_rate
