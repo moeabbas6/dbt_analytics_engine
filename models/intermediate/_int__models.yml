@@ -1,14 +1,14 @@
 version: 2
 
 models:
-  - name: int_orders
+  - name: int_orders_joined
     data_tests:
       - dbt_utils.equal_rowcount:
-          compare_model: ref('stg_orders')
+          compare_model: ref('stg_raw__orders')
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: int_orders_unequal_agg_shipping_amount
+          name: int_orders_joined_unequal_agg_shipping_amount
           expression: sum(shipping_amount)
-          compare_model: ref("stg_shipping")
+          compare_model: ref("stg_raw__shipping")
           compare_expression: sum(shipping_amount)
     columns:
       - name: product_category_id
@@ -30,7 +30,7 @@ models:
           - unique
           - not_null
           - relationships:
-              to: ref('stg_orders')
+              to: ref('stg_raw__orders')
               field: order_id
 
       - name: customer_id
@@ -39,7 +39,7 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg_customers')
+              to: ref('stg_raw__customers')
               field: customer_id
 
       - name: order_status
@@ -74,7 +74,7 @@ models:
         data_tests:
           - unique
           - relationships:
-              to: ref('stg_shipping')
+              to: ref('stg_raw__shipping')
               field: shipping_id
 
       - name: is_shipped
@@ -83,7 +83,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_unexpected_is_shipped_bool
+              name: int_orders_joined_unexpected_is_shipped_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -107,7 +107,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_unexpected_is_returned_bool
+              name: int_orders_joined_unexpected_is_returned_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -125,7 +125,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_unexpected_is_nps_bool
+              name: int_orders_joined_unexpected_is_nps_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -164,14 +164,14 @@ models:
 
 
 
-  - name: int_payments
+  - name: int_payments_joined
     data_tests:
       - dbt_utils.equal_rowcount:
-          compare_model: ref('stg_payments')
+          compare_model: ref('stg_raw__payments')
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: int_payments_unequal_agg_gross_revenue
+          name: int_payments_joined_unequal_agg_gross_revenue
           expression: sum(gross_revenue)
-          compare_model: ref("stg_payments")
+          compare_model: ref("stg_raw__payments")
           compare_expression: sum(gross_revenue)
     columns:
       - name: order_id
@@ -193,7 +193,7 @@ models:
           - unique
           - not_null
           - relationships:
-              to: ref('stg_payments')
+              to: ref('stg_raw__payments')
               field: order_payment_id
 
       - name: payment_method
@@ -202,7 +202,7 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg_payment_fees')
+              to: ref('stg_seed__payment_fees')
               field: payment_method
 
       - name: payment_status
@@ -217,7 +217,7 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('stg_taxes')
+              to: ref('stg_seed__taxes')
               field: country_id
 
       - name: country
@@ -262,5 +262,5 @@ models:
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
-              name: int_payments_unexpected_payment_fee
+              name: int_payments_joined_unexpected_payment_fee
               expression: "= ROUND((gross_revenue * (percentage_fee / 100)) + fixed_fee, 2)"

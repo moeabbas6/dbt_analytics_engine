@@ -14,7 +14,7 @@
 WITH
   int_payments AS (
     SELECT *
-      FROM {{ ref('int_payments') }}
+      FROM {{ ref('int_payments_joined') }}
       {%- if is_incremental() %}
       WHERE created_at >= (SELECT DATE_SUB(MAX(order_date), INTERVAL 3 DAY) FROM {{ this }})
       {%- endif -%})

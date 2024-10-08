@@ -1,31 +1,4 @@
 exposures:
-  - name: cohort_analysis
-    type: dashboard
-    owner:
-      name: "Moe Abbas"
-    description: 
-      A dashboard that visualizes customer retention over time using cohort analysis. It displays both cumulative 
-      and point-in-time retention rates, allowing stakeholders to understand customer behavior patterns, identify 
-      trends, and make data-driven decisions to improve customer engagement and retention strategies.
-    depends_on:
-      - ref('fct_cohort_retention')
-    maturity: high
-    url: "https://lookerstudio.google.com/s/v4Lk9hWljjQ"
-
-
-  - name: rfm_customer_segmentation
-    type: dashboard
-    owner:
-      name: "Moe Abbas"
-    description: >
-      This dashboard provides a detailed view of customer segments based on the RFM (Recency, Frequency, and Monetary) framework. 
-      It helps identify and classify customers into different segments, such as high-value customers, new customers, or inactive 
-      customers, based on their purchasing behavior. The dashboard leverages data from the `dim_customers` table and is designed 
-      to provide actionable insights for marketing and sales strategies.
-    depends_on:
-      - ref('dim_customers')
-    maturity: high
-    url: "https://lookerstudio.google.com/s/n57qnjA82Tc"
 
 
   - name: sales_performance

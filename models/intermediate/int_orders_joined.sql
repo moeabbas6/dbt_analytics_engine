@@ -3,32 +3,32 @@
 WITH
   stg_orders AS (
     SELECT *
-      FROM {{ ref('stg_orders') }})
+      FROM {{ ref('stg_raw__orders') }})
 
 
   ,stg_customers AS (
     SELECT *
-      FROM {{ ref('stg_customers') }})
+      FROM {{ ref('stg_raw__customers') }})
 
 
   ,stg_shipping AS (
     SELECT *
-      FROM {{ ref('stg_shipping') }})
+      FROM {{ ref('stg_raw__shipping') }})
 
 
   ,stg_returns AS (
     SELECT *
-      FROM {{ ref('stg_returns') }})
+      FROM {{ ref('stg_raw__returns') }})
 
 
   ,stg_nps AS (
     SELECT *
-      FROM {{ ref('stg_nps') }})
+      FROM {{ ref('stg_raw__nps') }})
 
 
   ,stg_products AS (
     SELECT *
-      FROM {{ ref('stg_products') }})
+      FROM {{ ref('stg_seed__products') }})
 
 
   ,final AS (

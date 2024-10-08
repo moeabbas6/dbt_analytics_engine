@@ -3,17 +3,17 @@
 WITH
   stg_payments AS (
     SELECT *
-      FROM {{ ref('stg_payments') }})
+      FROM {{ ref('stg_raw__payments') }})
 
 
   ,stg_taxes AS (
     SELECT * 
-      FROM {{ ref('stg_taxes') }})
+      FROM {{ ref('stg_seed__taxes') }})
 
 
   ,stg_payment_fees AS (
     SELECT * 
-      FROM {{ ref('stg_payment_fees') }})
+      FROM {{ ref('stg_seed__payment_fees') }})
 
 
   ,final AS (

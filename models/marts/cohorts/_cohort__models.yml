@@ -1,0 +1,155 @@
+version: 2
+
+models:
+
+  - name: fct_cohort_retention
+    config:
+      contract:
+        enforced: true
+    description: >
+      A fact table that provides cohort analysis data, including both cumulative and point-in-time retention rates 
+      for customer cohorts over elapsed months. This table enables insights into customer retention patterns and 
+      behavior over time.
+
+
+    columns:
+      - name: id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: >
+          A unique identifier for each record in the table, ensuring data integrity and facilitating joins with 
+          other tables if necessary.
+        data_tests:
+          - dbt_expectations.expect_column_value_lengths_to_equal:
+              name: fct_cohort_retention_unexpected_id_length
+              value: 32
+
+
+      - name: cohort_month
+        data_type: date
+        constraints: 
+          - type: not_null
+        description: >
+          The month in which the customer made their first purchase, representing the starting point of the cohort. 
+          Used to group customers into cohorts based on their initial interaction.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_cohort_retention_unexpected_cohort_month
+              max_value: "current_datetime()"
+
+
+      - name: elapsed_month
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of months since the cohort's starting month (`cohort_month`). Indicates the time elapsed for 
+          tracking retention metrics over periods.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_elapsed_month
+              expression: ">= 0"
+
+
+      - name: cohort_size
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The total number of unique customers in the cohort at `cohort_month`. Serves as the baseline for 
+          calculating retention rates.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_cohort_size
+              expression: "> 0"
+
+
+      - name: customers_retained
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of customers from the original cohort who have remained active (made at least one purchase) 
+          up to and including the specified `elapsed_month`. Used in calculating the cumulative retention rate.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_customers_retained
+              expression: "> 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_customers_retained
+              expression: "<= cohort_size"
+
+
+      - name: churned_users
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of customers from the original cohort who have churned.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_churned_users
+              expression: ">= 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_churned_users
+              expression: "<= cohort_size"
+
+
+      - name: cumulative_retention_rate
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The cumulative retention rate for the cohort at the given `elapsed_month`, calculated as `customers_retained` 
+          divided by `cohort_size`. Reflects the proportion of the cohort that remains active over time.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_cumulative_retention_rate
+              expression: "> 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_cumulative_retention_rate
+              expression: "<= 1"
+
+
+      - name: active_customers
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of customers from the cohort who made a purchase in the specific `elapsed_month`. Used 
+          in calculating the point-in-time retention rate.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_active_customers
+              expression: "> 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_active_customers
+              expression: "<= cohort_size"
+          
+
+
+      - name: point_in_time_retention_rate
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The point-in-time retention rate for the cohort at the given `elapsed_month`, calculated as `active_customers` 
+          divided by `cohort_size`. Indicates the percentage of the cohort that made a purchase in that specific month.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_assert_positive_point_in_time_retention_rate
+              expression: "> 0"
+          - dbt_utils.expression_is_true:
+              name: fct_cohort_retention_unexpected_point_in_time_retention_rate
+              expression: "<= 1"

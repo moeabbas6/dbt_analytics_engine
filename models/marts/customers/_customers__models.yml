@@ -1,0 +1,328 @@
+version: 2
+
+models:
+  - name: dim_customers
+    config:
+      contract:
+        enforced: true 
+    description: "This table contains information about customers and their related metrics such as order history, revenue, and segmentation."
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_gross_revenue
+          expression: sum(total_gross_revenue)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(gross_revenue)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_tax_amount
+          expression: sum(total_tax_amount)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(tax_amount)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_net_revenue_before_tax
+          expression: sum(total_net_revenue_before_tax)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(net_revenue_before_tax)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_net_revenue_after_tax
+          expression: sum(total_net_revenue_after_tax)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(net_revenue_after_tax)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_cogs
+          expression: sum(total_cogs)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(cogs)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_returned_cogs
+          expression: sum(total_returned_cogs)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(returned_cogs)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_refund_amount
+          expression: sum(total_refund_amount)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(refund_amount)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_payment_fee
+          expression: sum(total_payment_fee)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(payment_fee)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_customers_unequal_agg_total_cm
+          expression: sum(total_cm)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(cm)
+
+
+    columns:
+      - name: customer_id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: "Unique identifier for the customer placing the order."
+        data_tests:
+          - unique
+
+
+      - name: first_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The first name of the customer."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: last_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The last name of the customer."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: nb_order_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Total number of orders placed by the customer."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_nb_order_id
+              expression: "> 0"
+
+
+      - name: last_order_days
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Number of days since the customer's last order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_last_order_days
+              expression: ">= 0"
+
+
+      - name: first_order_date
+        data_type: datetime
+        constraints: 
+          - type: not_null
+        description: "Timestamp of the first order placed by the customer."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: dim_customers_unexpected_first_order_date
+              max_value: "current_datetime()"
+
+
+      - name: last_order_date
+        data_type: datetime
+        constraints: 
+          - type: not_null
+        description: "Timestamp of the most recent order placed by the customer."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: dim_customers_unexpected_last_order_date
+              max_value: "current_datetime()"
+
+
+      - name: nb_shipping_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Number of unique shipping identifiers associated with the customer's orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_nb_shipping_id
+              expression: ">= 0"
+
+
+      - name: nb_return_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Number of unique return identifiers associated with the customer's orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_nb_return_id
+              expression: ">= 0"
+
+
+      - name: avg_fulfillment_days
+        data_type: float64
+        description: "Average number of days it takes to fulfill the customer's orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_avg_fulfillment_days
+              expression: "> 0"
+              config:
+                where: avg_fulfillment_days IS NOT NULL
+
+
+      - name: avg_nps_score
+        data_type: float64
+        description: "Average Net Promoter Score (NPS) given by the customer based on their orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_avg_nps_score
+              expression: "> 0"
+              config:
+                where: avg_nps_score IS NOT NULL
+
+
+      - name: total_gross_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total gross revenue generated from the customer's orders before any deductions."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_gross_revenue
+              expression: "> 0"
+
+
+      - name: total_tax_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total tax amount paid by the customer on their orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_tax_amount
+              expression: "> 0"
+
+
+      - name: total_net_revenue_before_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total net revenue from the customer's orders before tax deductions."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_net_revenue_before_tax
+              expression: "> 0"
+
+
+      - name: total_net_revenue_after_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total net revenue from the customer's orders after tax deductions."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_net_revenue_after_tax
+              expression: "> 0"
+
+
+      - name: total_cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total cost of goods sold (COGS) associated with the customer's orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_cogs
+              expression: "> 0"
+
+
+      - name: total_returned_cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total cost of goods sold for items returned by the customer."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_returned_cogs
+              expression: ">= 0"
+
+
+      - name: total_refund_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total amount refunded to the customer for returned or canceled orders."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_refund_amount
+              expression: ">= 0"
+
+
+      - name: total_payment_fee
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total payment processing fees associated with the customer's transactions."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_customers_assert_positive_total_payment_fee
+              expression: "> 0"
+
+
+      - name: total_cm
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "Total contribution margin (CM) generated from the customer's orders."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: recency
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "Recency classification of the customer based on the time since their last order."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: frequency
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "Frequency classification of the customer based on how often they place orders."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: segment
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: '{{ doc("segment") }}'
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: dim_customers_unexpected_segment
+              values: ['Loyal Leader', 'Growing Patron', 'New Enthusiast', 'Casual Shopper', 'Waning Loyalty', 'Slipping Newcomer', 'At-Risk Regular', 'Vanished Buyer', 'One-Time Buyer', 'Dormant Customer']
+
+
+      - name: segment_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Unique identifier for the rfm customer segment."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: dim_customers_unexpected_segment_id
+              min_value: 0
+              max_value: 10

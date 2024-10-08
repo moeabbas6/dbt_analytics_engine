@@ -1,0 +1,220 @@
+version: 2
+
+models:
+  - name: fct_payment_methods
+    config:
+      contract:
+        enforced: true
+    description: "Fact table containing details of payment methods used in customer orders."
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_payment_methods_unequal_agg_gross_revenue
+          expression: sum(total_gross_revenue)
+          compare_model: ref("int_payments")
+          compare_expression: sum(gross_revenue)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_payment_methods_unequal_agg_payment_fees
+          expression: sum(total_payment_fees)
+          compare_model: ref("int_payments")
+          compare_expression: sum(payment_fee)
+
+
+    columns:
+      - name: country_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Identifier for the billing country associated with the order"
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_payment_methods_unexpected_country_id
+              min_value: 0
+              max_value: 22
+
+
+      - name: country
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The name of the billing country associated with the order."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: order_id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: "Unique identifier for the order, serving as a reference to the specific transaction."
+        data_tests:
+          - unique
+          - dbt_utils.not_constant
+          - relationships:
+              to: ref('int_payments')
+              field: order_id
+
+
+      - name: nb_payments
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "The total number of payments made for the order, indicating the frequency of transactions associated with the order."
+        data_tests:
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_nb_payments
+              expression: "> 0"
+
+
+      - name: payment_methods
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: >
+          Indicates whether a single or multiple distinct payment methods were used for the order. 
+          The value is 'single' if only one payment method was used or 'multiple' if more than one distinct payment method was utilized.
+
+
+      - name: order_date
+        data_type: datetime
+        constraints: 
+          - type: not_null
+        description: "The date on which the order was placed."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_payment_methods_unexpected_order_date
+              max_value: "current_datetime()"
+
+
+      - name: order_status
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: '{{ doc("orders_status") }}'
+        data_tests:
+          - accepted_values:
+              name: fct_payment_methods_unexpected_order_status
+              values: ['completed', 'failed']
+
+
+      - name: total_gross_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total gross revenue generated from the order, representing the sum of all payments before any deductions or fees."
+        data_tests:
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_total_gross_revenue
+              expression: "> 0"
+
+
+      - name: total_payment_fees
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount of fees incurred for processing all payment methods associated with the order."
+        data_tests:
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_total_payment_fees
+              expression: "> 0"
+
+
+      - name: amazon_pay_payment_fees
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total fees charged for processing payments through Amazon Pay."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_amazon_pay_payment_fees
+              expression: ">= 0"
+
+
+      - name: apple_pay_payment_fees
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total fees charged for processing payments through Apple Pay."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_apple_pay_payment_fees
+              expression: ">= 0"
+
+
+      - name: bitcoin_payment_fees
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total fees charged for processing payments through Bitcoin."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_bitcoin_payment_fees
+              expression: ">= 0"
+
+
+      - name: stripe_payment_fees
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total fees charged for processing payments through Stripe."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_stripe_payment_fees
+              expression: ">= 0"
+
+
+      - name: amazon_pay_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount paid using Amazon Pay for the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_amazon_pay_amount
+              expression: ">= 0"
+
+
+      - name: apple_pay_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount paid using Apple Pay for the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_apple_pay_amount
+              expression: ">= 0"
+
+
+      - name: bitcoin_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount paid using Bitcoin for the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_bitcoin_amount
+              expression: ">= 0"
+
+
+      - name: stripe_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount paid using Stripe for the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_payment_methods_assert_positive_stripe_amount
+              expression: ">= 0"
+
+
