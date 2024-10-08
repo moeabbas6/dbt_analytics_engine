@@ -7,7 +7,6 @@
 
 {% set periods = [7, 14, 30, 60, 120] %}
 {% set weights = [0.4, 0.2, 0.15, 0.1, 0.075, 0.05, 0.025] %}
-{% set forecast_horizon = 14 %}
 
 WITH
   daily_sales AS (
