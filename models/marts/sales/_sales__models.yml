@@ -13,17 +13,17 @@ models:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           name: fct_orders_unequal_agg_gross_revenue
           expression: sum(gross_revenue)
-          compare_model: ref("int_payments")
+          compare_model: ref("int_payments_joined")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           name: fct_orders_unequal_agg_cogs
           expression: sum(cogs)
-          compare_model: ref("int_orders")
+          compare_model: ref("int_orders_joined")
           compare_expression: 'sum(inbound_shipping_cost) + sum(product_cost)'
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           name: fct_orders_unequal_agg_shipping_amount
           expression: sum(shipping_amount)
-          compare_model: ref("int_orders")
+          compare_model: ref("int_orders_joined")
           compare_expression: sum(shipping_amount)
 
 
@@ -60,7 +60,7 @@ models:
         data_tests:
           - unique
           - relationships:
-              to: ref('int_orders')
+              to: ref('int_orders_joined')
               field: order_id
 
 

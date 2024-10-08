@@ -10,12 +10,12 @@ models:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           name: fct_payment_methods_unequal_agg_gross_revenue
           expression: sum(total_gross_revenue)
-          compare_model: ref("int_payments")
+          compare_model: ref("int_payments_joined")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           name: fct_payment_methods_unequal_agg_payment_fees
           expression: sum(total_payment_fees)
-          compare_model: ref("int_payments")
+          compare_model: ref("int_payments_joined")
           compare_expression: sum(payment_fee)
 
 
@@ -53,7 +53,7 @@ models:
           - unique
           - dbt_utils.not_constant
           - relationships:
-              to: ref('int_payments')
+              to: ref('int_payments_joined')
               field: order_id
 
 
