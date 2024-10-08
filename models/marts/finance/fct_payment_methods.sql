@@ -6,7 +6,8 @@
       "field": "country_id",
       "data_type": "int64",
       "range": { "start": 0, "end": 100, "interval": 1}},
-    cluster_by = 'order_date'
+    cluster_by = 'order_date',
+    enabled = false
 )}}
 
 {% set payment_methods = ['amazon_pay', 'apple_pay', 'bitcoin', 'stripe'] %}
