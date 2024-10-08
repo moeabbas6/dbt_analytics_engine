@@ -87,37 +87,22 @@ WITH
             ,order_id
             ,order_date AS customer_order_date
             ,ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS customer_order_nb
-        FROM contribution_margin
-        GROUP BY ALL)
+        FROM contribution_margin)
 
 
     ,first_order_customers AS (
       SELECT customer_id
             ,DATE(MIN(customer_order_date)) AS first_order_date
-            ,DATE(DATE_TRUNC(MIN(customer_order_date), MONTH)) AS cohort_month
         FROM customers
         GROUP BY customer_id)
 
 
-    ,joins AS (
+    ,final AS (
       SELECT * EXCEPT(customer_order_date)
             ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
         FROM contribution_margin
         LEFT JOIN customers USING (customer_id, order_id)
         LEFT JOIN first_order_customers USING (customer_id))
-
-
-    ,cohort_sizes AS (
-      SELECT cohort_month
-            ,COUNT(DISTINCT customer_id) AS cohort_size
-        FROM joins
-        GROUP BY cohort_month)
-
-
-    ,final AS (
-      SELECT *
-        FROM joins
-        LEFT JOIN cohort_sizes USING (cohort_month))
 
 
   SELECT *

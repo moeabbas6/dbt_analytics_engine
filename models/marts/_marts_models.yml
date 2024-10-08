@@ -791,24 +791,6 @@ models:
           - dbt_utils.not_constant
 
 
-      - name: cohort_month
-        data_type: date
-        constraints: 
-          - type: not_null
-        description: ""
-        data_tests:
-          - dbt_utils.not_constant
-
-
-      - name: cohort_size
-        data_type: int64
-        constraints: 
-          - type: not_null
-        description: ""
-        data_tests:
-          - dbt_utils.not_constant
-
-
       - name: customer_type
         data_type: string
         constraints: 
