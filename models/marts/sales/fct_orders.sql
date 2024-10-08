@@ -10,6 +10,8 @@
 )}}
 
 
+{% set net_revenue_thresholds = [100, 250, 500] %}
+
 WITH
   int_orders AS (
     SELECT *
@@ -90,11 +92,25 @@ WITH
         FROM contribution_margin)
 
 
-    ,final AS (
+    ,cm_customers AS (
       SELECT *
             ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
+            ,SUM(net_revenue_after_tax) OVER (PARTITION BY customer_id ORDER BY customer_order_nb ROWS UNBOUNDED PRECEDING) AS customer_cumulative_net_revenue
         FROM contribution_margin
         LEFT JOIN customers USING (customer_id, order_id))
+
+
+    ,cumulative_revenue AS (
+      SELECT *
+             {%- for threshold in net_revenue_thresholds %}
+             ,MIN(CASE WHEN customer_cumulative_net_revenue >= {{ threshold }} THEN customer_order_nb END) OVER (PARTITION BY customer_id) AS customer_orders_to_{{ threshold }}_net_revenue
+             {%- endfor %}
+        FROM cm_customers)
+
+
+    ,final AS (
+      SELECT *
+        FROM cumulative_revenue)
 
 
   SELECT *
