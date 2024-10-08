@@ -9,29 +9,16 @@
     cluster_by = 'order_date'
 )}}
 
-
 {% set net_revenue_thresholds = [100, 250, 500] %}
 
+
 WITH
-  int_orders AS (
+  int_orders_payments_joined AS (
     SELECT *
-      FROM {{ ref('int_orders_joined') }}
+      FROM {{ ref('int_orders_payments_joined') }}
       {%- if is_incremental() %}
       WHERE order_date >= (SELECT DATE_SUB(MAX(order_date), INTERVAL 3 DAY) FROM {{ this }})
       {%- endif -%})
-
-
-  ,int_payments AS (
-    SELECT order_id
-          ,COUNT(payment_id) AS nb_payments
-          ,MAX(payment_method) AS payment_method
-          ,MAX(country_id) AS country_id
-          ,MAX(country) AS country
-          ,SUM(gross_revenue) AS gross_revenue
-          ,MAX(tax_rate) AS tax_rate
-          ,SUM(payment_fee) AS payment_fee
-      FROM {{ ref('int_payments_joined') }}
-      GROUP BY order_id)
 
 
   ,orders_payments AS (
@@ -70,8 +57,9 @@ WITH
             ,IF(is_returned IS TRUE, SAFE_ADD(inbound_shipping_cost, product_cost), 0) AS returned_cogs
             ,IF(is_returned IS TRUE, SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), 0) AS refund_amount
             ,payment_fee
-        FROM int_orders
-        LEFT JOIN int_payments USING (order_id))
+        #FROM int_orders
+        #LEFT JOIN int_payments USING (order_id)
+        FROM int_orders_payments_joined)
 
 
     ,contribution_margin AS (
