@@ -85,24 +85,16 @@ WITH
     ,customers AS (
       SELECT customer_id
             ,order_id
-            ,order_date AS customer_order_date
+            ,MIN(DATE(order_date)) OVER (PARTITION BY customer_id) AS first_order_date
             ,ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS customer_order_nb
         FROM contribution_margin)
 
 
-    ,first_order_customers AS (
-      SELECT customer_id
-            ,DATE(MIN(customer_order_date)) AS first_order_date
-        FROM customers
-        GROUP BY customer_id)
-
-
     ,final AS (
-      SELECT * EXCEPT(customer_order_date)
+      SELECT *
             ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
         FROM contribution_margin
-        LEFT JOIN customers USING (customer_id, order_id)
-        LEFT JOIN first_order_customers USING (customer_id))
+        LEFT JOIN customers USING (customer_id, order_id))
 
 
   SELECT *
