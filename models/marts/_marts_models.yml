@@ -805,6 +805,59 @@ models:
               values: ['Returning', 'New']
 
 
+      - name: customer_cumulative_net_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total net revenue accumulated by the customer across all their orders. This value 
+          increases as more orders are placed by the customer.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: customer_orders_to_100_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net 
+          revenue of at least 100.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_100_net_revenue
+              expression: "> 0" 
+              config:
+                where: customer_orders_to_100_net_revenue IS NOT NULL
+
+
+      - name: customer_orders_to_250_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net 
+          revenue of at least 200.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_200_net_revenue
+              expression: "> 0"
+              config:
+                where: customer_orders_to_250_net_revenue IS NOT NULL
+          
+
+
+      - name: customer_orders_to_500_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net
+          revenue of at least 500.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_500_net_revenue
+              expression: "> 0" 
+              config:
+                where: customer_orders_to_500_net_revenue IS NOT NULL
+          
 
 
 
