@@ -1,0 +1,967 @@
+version: 2
+
+models:
+  - name: fct_orders
+    config:
+      contract:
+        enforced: true 
+    description: >
+       Fact table capturing detailed information about customer orders, including order details, payment methods, 
+       shipping, returns, and customer feedback. This table provides a comprehensive view of each order's lifecycle, 
+       enabling in-depth analysis of sales performance, customer behavior, and product profitability.
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_orders_unequal_agg_gross_revenue
+          expression: sum(gross_revenue)
+          compare_model: ref("int_payments_joined")
+          compare_expression: sum(gross_revenue)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_orders_unequal_agg_cogs
+          expression: sum(cogs)
+          compare_model: ref("int_orders_joined")
+          compare_expression: 'sum(inbound_shipping_cost) + sum(product_cost)'
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_orders_unequal_agg_shipping_amount
+          expression: sum(shipping_amount)
+          compare_model: ref("int_orders_joined")
+          compare_expression: sum(shipping_amount)
+
+
+    columns:
+      - name: country_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Identifier for the billing country of the order and used as the partition field."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_country_id
+              min_value: 0
+              max_value: 22
+
+
+      - name: country
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The billing country associated with the order."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: order_id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: "Unique identifier for the order."
+        data_tests:
+          - unique
+          - relationships:
+              to: ref('int_orders_joined')
+              field: order_id
+
+
+      - name: order_status
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: '{{ doc("orders_status") }}'
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_order_status
+              values: ['completed', 'failed']
+
+
+      - name: customer_id
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "Unique identifier for the customer placing the order."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: nb_payments
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "The number of payments made by the customer for the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_nb_payments
+              expression: "> 0"
+
+
+      - name: first_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The first name of the customer."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: last_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The last name of the customer."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: is_shipped
+        data_type: boolean
+        description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
+        data_tests:
+          - accepted_values:
+              name: fct_orders_unexpected_is_shipped_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+
+      - name: shipping_id
+        data_type: string
+        description: >
+          A unique identifier for each shipping transaction. This field ensures that each shipment is 
+          tracked individually and is essential for linking sales orders to their corresponding shipping details.
+        data_tests:
+          - unique
+          - dbt_utils.not_constant
+
+
+      - name: shipping_amount
+        data_type: float64
+        description: "The total gross amount charged for shipping the order."
+        data_tests:
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_shipping_amount
+              expression: "> 0"
+
+
+      - name: payment_method
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The payment method used for the order; accepted values include 'amazon_pay', 'stripe', 'apple_pay', and 'bitcoin'."
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_payment_method
+              values: ['amazon_pay', 'stripe', 'apple_pay', 'bitcoin']
+
+
+      - name: gross_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total gross amount paid by the customer, including tax and shipping."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_gross_revenue
+              expression: "> 0"
+
+
+      - name: tax_rate
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The tax rate applied to the order, based on the billing country."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_tax_rate
+              min_value: 0
+              max_value: 100
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_tax_rate
+              expression: "> 0"              
+
+
+      - name: tax_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The total amount of tax charged on the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_tax_amount
+              expression: "= SAFE_MULTIPLY(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), SAFE_DIVIDE(tax_rate, 100))"
+
+
+      - name: net_revenue_before_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The gross revenue from the order minus the shipping amount."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_net_revenue_before_tax
+              expression: "= SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0))"
+
+
+      - name: net_revenue_after_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The gross revenue from the order minus both shipping and tax amounts."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_net_revenue_after_tax
+              expression: "= SAFE_DIVIDE(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), (1 + SAFE_DIVIDE(tax_rate, 100)))"
+
+
+      - name: order_date
+        data_type: datetime
+        constraints: 
+          - type: not_null
+        description: "The date on which the order was created."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_order_date
+              max_value: "current_datetime()"
+
+
+      - name: shipping_date
+        data_type: datetime
+        description: "The date on which the order was shipped."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_shipping_date
+              max_value: "current_datetime()"
+
+
+      - name: is_returned
+        data_type: boolean
+        description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
+        data_tests:
+          - accepted_values:
+              name: fct_orders_unexpected_is_returned_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+
+      - name: return_id
+        data_type: string
+        description: >
+          A unique identifier for each return associated with an order. This field is populated only 
+          if the order has been returned, and remains null for non-returned orders.
+        data_tests:
+          - unique
+          - dbt_utils.not_constant
+
+
+      - name: return_date
+        data_type: datetime
+        description: "The date on which the order was returned, if applicable."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_return_date
+              max_value: "current_datetime()"
+
+
+      - name: return_reason
+        data_type: string
+        description: '{{ doc("return_reason") }}'
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_return_reason
+              values: ['Not as Described', 'Compatibility Issues', 'Quality Concerns', 'Technical Difficulties']
+
+
+      - name: fulfillment_days
+        data_type: int64
+        description: "The number of days between the order date and the shipping date, representing the time taken to fulfill the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_fulfillment_days
+              expression: "= DATE_DIFF(shipping_date, order_date, DAY)"
+
+
+      - name: is_nps
+        data_type: boolean
+        description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_is_nps_bool
+              values: [TRUE, FALSE]
+              quote: false
+
+
+      - name: nps_score
+        data_type: int64
+        description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10
+
+
+      - name: nps_date
+        data_type: datetime
+        description: "The date on which the customer provided their Net Promoter Score (NPS)."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_nps_date
+              max_value: "current_datetime()"
+
+
+      - name: product_category_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Unique identifier for the product's category."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_product_category_id
+              min_value: 0
+              max_value: 5
+
+
+      - name: product_category
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The name of the category to which the product belongs."
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_product_category
+              values: ['Design Templates', 'Fonts & Typography', 'Graphic Assets', 'Stock Photography', 'Video & Animation']
+
+
+      - name: product_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: "Unique identifier for the product."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: fct_orders_unexpected_product_id
+              min_value: 0
+              max_value: 5
+
+
+      - name: product_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: "The name of the product."
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The cost of goods sold (COGS) for the product, representing the direct costs 
+          attributable to the production of the product sold in the order.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_cogs
+              expression: "> 0"
+
+
+      - name: returned_cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The cost of goods sold (COGS) associated with returned products, representing 
+          the direct costs of the returned items.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_returned_cogs
+              expression: "= cogs"
+              config:
+                where: "returned_cogs > 0"
+
+
+      - name: refund_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The amount refunded to the customer for returned products or order cancellations."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_refund_amount
+              expression: "= (gross_revenue - shipping_amount)"
+              config:
+                where: "refund_amount > 0"
+
+
+      - name: payment_fee
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The fee charged by the payment processor for handling the transaction associated with the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_payment_fee
+              expression: "> 0"
+
+
+      - name: cm
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: "The fee charged by the payment processor for handling the transaction associated with the order."
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_unexpected_cm
+              expression: "< gross_revenue"
+
+
+      - name: customer_order_nb
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The customer's order number. 1 indicates a first-time order (new customer), while any number 
+          greater than 1 indicates that the customer has placed multiple orders (returning customer).
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: first_order_date
+        data_type: date
+        constraints: 
+          - type: not_null
+        description: >
+          Date of the customers first recorded order, indicating when the initial transaction occurred. 
+          This field is used for cohort analysis.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: customer_type
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: >
+          Indicates whether a customer is new or returning. The values can be 'new' for first-time 
+          customers and 'returning' for customers who have made previous purchases.
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: fct_orders_unexpected_customer_type
+              values: ['Returning', 'New']
+
+
+      - name: customer_cumulative_net_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total net revenue accumulated by the customer across all their orders. This value 
+          increases as more orders are placed by the customer.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: customer_orders_to_100_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net 
+          revenue of at least 100.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_100_net_revenue
+              expression: "> 0" 
+              config:
+                where: customer_orders_to_100_net_revenue IS NOT NULL
+
+
+      - name: customer_orders_to_250_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net 
+          revenue of at least 200.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_200_net_revenue
+              expression: "> 0"
+              config:
+                where: customer_orders_to_250_net_revenue IS NOT NULL
+          
+
+
+      - name: customer_orders_to_500_net_revenue
+        data_type: int64
+        description: >
+          The number of orders a customer has placed until they reach a cumulative net
+          revenue of at least 500.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_orders_assert_positive_customer_orders_to_500_net_revenue
+              expression: "> 0" 
+              config:
+                where: customer_orders_to_500_net_revenue IS NOT NULL
+
+
+
+
+
+
+  - name: fct_sales_timeseries
+    config:
+      contract:
+        enforced: true
+    description: >
+      Fact table capturing the daily sales time series data, including the total net revenue after tax (`sales`). 
+      The table also includes various Simple Moving Averages (SMA) and Bollinger Bands calculated over different 
+      periods (14, 30, 60, 120, and 250 days). This table is essential for analyzing sales trends, understanding 
+      market volatility, and smoothing out fluctuations in daily sales data."
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_timeseries_unequal_agg_sales
+          expression: sum(sales)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(net_revenue_after_tax)
+
+
+    columns:
+      - name: date
+        data_type: date
+        description: "The date corresponding to the recorded sales figures."
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+
+
+      - name: sales
+        data_type: float64
+        description: >
+          The total net revenue after tax for each day, representing the sum of all sales transactions. 
+          This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales
+              expression: ">= 0"
+
+
+      - name: sales_wma_7
+        data_type: float64
+        description: >
+          The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
+          This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
+          The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_wma_7
+              expression: ">= 0"
+
+
+      - name: sales_sma_7
+        data_type: float64
+        description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_7
+              expression: ">= 0"
+
+
+      - name: sales_sma_14
+        data_type: float64
+        description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_14
+              expression: ">= 0"
+
+
+      - name: sales_sma_30
+        data_type: float64
+        description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_30
+              expression: ">= 0"
+
+
+      - name: sales_sma_60
+        data_type: float64
+        description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_60
+              expression: ">= 0"
+
+
+      - name: sales_sma_120
+        data_type: float64
+        description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_120
+              expression: ">= 0"
+
+
+      - name: sales_sma_upper_7
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_7
+              expression: ">= 0"
+
+
+      - name: sales_sma_lower_7
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_7
+              expression: ">= 0"
+
+
+      - name: sales_sma_upper_14
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_14
+              expression: ">= 0"
+
+
+      - name: sales_sma_lower_14
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_14
+              expression: ">= 0"
+
+
+      - name: sales_sma_upper_30
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Represents the potential upper bound for monthly sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_30
+              expression: ">= 0"
+
+
+      - name: sales_sma_lower_30
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Represents the potential lower bound for monthly sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_30
+              expression: ">= 0"
+
+
+      - name: sales_sma_upper_60
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the upper limit of quarterly sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_60
+              expression: ">= 0"
+
+
+      - name: sales_sma_lower_60
+        data_type: float64
+        description: > 
+          The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the lower limit of quarterly sales trends.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_60
+              expression: ">= 0"
+
+
+      - name: sales_sma_upper_120
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Provides the upper bound for sales trends over half a year.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_upper_120
+              expression: ">= 0"
+
+
+      - name: sales_sma_lower_120
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Provides the lower bound for sales trends over half a year.
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: fct_sales_timeseries_assert_positive_sales_sma_lower_120
+              expression: ">= 0"
+
+
+
+
+
+
+  - name: fct_sales_forecast
+    config:
+      contract:
+        enforced: true
+    description: >
+      Fact table capturing the daily sales time series data, including the total net revenue after tax (`sales`). 
+      The table also includes various Simple Moving Averages (SMA) and Bollinger Bands calculated over different 
+      periods (14, 30, 60, 120, and 250 days). This table is essential for analyzing sales trends, understanding 
+      market volatility, and smoothing out fluctuations in daily sales data."
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales
+          expression: sum(sales)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_wma_7
+          expression: sum(sales_wma_7)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_wma_7)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_7
+          expression: sum(sales_sma_7)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_7)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_14
+          expression: sum(sales_sma_14)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_14)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_30
+          expression: sum(sales_sma_30)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_30)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_60
+          expression: sum(sales_sma_60)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_60)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: fct_sales_forecast_unequal_agg_sales_sma_120
+          expression: sum(sales_sma_120)
+          compare_model: ref("fct_sales_timeseries")
+          compare_expression: sum(sales_sma_120)
+
+
+    columns:
+      - name: date
+        data_type: date
+        description: "The date corresponding to the recorded sales figures."
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+
+
+      - name: sales
+        data_type: float64
+        description: >
+          The total net revenue after tax for each day, representing the sum of all sales transactions. 
+          This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
+
+
+      - name: sales_wma_7
+        data_type: float64
+        description: >
+          The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
+          This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
+          The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
+
+
+      - name: sales_sma_7
+        data_type: float64
+        description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+
+
+      - name: sales_sma_14
+        data_type: float64
+        description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+
+
+      - name: sales_sma_30
+        data_type: float64
+        description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
+
+
+      - name: sales_sma_60
+        data_type: float64
+        description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
+
+
+      - name: sales_sma_120
+        data_type: float64
+        description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
+
+
+      - name: sales_sma_upper_7
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+
+
+      - name: sales_sma_lower_7
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+
+
+      - name: sales_sma_upper_14
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the potential upper bound of short-term sales trends.
+
+
+      - name: sales_sma_lower_14
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the potential lower bound of short-term sales trends.
+
+
+      - name: sales_sma_upper_30
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Represents the potential upper bound for monthly sales trends.
+
+
+      - name: sales_sma_lower_30
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Represents the potential lower bound for monthly sales trends.
+
+
+      - name: sales_sma_upper_60
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Indicates the upper limit of quarterly sales trends.
+
+
+      - name: sales_sma_lower_60
+        data_type: float64
+        description: > 
+          The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Indicates the lower limit of quarterly sales trends.
+
+
+      - name: sales_sma_upper_120
+        data_type: float64
+        description: >
+          The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
+          Provides the upper bound for sales trends over half a year.
+
+
+      - name: sales_sma_lower_120
+        data_type: float64
+        description: >
+          The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
+          Provides the lower bound for sales trends over half a year.
+
+
+      - name: sales_forecast
+        data_type: float64
+        description: >
+          The predicted future sales generated using the ARIMA forecasting model in BigQuery. This model leverages historical 
+          sales data to forecast upcoming trends. 
+

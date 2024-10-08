@@ -1,0 +1,311 @@
+version: 2
+
+models:
+  - name: dim_products
+    config:
+      contract:
+        enforced: true
+    description: >
+      This table contains dimensional data for products across different categories, regions, and timeframes. 
+      It provides aggregated insights into sales, returns, shipping, and revenue performance, along with key 
+      customer satisfaction and operational metrics. The table is used in dashboards for product performance 
+      analysis and sales strategy optimization.
+    data_tests:
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_gross_revenue
+          expression: sum(total_gross_revenue)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(gross_revenue)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_tax_amount
+          expression: sum(total_tax_amount)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(tax_amount)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_net_revenue_before_tax
+          expression: sum(total_net_revenue_before_tax)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(net_revenue_before_tax)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_net_revenue_after_tax
+          expression: sum(total_net_revenue_after_tax)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(net_revenue_after_tax)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_cogs
+          expression: sum(total_cogs)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(cogs)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_returned_cogs
+          expression: sum(total_returned_cogs)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(returned_cogs)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_refund_amount
+          expression: sum(total_refund_amount)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(refund_amount)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_payment_fee
+          expression: sum(total_payment_fee)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(payment_fee)
+      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
+          name: dim_products_unequal_agg_total_cm
+          expression: sum(total_cm)
+          compare_model: ref("fct_orders")
+          compare_expression: sum(cm)
+
+
+    columns:
+      - name: dim_product_id
+        data_type: string
+        constraints: 
+          - type: not_null
+          - type: primary_key
+            warn_unenforced: false
+        description: "Unique identifier of the dim_product record"
+
+
+      - name: date
+        data_type: date
+        constraints: 
+          - type: not_null
+        description: >
+          The date representing when the data for product performance was aggregated, 
+          providing a time reference for the metrics in the table.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: dim_products_unexpected_date
+              max_value: "current_datetime()"
+
+
+      - name: country_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          A unique identifier for each country in which the product is sold or marketed, 
+          used to join with other geographical data tables.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.accepted_range:
+              name: dim_products_unexpected_country_id
+              min_value: 0
+              max_value: 10
+
+
+      - name: country
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: >
+          The name of the country where the product is sold or marketed, used to filter 
+          product performance based on geographic regions.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: product_category
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: >
+          The category to which the product belongs, such as electronics, apparel, or 
+          digital assets, allowing for category-level analysis of performance.
+        data_tests:
+          - dbt_utils.not_constant
+          - accepted_values:
+              name: dim_products_unexpected_product_category
+              values: ['Design Templates', 'Fonts & Typography', 'Graphic Assets', 'Stock Photography', 'Video & Animation']
+
+
+      - name: product_name
+        data_type: string
+        constraints: 
+          - type: not_null
+        description: >
+          The name of the individual product being tracked, used for granular analysis 
+          of sales, returns, and other performance metrics.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: nb_order_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of unique orders associated with the product, used to measure 
+          sales volume and demand for the product.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: nb_shipping_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of shipping transactions associated with the product, used to 
+          track logistics performance and delivery efficiency.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: nb_return_id
+        data_type: int64
+        constraints: 
+          - type: not_null
+        description: >
+          The number of product returns, used to analyze product quality, customer 
+          satisfaction, and return rates for the product.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: avg_fulfillment_days
+        data_type: float64
+        description: >
+          The average number of days it takes to fulfill an order for the product, 
+          providing insights into supply chain efficiency and customer experience.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_avg_fulfillment_days
+              expression: "> 0"
+              config:
+                where: avg_fulfillment_days IS NOT NULL
+
+
+      - name: avg_nps_score
+        data_type: float64
+        description: >
+          The average Net Promoter Score (NPS) for the product, indicating customer 
+          satisfaction and likelihood to recommend the product.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_avg_nps_score
+              expression: "> 0"
+              config:
+                where: avg_nps_score IS NOT NULL
+
+
+      - name: total_gross_revenue
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total gross revenue generated by the product before any deductions for taxes, 
+          returns, or fees, providing a top-level view of sales performance.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_gross_revenue
+              expression: "> 0"
+
+
+      - name: total_tax_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total amount of taxes collected for sales of the product, used to calculate net 
+          revenue and assess the impact of taxes on overall profitability.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_tax_amount
+              expression: "> 0"
+
+
+      - name: total_net_revenue_before_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total net revenue generated by the product before taxes are applied, used to assess 
+          profitability before accounting for tax obligations.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_net_revenue_before_tax
+              expression: "> 0"
+
+
+      - name: total_net_revenue_after_tax
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total net revenue generated by the product after taxes have been deducted, providing 
+          an accurate representation of revenue after all tax liabilities.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_net_revenue_after_tax
+              expression: "> 0"
+
+
+      - name: total_cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total cost of goods sold (COGS) for the product, including manufacturing, shipping, and 
+          handling costs, used to calculate profit margins.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_cogs
+              expression: "> 0"
+
+
+      - name: total_returned_cogs
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total cost of goods sold for returned items, providing insights into the financial impact 
+          of product returns on profitability.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: total_refund_amount
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total amount refunded to customers for returned products, used to assess the overall impact 
+          of returns on net revenue.
+        data_tests:
+          - dbt_utils.not_constant
+
+
+      - name: total_payment_fee
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total fees associated with payment processing for the product, including transaction fees from 
+          providers like credit card companies or digital wallets.
+        data_tests:
+          - dbt_utils.not_constant
+          - dbt_utils.expression_is_true:
+              name: dim_products_assert_positive_total_payment_fee
+              expression: "> 0"
+
+
+      - name: total_cm
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: >
+          The total contribution margin for the product, calculated as net revenue minus cost of goods sold (COGS), 
+          providing a clear view of product profitability.
+        data_tests:
+          - dbt_utils.not_constant

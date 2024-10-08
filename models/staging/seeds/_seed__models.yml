@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: stg_seed__payment_fees
+    columns:
+      - name: payment_method_id
+        data_type: int64
+        description: "Unique identifier for the payment method."
+
+      - name: payment_method
+        description: "The payment method used for transactions (e.g., amazon_pay, stripe, apple_pay, bitcoin)."
+        data_type: string
+
+      - name: percentage_fee
+        data_type: float64
+        description: "The percentage fee applied to transactions using the specified payment method."
+
+      - name: fixed_fee
+        data_type: float64
+        description: "The fixed fee applied to transactions using the specified payment method."
+
+
+
+
+  - name: stg_seed__products
+    columns:
+      - name: product_category_id
+        data_type: int64
+        description: "Unique identifier for the product's category."
+
+      - name: product_category
+        data_type: string
+        description: "The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets)."
+
+      - name: product_id
+        data_type: int64
+        description: "Unique identifier for the product."
+
+      - name: product_name
+        data_type: string
+        description: "The name of the product."
+
+      - name: inbound_shipping_cost
+        data_type: float64
+        description: "The cost of shipping the product to the warehouse."
+
+      - name: product_cost
+        data_type: float64
+        description: "The cost incurred to acquire or produce the product."
+
+
+
+
+  - name: stg_seed__taxes
+    columns:
+      - name: country_id
+        data_type: int64
+        description: "Identifier for the billing country associated with the order"
+
+      - name: country
+        data_type: string
+        description: "The name of the billing country associated with the order."
+
+      - name: tax_rate
+        data_type: float64
+        description: "The tax rate applied to the order, based on the billing country."

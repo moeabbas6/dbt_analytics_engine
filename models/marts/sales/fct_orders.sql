@@ -15,7 +15,7 @@
 WITH
   int_orders AS (
     SELECT *
-      FROM {{ ref('int_orders') }}
+      FROM {{ ref('int_orders_joined') }}
       {%- if is_incremental() %}
       WHERE order_date >= (SELECT DATE_SUB(MAX(order_date), INTERVAL 3 DAY) FROM {{ this }})
       {%- endif -%})
@@ -30,7 +30,7 @@ WITH
           ,SUM(gross_revenue) AS gross_revenue
           ,MAX(tax_rate) AS tax_rate
           ,SUM(payment_fee) AS payment_fee
-      FROM {{ ref('int_payments') }}
+      FROM {{ ref('int_payments_joined') }}
       GROUP BY order_id)
 
 
