@@ -1,12 +1,12 @@
 
 
 WITH 
-  int_orders_joined AS (
+  int_order_lvl_joined AS (
     SELECT *
-      FROM {{ ref('int_orders_joined') }})
+      FROM {{ ref('int_order_lvl_joined') }})
 
 
-  ,int_payments_joined AS (
+  ,int_payments_lvl_joined AS (
     SELECT order_id
           ,COUNT(payment_id) AS nb_payments
           ,MAX(payment_method) AS payment_method
@@ -15,7 +15,7 @@ WITH
           ,SUM(gross_revenue) AS gross_revenue
           ,MAX(tax_rate) AS tax_rate
           ,SUM(payment_fee) AS payment_fee
-      FROM {{ ref('int_payments_joined') }}
+      FROM {{ ref('int_payments_lvl_joined') }}
       GROUP BY order_id)
 
 
@@ -50,8 +50,8 @@ WITH
           ,gross_revenue
           ,tax_rate
           ,payment_fee
-      FROM int_orders_joined
-      JOIN int_payments_joined USING (order_id))
+      FROM int_order_lvl_joined
+      JOIN int_payments_lvl_joined USING (order_id))
 
 
   SELECT *

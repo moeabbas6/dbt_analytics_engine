@@ -3,7 +3,7 @@
 WITH
   orders_customers AS (
     SELECT *
-      FROM {{ ref('int_orders_customers_joined') }})
+      FROM {{ ref('int_customers_orders_products_joined') }})
 
 
   ,nps_returns_shipping AS (

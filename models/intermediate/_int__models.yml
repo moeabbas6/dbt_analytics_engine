@@ -1,12 +1,12 @@
 version: 2
 
 models:
-  - name: int_orders_joined
+  - name: int_order_lvl_joined
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_raw__orders')
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: int_orders_joined_unequal_agg_shipping_amount
+          name: int_order_lvl_joined_unequal_agg_shipping_amount
           expression: sum(shipping_amount)
           compare_model: ref("stg_raw__shipping")
           compare_expression: sum(shipping_amount)
@@ -71,7 +71,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_joined_unexpected_is_shipped_bool
+              name: int_order_lvl_joined_unexpected_is_shipped_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -95,7 +95,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_joined_unexpected_is_returned_bool
+              name: int_order_lvl_joined_unexpected_is_returned_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -113,7 +113,7 @@ models:
         data_tests:
           - not_null
           - accepted_values:
-              name: int_orders_joined_unexpected_is_nps_bool
+              name: int_order_lvl_joined_unexpected_is_nps_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -152,12 +152,12 @@ models:
 
 
 
-  - name: int_payments_joined
+  - name: int_payments_lvl_joined
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_raw__payments')
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: int_payments_joined_unequal_agg_gross_revenue
+          name: int_payments_lvl_joined_unequal_agg_gross_revenue
           expression: sum(gross_revenue)
           compare_model: ref("stg_raw__payments")
           compare_expression: sum(gross_revenue)
@@ -250,5 +250,5 @@ models:
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:
-              name: int_payments_joined_unexpected_payment_fee
+              name: int_payments_lvl_joined_unexpected_payment_fee
               expression: "= ROUND((gross_revenue * (percentage_fee / 100)) + fixed_fee, 2)"
