@@ -20,7 +20,36 @@ WITH
 
 
   ,final AS (
-    SELECT *
+    SELECT country_id
+          ,country
+          ,order_id
+          ,customer_id
+          ,first_order_date
+          ,customer_order_nb
+          ,order_status
+          ,order_date
+          ,shipping_id
+          ,is_shipped
+          ,shipping_date
+          ,shipping_amount
+          ,return_id
+          ,is_returned
+          ,return_date
+          ,return_reason
+          ,is_nps
+          ,nps_score
+          ,nps_date
+          ,product_category_id
+          ,product_category
+          ,product_id
+          ,product_name
+          ,inbound_shipping_cost
+          ,product_cost
+          ,nb_payments
+          ,payment_method
+          ,gross_revenue
+          ,tax_rate
+          ,payment_fee
       FROM int_orders_joined
       JOIN int_payments_joined USING (order_id))
 
