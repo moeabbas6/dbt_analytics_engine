@@ -28,8 +28,6 @@ WITH
             ,order_status
             ,customer_id
             ,nb_payments
-            ,first_name
-            ,last_name
             ,shipping_id
             ,is_shipped
             ,shipping_amount
@@ -57,8 +55,9 @@ WITH
             ,IF(is_returned IS TRUE, SAFE_ADD(inbound_shipping_cost, product_cost), 0) AS returned_cogs
             ,IF(is_returned IS TRUE, SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), 0) AS refund_amount
             ,payment_fee
-        #FROM int_orders
-        #LEFT JOIN int_payments USING (order_id)
+            ,first_order_date
+            ,customer_order_nb
+            ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
         FROM int_orders_payments_joined)
 
 
@@ -72,33 +71,23 @@ WITH
         FROM orders_payments)
 
 
-    ,customers AS (
-      SELECT customer_id
-            ,order_id
-            ,MIN(DATE(order_date)) OVER (PARTITION BY customer_id) AS first_order_date
-            ,ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS customer_order_nb
+    ,cumulative_revenue AS (
+      SELECT *
+            ,SUM(net_revenue_after_tax) OVER (PARTITION BY customer_id ORDER BY customer_order_nb ROWS UNBOUNDED PRECEDING) AS customer_cumulative_net_revenue
         FROM contribution_margin)
 
 
-    ,cm_customers AS (
-      SELECT *
-            ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
-            ,SUM(net_revenue_after_tax) OVER (PARTITION BY customer_id ORDER BY customer_order_nb ROWS UNBOUNDED PRECEDING) AS customer_cumulative_net_revenue
-        FROM contribution_margin
-        LEFT JOIN customers USING (customer_id, order_id))
-
-
-    ,cumulative_revenue AS (
+    ,customer_orders_to AS (
       SELECT *
              {%- for threshold in net_revenue_thresholds %}
              ,MIN(CASE WHEN customer_cumulative_net_revenue >= {{ threshold }} THEN customer_order_nb END) OVER (PARTITION BY customer_id) AS customer_orders_to_{{ threshold }}_net_revenue
              {%- endfor %}
-        FROM cm_customers)
+        FROM cumulative_revenue)
 
 
     ,final AS (
       SELECT *
-        FROM cumulative_revenue)
+        FROM customer_orders_to)
 
 
   SELECT *

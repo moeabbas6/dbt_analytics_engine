@@ -6,7 +6,7 @@ WITH
   customer_cohorts AS (
     SELECT customer_id
           ,DATE_TRUNC(MIN(first_order_date), MONTH) AS cohort_month
-      FROM {{ ref('fct_orders') }}
+      FROM {{ ref('int_orders_customers_joined') }}
       GROUP BY customer_id)
 
 
@@ -16,7 +16,7 @@ WITH
           ,DATE_TRUNC(order_date, MONTH) AS order_month
           ,cohort_month
           ,DATE_DIFF(DATE_TRUNC(order_date, MONTH), cohort_month, MONTH) AS elapsed_month
-      FROM {{ ref('fct_orders') }}
+      FROM {{ ref('int_orders_customers_joined') }}
       JOIN customer_cohorts USING (customer_id)
       WHERE DATE_DIFF(DATE_TRUNC(order_date, MONTH), cohort_month, MONTH) >= 0)
 

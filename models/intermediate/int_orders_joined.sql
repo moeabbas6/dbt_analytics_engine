@@ -1,34 +1,14 @@
 
 
 WITH
-  stg_orders AS (
+  orders_customers AS (
     SELECT *
-      FROM {{ ref('stg_raw__orders') }})
+      FROM {{ ref('int_orders_customers_joined') }})
 
 
-  ,stg_customers AS (
+  ,nps_returns_shipping AS (
     SELECT *
-      FROM {{ ref('stg_raw__customers') }})
-
-
-  ,stg_shipping AS (
-    SELECT *
-      FROM {{ ref('stg_raw__shipping') }})
-
-
-  ,stg_returns AS (
-    SELECT *
-      FROM {{ ref('stg_raw__returns') }})
-
-
-  ,stg_nps AS (
-    SELECT *
-      FROM {{ ref('stg_raw__nps') }})
-
-
-  ,stg_products AS (
-    SELECT *
-      FROM {{ ref('stg_seed__products') }})
+      FROM {{ ref('int_nps_returns_shipping_joined') }})
 
 
   ,final AS (
@@ -36,10 +16,10 @@ WITH
           ,product_id
           ,order_id
           ,customer_id
+          ,first_order_date
+          ,customer_order_nb
           ,order_status
           ,order_date
-          ,first_name
-          ,last_name
           ,shipping_id
           ,COALESCE(is_shipped, FALSE) AS is_shipped
           ,shipping_date
@@ -55,12 +35,8 @@ WITH
           ,product_name
           ,inbound_shipping_cost
           ,product_cost
-      FROM stg_orders
-      LEFT JOIN stg_customers USING (customer_id)
-      LEFT JOIN stg_shipping USING (order_id)
-      LEFT JOIN stg_returns USING (order_id)
-      LEFT JOIN stg_nps USING (order_id, customer_id)
-      LEFT JOIN stg_products USING (product_category_id, product_id))
+      FROM orders_customers
+      LEFT JOIN nps_returns_shipping USING (order_id))
 
 
   SELECT *

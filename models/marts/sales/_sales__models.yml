@@ -97,24 +97,6 @@ models:
               expression: "> 0"
 
 
-      - name: first_name
-        data_type: string
-        constraints: 
-          - type: not_null
-        description: "The first name of the customer."
-        data_tests:
-          - dbt_utils.not_constant
-
-
-      - name: last_name
-        data_type: string
-        constraints: 
-          - type: not_null
-        description: "The last name of the customer."
-        data_tests:
-          - dbt_utils.not_constant
-
-
       - name: is_shipped
         data_type: boolean
         description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."

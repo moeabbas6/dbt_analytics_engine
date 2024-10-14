@@ -66,24 +66,6 @@ models:
           - unique
 
 
-      - name: first_name
-        data_type: string
-        constraints: 
-          - type: not_null
-        description: "The first name of the customer."
-        data_tests:
-          - dbt_utils.not_constant
-
-
-      - name: last_name
-        data_type: string
-        constraints: 
-          - type: not_null
-        description: "The last name of the customer."
-        data_tests:
-          - dbt_utils.not_constant
-
-
       - name: nb_order_id
         data_type: int64
         constraints: 
