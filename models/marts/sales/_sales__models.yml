@@ -511,6 +511,9 @@ models:
 
 
 
+  - name: ml_sales_arima
+    config:
+      tags: "forecasting"
 
 
 
