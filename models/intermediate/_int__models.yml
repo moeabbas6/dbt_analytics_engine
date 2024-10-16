@@ -2,6 +2,13 @@ version: 2
 
 models:
   - name: int_order_lvl_joined
+    description: >
+      This intermediate model combines data from orders, shipping, returns, and Net Promoter Score (NPS) 
+      feedback to provide a unified view of each order's lifecycle. It includes key information on order 
+      details, shipping transactions, product categories, returns, and customer feedback. This model is 
+      designed to support comprehensive analysis across multiple dimensions, such as order fulfillment 
+      performance, product costs, and customer satisfaction. It ensures data consistency by aggregating 
+      and validating financial, logistic, and customer experience data.
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_raw__orders')
@@ -13,19 +20,19 @@ models:
     columns:
       - name: product_category_id
         data_type: int64
-        description: "Unique identifier for the product's category."
+        description: '{{ doc("product_category_id") }}'
         data_tests:
           - not_null
 
       - name: product_id
         data_type: int64
-        description: "Unique identifier for the product."
+        description: '{{ doc("product_id") }}'
         data_tests:
           - not_null
 
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
         data_tests:
           - unique
           - not_null
@@ -35,12 +42,20 @@ models:
 
       - name: customer_id
         data_type: string
-        description: "Unique identifier for the customer placing the order."
+        description: '{{ doc("customer_id") }}'
         data_tests:
           - not_null
           - relationships:
               to: ref('stg_raw__customers')
               field: customer_id
+
+      - name: first_order_date
+        data_type: date
+        description: '{{ doc("first_order_date") }}'
+
+      - name: customer_order_nb
+        data_type: int64
+        description: '{{ doc("customer_order_nb") }}'
 
       - name: order_status
         data_type: string
@@ -50,15 +65,13 @@ models:
 
       - name: order_date
         data_type: datetime
-        description: "The date on which the order was created."
+        description: '{{ doc("order_date") }}'
         data_tests:
           - not_null
 
       - name: shipping_id
         data_type: string
-        description: >
-          A unique identifier for each shipping transaction. This field ensures that each shipment is 
-          tracked individually and is essential for linking sales orders to their corresponding shipping details.
+        description: '{{ doc("shipping_id") }}'
         data_tests:
           - unique
           - relationships:
@@ -67,7 +80,7 @@ models:
 
       - name: is_shipped
         data_type: boolean
-        description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
+        description: '{{ doc("is_shipped") }}'
         data_tests:
           - not_null
           - accepted_values:
@@ -76,22 +89,22 @@ models:
               quote: false
 
       - name: shipping_date
-        description: "The date on which the order was shipped."
+        description: '{{ doc("shipping_date") }}'
         data_type: datetime
 
       - name: shipping_amount
-        description: "The total gross amount charged for shipping the order."
+        description: '{{ doc("shipping_amount") }}'
         data_type: float64
 
       - name: return_id
         data_type: string
-        description: "Unique identifier for the return."
+        description: '{{ doc("return_id") }}'
         data_tests:
           - unique
 
       - name: is_returned
         data_type: boolean
-        description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
+        description: '{{ doc("is_returned") }}'
         data_tests:
           - not_null
           - accepted_values:
@@ -101,7 +114,7 @@ models:
 
       - name: return_date
         data_type: datetime
-        description: "The date on which the order was returned, if applicable."
+        description: '{{ doc("return_date") }}'
 
       - name: return_reason
         data_type: string
@@ -109,7 +122,7 @@ models:
 
       - name: is_nps
         data_type: boolean
-        description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
+        description: '{{ doc("is_nps") }}'
         data_tests:
           - not_null
           - accepted_values:
@@ -119,40 +132,295 @@ models:
 
       - name: nps_score
         data_type: int64
-        description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
+        description: '{{ doc("nps_score") }}'
 
       - name: nps_date
         data_type: datetime
-        description: "The date on which the customer provided their Net Promoter Score (NPS)."
+        description: '{{ doc("nps_date") }}'
 
       - name: product_category
         data_type: string
-        description: "The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets)."
+        description: '{{ doc("product_category") }}'
         data_tests:
           - not_null
 
       - name: product_name
         data_type: string
-        description: "The name of the product."
+        description: '{{ doc("product_name") }}'
         data_tests:
           - not_null
 
       - name: inbound_shipping_cost
         data_type: float64
-        description: "The cost of shipping the product to the warehouse."
+        description: '{{ doc("inbound_shipping_cost") }}'
         data_tests:
           - not_null
 
       - name: product_cost
         data_type: float64
-        description: "The cost incurred to acquire or produce the product."
+        description: '{{ doc("product_cost") }}'
         data_tests:
           - not_null
-  
 
+
+
+  - name: int_customers_orders_products_joined
+    description: >
+      This intermediate model combines customer, order, and product data to provide a unified 
+      view of customer purchase behavior. It links customers with their order history, product 
+      categories, and associated costs, enabling detailed analysis of customer lifetime value, 
+      product performance, and purchase patterns. This model is essential for understanding the 
+      relationships between customers, the products they buy, and the frequency of their orders.
+    columns:
+      - name: order_id
+        data_type: string
+        description: '{{ doc("order_id") }}'
+
+      - name: order_status
+        data_type: string
+        description: '{{ doc("orders_status") }}'
+
+      - name: order_date
+        data_type: datetime
+        description: '{{ doc("order_date") }}'
+
+      - name: customer_id
+        data_type: string
+        description: '{{ doc("customer_id") }}'
+
+      - name: first_order_date
+        data_type: date
+        description: '{{ doc("first_order_date") }}'
+
+      - name: customer_order_nb
+        data_type: int64
+        description: '{{ doc("customer_order_nb") }}'
+
+      - name: product_category_id
+        data_type: int64
+        description: '{{ doc("product_category_id") }}'
+
+      - name: product_category
+        data_type: string
+        description: '{{ doc("product_category") }}'
+
+      - name: product_id
+        data_type: int64
+        description: '{{ doc("product_id") }}'
+
+      - name: product_name
+        data_type: string
+        description: '{{ doc("product_name") }}'
+
+      - name: inbound_shipping_cost
+        data_type: float64
+        description: '{{ doc("inbound_shipping_cost") }}'
+
+      - name: product_cost
+        data_type: float64
+        description: '{{ doc("product_cost") }}'
+
+
+
+
+  - name: int_orders_payments_joined
+    description: >
+      This intermediate model joins data from customer orders, payments, shipping, and 
+      returns to provide a comprehensive view of each transaction. It combines key details 
+      such as order and payment information, product categories, shipping details, returns, 
+      and Net Promoter Score (NPS) feedback. This model serves as the foundation for 
+      advanced reporting and analysis, including customer order behavior, payment trends, 
+      product performance, and overall financial metrics like gross revenue and payment fees. 
+      The model also supports customer experience analysis through NPS and return data.
+    columns:
+      - name: country_id
+        data_type: int64
+        description: '{{ doc("country_id") }}'
+
+      - name: country
+        data_type: string
+        description: '{{ doc("country") }}'
+
+      - name: order_id
+        data_type: string
+        description: '{{ doc("order_id") }}'
+
+      - name: customer_id
+        data_type: string
+        description: '{{ doc("customer_id") }}'
+
+      - name: first_order_date
+        data_type: date
+        description: '{{ doc("first_order_date") }}'
+
+      - name: customer_order_nb
+        data_type: int64
+        description: '{{ doc("customer_order_nb") }}'
+
+      - name: order_status
+        data_type: string
+        description: '{{ doc("orders_status") }}'
+
+      - name: order_date
+        data_type: datetime
+        description: '{{ doc("order_date") }}'
+
+      - name: shipping_id
+        data_type: string
+        description: '{{ doc("shipping_id") }}'
+
+      - name: is_shipped
+        data_type: boolean
+        description: '{{ doc("is_shipped") }}'
+
+      - name: shipping_date
+        data_type: datetime
+        description: '{{ doc("shipping_date") }}'
+
+      - name: shipping_amount
+        data_type: float64
+        description: '{{ doc("shipping_amount") }}'
+
+      - name: return_id
+        data_type: string
+        description: '{{ doc("return_id") }}'
+
+      - name: is_returned
+        data_type: boolean
+        description: '{{ doc("is_returned") }}'
+
+      - name: return_date
+        data_type: datetime
+        description: '{{ doc("return_date") }}'
+
+      - name: return_reason
+        data_type: string
+        description: '{{ doc("return_reason") }}'
+
+      - name: is_nps
+        data_type: boolean
+        description: '{{ doc("is_nps") }}'
+
+      - name: nps_score
+        data_type: int64
+        description: '{{ doc("nps_score") }}'
+
+      - name: nps_date
+        data_type: datetime
+        description: '{{ doc("nps_date") }}'
+
+      - name: product_category_id
+        data_type: int64
+        description: '{{ doc("product_category_id") }}'
+
+      - name: product_category
+        data_type: string
+        description: '{{ doc("product_category") }}'
+
+      - name: product_id
+        data_type: int64
+        description: '{{ doc("product_id") }}'
+
+      - name: product_name
+        data_type: string
+        description: '{{ doc("product_name") }}'
+
+      - name: inbound_shipping_cost
+        data_type: float64
+        description: '{{ doc("inbound_shipping_cost") }}'
+
+      - name: product_cost
+        data_type: float64
+        description: '{{ doc("product_cost") }}'
+
+      - name: nb_payments
+        data_type: int64
+        description: '{{ doc("nb_payments") }}'
+
+      - name: payment_method
+        data_type: string
+        description: '{{ doc("payment_method") }}'
+
+      - name: gross_revenue
+        data_type: float64
+        description: '{{ doc("gross_revenue") }}'
+
+      - name: tax_rate
+        data_type: float64
+        description: '{{ doc("tax_rate") }}'
+
+      - name: payment_fee
+        data_type: float64
+        description: '{{ doc("payment_fee") }}'
+
+
+
+  - name: int_nps_returns_shipping_joined
+    description: >
+      This intermediate model joins data from shipping, returns, and Net Promoter Score (NPS) feedback 
+      to provide a complete view of the post-order lifecycle. It captures key details about the 
+      shipping status and amounts, returns and their reasons, and customer satisfaction through NPS 
+      scores. This model is essential for analyzing order fulfillment efficiency, return rates, and 
+      customer feedback, providing insights into both logistical performance and customer sentiment.
+    columns:
+      - name: order_id
+        data_type: string
+        description: '{{ doc("order_id") }}'
+
+      - name: shipping_id
+        data_type: string
+        description: '{{ doc("shipping_id") }}'
+
+      - name: is_shipped
+        data_type: boolean
+        description: '{{ doc("is_shipped") }}'
+
+      - name: shipping_date
+        data_type: datetime
+        description: '{{ doc("shipping_date") }}'
+
+      - name: shipping_amount
+        data_type: float64
+        description: '{{ doc("shipping_amount") }}'
+
+      - name: return_id
+        data_type: string
+        description: '{{ doc("return_id") }}'
+
+      - name: is_returned
+        data_type: boolean
+        description: '{{ doc("is_returned") }}'
+
+      - name: return_date
+        data_type: datetime
+        description: '{{ doc("return_date") }}' 
+
+      - name: return_reason
+        data_type: string
+        description: '{{ doc("return_reason") }}'
+
+      - name: is_nps
+        data_type: boolean
+        description: '{{ doc("is_nps") }}'
+
+      - name: nps_score
+        data_type: int64
+        description: '{{ doc("nps_score") }}'
+
+      - name: nps_date
+        data_type: datetime
+        description: '{{ doc("nps_date") }}'
 
 
   - name: int_payments_lvl_joined
+    descriptions: >
+      This intermediate model combines payment data from various sources, including raw payments 
+      and payment fee information, and applies necessary transformations to prepare the data for 
+      analysis. It joins payments with relevant details such as payment methods, fees, and tax 
+      rates. This model serves as a critical layer for calculating accurate payment processing 
+      costs, including gross revenue, percentage fees, and fixed fees, ensuring that all financial 
+      details are linked and aggregated correctly for further reporting. Data quality is maintained 
+      through row count checks and aggregation tests to ensure consistency with the source tables.
     data_tests:
       - dbt_utils.equal_rowcount:
           compare_model: ref('stg_raw__payments')
@@ -164,19 +432,19 @@ models:
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
         data_tests:
           - not_null
 
       - name: payment_id
         data_type: int64
-        description: "Unique identifier for the payment."
+        description: '{{ doc("payment_id") }}'
         data_tests:
           - not_null
 
       - name: order_payment_id
         data_type: string
-        description: "Unique identifier for the specific payment associated with the order."
+        description: '{{ doc("order_payment_id") }}'
         data-tests:
           - unique
           - not_null
@@ -186,7 +454,7 @@ models:
 
       - name: payment_method
         data_type: string
-        description: "The payment method used for the order."
+        description: '{{ doc("payment_method") }}'
         data_tests:
           - not_null
           - relationships:
@@ -195,13 +463,13 @@ models:
 
       - name: payment_status
         data_type: string
-        description: "The current status of the payment (e.g., pending, completed, failed)."
+        description: '{{ doc("payment_status") }}'
         data_tests:
           - not_null
 
       - name: country_id
         data_type: int64
-        description: "Identifier for the country from which the payment originated."
+        description: '{{ doc("country_id") }}'
         data_tests:
           - not_null
           - relationships:
@@ -210,43 +478,43 @@ models:
 
       - name: country
         data_type: string
-        description: "The name of the billing country associated with the order."
+        description: '{{ doc("country") }}'
         data_tests:
           - not_null
 
       - name: created_at
         data_type: datetime
-        description: "The timestamp when the payment was created."
+        description: '{{ doc("created_at") }}'
         data_tests:
           - not_null
 
       - name: gross_revenue
         data_type: float64
-        description: "The total gross amount paid by the customer, including tax and shipping."
+        description: '{{ doc("gross_revenue") }}'
         data_tests:
           - not_null
 
       - name: tax_rate
         data_type: float64
-        description: "The tax rate applied to the order, based on the billing country."
+        description: '{{ doc("tax_rate") }}'
         data_tests:
           - not_null
 
       - name: percentage_fee
         data_type: float64
-        description: "The percentage fee applied to transactions using the specified payment method."
+        description: '{{ doc("percentage_fee") }}'
         data_tests:
           - not_null
 
       - name: fixed_fee
         data_type: float64
-        description: "The fixed fee applied to transactions using the specified payment method."
+        description: '{{ doc("fixed_fee") }}'
         data_tests:
           - not_null
 
       - name: payment_fee
         data_type: float64
-        description: "The total fee applied to the payment, calculated as a percentage of the gross revenue plus a fixed fee."
+        description: '{{ doc("payment_fee") }}'
         data_tests:
           - not_null
           - dbt_utils.expression_is_true:

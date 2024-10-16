@@ -24,7 +24,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Identifier for the billing country associated with the order"
+        description: '{{ doc("country_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -37,7 +37,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "The name of the billing country associated with the order."
+        description: '{{ doc("country") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -48,7 +48,7 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        description: "Unique identifier for the order, serving as a reference to the specific transaction."
+        description: '{{ doc("order_id") }}'
         data_tests:
           - unique
           - dbt_utils.not_constant
@@ -61,7 +61,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "The total number of payments made for the order, indicating the frequency of transactions associated with the order."
+        description: '{{ doc("nb_payments") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               name: fct_payment_methods_assert_positive_nb_payments
@@ -72,16 +72,14 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: >
-          Indicates whether a single or multiple distinct payment methods were used for the order. 
-          The value is 'single' if only one payment method was used or 'multiple' if more than one distinct payment method was utilized.
+        description: '{{ doc("payment_methods") }}'
 
 
       - name: order_date
         data_type: datetime
         constraints: 
           - type: not_null
-        description: "The date on which the order was placed."
+        description: '{{ doc("order_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -104,7 +102,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total gross revenue generated from the order, representing the sum of all payments before any deductions or fees."
+        description: '{{ doc("total_gross_revenue") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               name: fct_payment_methods_assert_positive_total_gross_revenue
@@ -115,7 +113,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount of fees incurred for processing all payment methods associated with the order."
+        description: '{{ doc("total_payment_fees") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               name: fct_payment_methods_assert_positive_total_payment_fees
@@ -126,7 +124,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total fees charged for processing payments through Amazon Pay."
+        description: '{{ doc("amazon_pay_payment_fees") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -138,7 +136,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total fees charged for processing payments through Apple Pay."
+        description: '{{ doc("apple_pay_payment_fees") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -150,7 +148,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total fees charged for processing payments through Bitcoin."
+        description: '{{ doc("bitcoin_payment_fees") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -162,7 +160,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total fees charged for processing payments through Stripe."
+        description: '{{ doc("stripe_payment_fees") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -174,7 +172,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount paid using Amazon Pay for the order."
+        description: '{{ doc("amazon_pay_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -186,7 +184,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount paid using Apple Pay for the order."
+        description: '{{ doc("apple_pay_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -198,7 +196,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount paid using Bitcoin for the order."
+        description: '{{ doc("bitcoin_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -210,7 +208,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount paid using Stripe for the order."
+        description: '{{ doc("stripe_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
