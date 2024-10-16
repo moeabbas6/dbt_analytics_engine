@@ -2,6 +2,15 @@ version: 2
 
 models:
   - name: fct_orders
+    latest_version: 2
+    versions:
+      - v: 1
+      - v: 2
+        config:
+          alias: fct_orders
+        columns:
+          - include: all
+            exclude: [product_id, product_category_id]
     config:
       contract:
         enforced: true 
@@ -11,17 +20,14 @@ models:
        enabling in-depth analysis of sales performance, customer behavior, and product profitability.
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_orders_unequal_agg_gross_revenue
           expression: sum(gross_revenue)
           compare_model: ref("int_payments_lvl_joined")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_orders_unequal_agg_cogs
           expression: sum(cogs)
           compare_model: ref("int_order_lvl_joined")
           compare_expression: 'sum(inbound_shipping_cost) + sum(product_cost)'
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_orders_unequal_agg_shipping_amount
           expression: sum(shipping_amount)
           compare_model: ref("int_order_lvl_joined")
           compare_expression: sum(shipping_amount)
@@ -36,7 +42,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_country_id
               min_value: 0
               max_value: 22
 
@@ -72,7 +77,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_order_status
               values: ['completed', 'failed']
 
 
@@ -93,7 +97,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_nb_payments
               expression: "> 0"
 
 
@@ -102,7 +105,6 @@ models:
         description: '{{ doc("is_shipped") }}'
         data_tests:
           - accepted_values:
-              name: fct_orders_unexpected_is_shipped_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -120,7 +122,6 @@ models:
         description: '{{ doc("shipping_amount") }}'
         data_tests:
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_shipping_amount
               expression: "> 0"
 
 
@@ -132,7 +133,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_payment_method
               values: ['amazon_pay', 'stripe', 'apple_pay', 'bitcoin']
 
 
@@ -144,7 +144,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_gross_revenue
               expression: "> 0"
 
 
@@ -156,11 +155,9 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_tax_rate
               min_value: 0
               max_value: 100
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_tax_rate
               expression: "> 0"              
 
 
@@ -172,7 +169,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_tax_amount
               expression: "= SAFE_MULTIPLY(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), SAFE_DIVIDE(tax_rate, 100))"
 
 
@@ -184,7 +180,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_net_revenue_before_tax
               expression: "= SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0))"
 
 
@@ -196,7 +191,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_net_revenue_after_tax
               expression: "= SAFE_DIVIDE(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), (1 + SAFE_DIVIDE(tax_rate, 100)))"
 
 
@@ -208,7 +202,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_order_date
               max_value: "current_datetime()"
 
 
@@ -218,7 +211,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_shipping_date
               max_value: "current_datetime()"
 
 
@@ -227,7 +219,6 @@ models:
         description: '{{ doc("is_returned") }}'
         data_tests:
           - accepted_values:
-              name: fct_orders_unexpected_is_returned_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -246,7 +237,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_return_date
               max_value: "current_datetime()"
 
 
@@ -256,7 +246,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_return_reason
               values: ['Not as Described', 'Compatibility Issues', 'Quality Concerns', 'Technical Difficulties']
 
 
@@ -266,7 +255,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_fulfillment_days
               expression: "= DATE_DIFF(shipping_date, order_date, DAY)"
 
 
@@ -276,7 +264,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_is_nps_bool
               values: [TRUE, FALSE]
               quote: false
 
@@ -297,7 +284,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_nps_date
               max_value: "current_datetime()"
 
 
@@ -309,7 +295,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_product_category_id
               min_value: 0
               max_value: 5
 
@@ -322,7 +307,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_product_category
               values: ['Design Templates', 'Fonts & Typography', 'Graphic Assets', 'Stock Photography', 'Video & Animation']
 
 
@@ -334,7 +318,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_orders_unexpected_product_id
               min_value: 0
               max_value: 5
 
@@ -356,7 +339,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_cogs
               expression: "> 0"
 
 
@@ -368,7 +350,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_returned_cogs
               expression: "= cogs"
               config:
                 where: "returned_cogs > 0"
@@ -382,7 +363,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_refund_amount
               expression: "= (gross_revenue - shipping_amount)"
               config:
                 where: "refund_amount > 0"
@@ -396,7 +376,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_payment_fee
               expression: "> 0"
 
 
@@ -408,7 +387,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_unexpected_cm
               expression: "< gross_revenue"
 
 
@@ -438,7 +416,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: fct_orders_unexpected_customer_type
               values: ['Returning', 'New']
 
 
@@ -457,7 +434,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_customer_orders_to_100_net_revenue
               expression: "> 0" 
               config:
                 where: customer_orders_to_100_net_revenue IS NOT NULL
@@ -469,7 +445,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_customer_orders_to_200_net_revenue
               expression: "> 0"
               config:
                 where: customer_orders_to_250_net_revenue IS NOT NULL
@@ -482,7 +457,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_orders_assert_positive_customer_orders_to_500_net_revenue
               expression: "> 0" 
               config:
                 where: customer_orders_to_500_net_revenue IS NOT NULL

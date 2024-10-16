@@ -37,6 +37,8 @@ models:
       +required_tests: {"unique.*|not_null": 2}
       +required_docs: true
       +materialized: table
+      +docs:
+        node_color: '#000000'
       cohorts:
         +schema: 'cohorts'
       customers:
@@ -47,8 +49,7 @@ models:
         +schema: 'product'
       sales:
         +schema: 'sales'
-      +docs:
-        node_color: '#000000'
+
 
 seeds:
   dbt_analytics_engine:
