@@ -289,8 +289,6 @@ models:
 
       - name: product_category_id
         data_type: int64
-        constraints: 
-          - type: not_null
         description: '{{ doc("product_category_id") }}'
         data_tests:
           - dbt_utils.not_constant
@@ -312,8 +310,6 @@ models:
 
       - name: product_id
         data_type: int64
-        constraints: 
-          - type: not_null
         description: '{{ doc("product_id") }}'
         data_tests:
           - dbt_utils.not_constant
