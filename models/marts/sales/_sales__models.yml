@@ -32,7 +32,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Identifier for the billing country of the order and used as the partition field."
+        description: '{{ doc("country_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -45,7 +45,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "The billing country associated with the order."
+        description: '{{ doc("country") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -56,7 +56,7 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
         data_tests:
           - unique
           - relationships:
@@ -80,7 +80,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "Unique identifier for the customer placing the order."
+        description: '{{ doc("customer_id") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -89,7 +89,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "The number of payments made by the customer for the order."
+        description: '{{ doc("nb_payments") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -99,7 +99,7 @@ models:
 
       - name: is_shipped
         data_type: boolean
-        description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
+        description: '{{ doc("is_shipped") }}'
         data_tests:
           - accepted_values:
               name: fct_orders_unexpected_is_shipped_bool
@@ -109,9 +109,7 @@ models:
 
       - name: shipping_id
         data_type: string
-        description: >
-          A unique identifier for each shipping transaction. This field ensures that each shipment is 
-          tracked individually and is essential for linking sales orders to their corresponding shipping details.
+        description: '{{ doc("shipping_id") }}'
         data_tests:
           - unique
           - dbt_utils.not_constant
@@ -119,7 +117,7 @@ models:
 
       - name: shipping_amount
         data_type: float64
-        description: "The total gross amount charged for shipping the order."
+        description: '{{ doc("shipping_amount") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               name: fct_orders_assert_positive_shipping_amount
@@ -130,7 +128,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "The payment method used for the order; accepted values include 'amazon_pay', 'stripe', 'apple_pay', and 'bitcoin'."
+        description: '{{ doc("payment_method") }}'
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
@@ -142,7 +140,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total gross amount paid by the customer, including tax and shipping."
+        description: '{{ doc("gross_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -154,7 +152,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The tax rate applied to the order, based on the billing country."
+        description: '{{ doc("tax_rate") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -170,7 +168,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The total amount of tax charged on the order."
+        description: '{{ doc("tax_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -182,7 +180,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The gross revenue from the order minus the shipping amount."
+        description: '{{ doc("net_revenue_before_tax") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -194,7 +192,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The gross revenue from the order minus both shipping and tax amounts."
+        description: '{{ doc("net_revenue_after_tax") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -206,7 +204,7 @@ models:
         data_type: datetime
         constraints: 
           - type: not_null
-        description: "The date on which the order was created."
+        description: '{{ doc("order_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -216,7 +214,7 @@ models:
 
       - name: shipping_date
         data_type: datetime
-        description: "The date on which the order was shipped."
+        description: '{{ doc("shipping_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -226,7 +224,7 @@ models:
 
       - name: is_returned
         data_type: boolean
-        description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
+        description: '{{ doc("is_returned") }}'
         data_tests:
           - accepted_values:
               name: fct_orders_unexpected_is_returned_bool
@@ -236,9 +234,7 @@ models:
 
       - name: return_id
         data_type: string
-        description: >
-          A unique identifier for each return associated with an order. This field is populated only 
-          if the order has been returned, and remains null for non-returned orders.
+        description: '{{ doc("return_id") }}'
         data_tests:
           - unique
           - dbt_utils.not_constant
@@ -246,7 +242,7 @@ models:
 
       - name: return_date
         data_type: datetime
-        description: "The date on which the order was returned, if applicable."
+        description: '{{ doc("return_date") }}' 
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -266,7 +262,7 @@ models:
 
       - name: fulfillment_days
         data_type: int64
-        description: "The number of days between the order date and the shipping date, representing the time taken to fulfill the order."
+        description: '{{ doc("fulfillment_days") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -276,7 +272,7 @@ models:
 
       - name: is_nps
         data_type: boolean
-        description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
+        description: '{{ doc("is_nps") }}'
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
@@ -287,7 +283,7 @@ models:
 
       - name: nps_score
         data_type: int64
-        description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
+        description: '{{ doc("nps_score") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -297,7 +293,7 @@ models:
 
       - name: nps_date
         data_type: datetime
-        description: "The date on which the customer provided their Net Promoter Score (NPS)."
+        description: '{{ doc("nps_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -309,7 +305,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Unique identifier for the product's category."
+        description: '{{ doc("product_category_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -322,7 +318,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "The name of the category to which the product belongs."
+        description: '{{ doc("product_category") }}'
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
@@ -334,7 +330,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Unique identifier for the product."
+        description: '{{ doc("product_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -347,7 +343,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "The name of the product."
+        description: '{{ doc("product_name") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -356,9 +352,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: >
-          The cost of goods sold (COGS) for the product, representing the direct costs 
-          attributable to the production of the product sold in the order.
+        description: '{{ doc("cogs") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -370,9 +364,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: >
-          The cost of goods sold (COGS) associated with returned products, representing 
-          the direct costs of the returned items.
+        description: '{{ doc("returned_cogs") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -386,7 +378,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The amount refunded to the customer for returned products or order cancellations."
+        description: '{{ doc("refund_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -400,7 +392,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The fee charged by the payment processor for handling the transaction associated with the order."
+        description: '{{ doc("payment_fee") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -412,7 +404,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "The fee charged by the payment processor for handling the transaction associated with the order."
+        description: '{{ doc("cm") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -424,9 +416,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The customer's order number. 1 indicates a first-time order (new customer), while any number 
-          greater than 1 indicates that the customer has placed multiple orders (returning customer).
+        description: '{{ doc("customer_order_nb") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -435,9 +425,7 @@ models:
         data_type: date
         constraints: 
           - type: not_null
-        description: >
-          Date of the customers first recorded order, indicating when the initial transaction occurred. 
-          This field is used for cohort analysis.
+        description: '{{ doc("first_order_date") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -446,9 +434,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: >
-          Indicates whether a customer is new or returning. The values can be 'new' for first-time 
-          customers and 'returning' for customers who have made previous purchases.
+        description: '{{ doc("customer_type") }}'
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
@@ -460,18 +446,14 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: >
-          The total net revenue accumulated by the customer across all their orders. This value 
-          increases as more orders are placed by the customer.
+        description: '{{ doc("customer_cumulative_net_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
 
 
       - name: customer_orders_to_100_net_revenue
         data_type: int64
-        description: >
-          The number of orders a customer has placed until they reach a cumulative net 
-          revenue of at least 100.
+        description: '{{ doc("customer_orders_to_100_net_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -483,9 +465,7 @@ models:
 
       - name: customer_orders_to_250_net_revenue
         data_type: int64
-        description: >
-          The number of orders a customer has placed until they reach a cumulative net 
-          revenue of at least 200.
+        description: '{{ doc("customer_orders_to_250_net_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -498,9 +478,7 @@ models:
 
       - name: customer_orders_to_500_net_revenue
         data_type: int64
-        description: >
-          The number of orders a customer has placed until they reach a cumulative net
-          revenue of at least 500.
+        description: '{{ doc("customer_orders_to_500_net_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -537,7 +515,7 @@ models:
     columns:
       - name: date
         data_type: date
-        description: "The date corresponding to the recorded sales figures."
+        description: '{{ doc("date") }}'
         constraints: 
           - type: not_null
           - type: primary_key
@@ -546,9 +524,7 @@ models:
 
       - name: sales
         data_type: float64
-        description: >
-          The total net revenue after tax for each day, representing the sum of all sales transactions. 
-          This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
+        description: '{{ doc("sales") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -560,10 +536,7 @@ models:
 
       - name: sales_wma_7
         data_type: float64
-        description: >
-          The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
-          This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
-          The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
+        description: '{{ doc("sales_wma_7") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -575,7 +548,7 @@ models:
 
       - name: sales_sma_7
         data_type: float64
-        description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        description: '{{ doc("sales_sma_7") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -587,7 +560,7 @@ models:
 
       - name: sales_sma_14
         data_type: float64
-        description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        description: '{{ doc("sales_sma_14") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -599,7 +572,7 @@ models:
 
       - name: sales_sma_30
         data_type: float64
-        description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
+        description: '{{ doc("sales_sma_30") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -611,7 +584,7 @@ models:
 
       - name: sales_sma_60
         data_type: float64
-        description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
+        description: '{{ doc("sales_sma_60") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -623,7 +596,7 @@ models:
 
       - name: sales_sma_120
         data_type: float64
-        description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
+        description: '{{ doc("sales_sma_120") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -635,9 +608,7 @@ models:
 
       - name: sales_sma_upper_7
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the potential upper bound of short-term sales trends.
+        description: '{{ doc("sales_sma_upper_7") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -649,9 +620,7 @@ models:
 
       - name: sales_sma_lower_7
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the potential lower bound of short-term sales trends.
+        description: '{{ doc("sales_sma_lower_7") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -663,9 +632,7 @@ models:
 
       - name: sales_sma_upper_14
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the potential upper bound of short-term sales trends.
+        description: '{{ doc("sales_sma_upper_14") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -677,9 +644,7 @@ models:
 
       - name: sales_sma_lower_14
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the potential lower bound of short-term sales trends.
+        description: '{{ doc("sales_sma_lower_14") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -691,9 +656,7 @@ models:
 
       - name: sales_sma_upper_30
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Represents the potential upper bound for monthly sales trends.
+        description: '{{ doc("sales_sma_upper_30") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -705,9 +668,7 @@ models:
 
       - name: sales_sma_lower_30
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Represents the potential lower bound for monthly sales trends.
+        description: '{{ doc("sales_sma_lower_30") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -719,9 +680,7 @@ models:
 
       - name: sales_sma_upper_60
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the upper limit of quarterly sales trends.
+        description: '{{ doc("sales_sma_upper_60") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -733,9 +692,7 @@ models:
 
       - name: sales_sma_lower_60
         data_type: float64
-        description: > 
-          The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the lower limit of quarterly sales trends.
+        description: '{{ doc("sales_sma_lower_60") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -747,9 +704,7 @@ models:
 
       - name: sales_sma_upper_120
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Provides the upper bound for sales trends over half a year.
+        description: '{{ doc("sales_sma_upper_120") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -761,9 +716,7 @@ models:
 
       - name: sales_sma_lower_120
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Provides the lower bound for sales trends over half a year.
+        description: '{{ doc("sales_sma_lower_120") }}'
         constraints: 
           - type: not_null
         data_tests:
@@ -827,7 +780,7 @@ models:
     columns:
       - name: date
         data_type: date
-        description: "The date corresponding to the recorded sales figures."
+        description: '{{ doc("date") }}'
         constraints: 
           - type: not_null
           - type: primary_key
@@ -836,117 +789,91 @@ models:
 
       - name: sales
         data_type: float64
-        description: >
-          The total net revenue after tax for each day, representing the sum of all sales transactions. 
-          This field is used as the basis for calculating various metrics such as Simple Moving Averages (SMA) and Bollinger Bands.
+        description: '{{ doc("sales") }}'
 
 
       - name: sales_wma_7
         data_type: float64
-        description: >
-          The wma_sales_7 column represents a 7-day weighted moving average of sales, where more recent days are assigned higher weights to emphasize recent sales trends. 
-          This approach helps smooth out short-term fluctuations in sales data and highlights underlying trends, making it easier to analyze sales performance over time. 
-          The weights applied in the calculation prioritize the most recent sales, with a total of 7 days considered in the average.
+        description: '{{ doc("sales_wma_7") }}'
 
 
       - name: sales_sma_7
         data_type: float64
-        description: "The 7-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        description: '{{ doc("sales_sma_7") }}'
 
 
       - name: sales_sma_14
         data_type: float64
-        description: "The 14-day Simple Moving Average (SMA) of daily sales, providing a balance between short-term and medium-term trend analysis."
+        description: '{{ doc("sales_sma_14") }}'
 
 
       - name: sales_sma_30
         data_type: float64
-        description: "The 30-day Simple Moving Average (SMA) of daily sales, offering a slightly longer-term view on sales trends."
+        description: '{{ doc("sales_sma_30") }}'
 
 
       - name: sales_sma_60
         data_type: float64
-        description: "The 60-day Simple Moving Average (SMA) of daily sales, representing a quarterly trend for sales data."
+        description: '{{ doc("sales_sma_60") }}'
 
 
       - name: sales_sma_120
         data_type: float64
-        description: "The 120-day Simple Moving Average (SMA) of daily sales, useful for identifying trends over half a year."
+        description: '{{ doc("sales_sma_120") }}'
 
 
       - name: sales_sma_upper_7
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the potential upper bound of short-term sales trends.
+        description: '{{ doc("sales_sma_upper_7") }}'
 
 
       - name: sales_sma_lower_7
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 7-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the potential lower bound of short-term sales trends.
+        description: '{{ doc("sales_sma_lower_7") }}'
 
 
       - name: sales_sma_upper_14
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the potential upper bound of short-term sales trends.
+        description: '{{ doc("sales_sma_upper_14") }}'
 
 
       - name: sales_sma_lower_14
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 14-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the potential lower bound of short-term sales trends.
+        description: '{{ doc("sales_sma_lower_14") }}'
 
 
       - name: sales_sma_upper_30
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Represents the potential upper bound for monthly sales trends.
+        description: '{{ doc("sales_sma_upper_30") }}'
 
 
       - name: sales_sma_lower_30
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 30-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Represents the potential lower bound for monthly sales trends.
+        description: '{{ doc("sales_sma_lower_30") }}'
 
 
       - name: sales_sma_upper_60
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Indicates the upper limit of quarterly sales trends.
+        description: '{{ doc("sales_sma_upper_60") }}'
 
 
       - name: sales_sma_lower_60
         data_type: float64
-        description: > 
-          The lower Bollinger Band for the 60-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Indicates the lower limit of quarterly sales trends.
+        description: '{{ doc("sales_sma_lower_60") }}'
+
 
 
       - name: sales_sma_upper_120
         data_type: float64
-        description: >
-          The upper Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA plus two standard deviations. 
-          Provides the upper bound for sales trends over half a year.
+        description: '{{ doc("sales_sma_upper_120") }}'
 
 
       - name: sales_sma_lower_120
         data_type: float64
-        description: >
-          The lower Bollinger Band for the 120-day Simple Moving Average, calculated as the SMA minus two standard deviations. 
-          Provides the lower bound for sales trends over half a year.
+        description: '{{ doc("sales_sma_lower_120") }}'
 
 
       - name: sales_forecast
         data_type: float64
-        description: >
-          The predicted future sales generated using the ARIMA forecasting model in BigQuery. This model leverages historical 
-          sales data to forecast upcoming trends. 
+        description: '{{ doc("sales_forecast") }}'
 

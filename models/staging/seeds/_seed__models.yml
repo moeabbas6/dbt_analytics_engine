@@ -2,65 +2,79 @@ version: 2
 
 models:
   - name: stg_seed__payment_fees
+    description: >
+      This seed model contains fee information for different payment methods. Each record 
+      defines both a percentage-based fee and a fixed fee that is applied to transactions 
+      using the respective payment method. This data is essential for calculating payment 
+      processing costs across different platforms.
     columns:
       - name: payment_method_id
         data_type: int64
-        description: "Unique identifier for the payment method."
+        description: '{{ doc("payment_method_id") }}'
 
       - name: payment_method
-        description: "The payment method used for transactions (e.g., amazon_pay, stripe, apple_pay, bitcoin)."
+        description: '{{ doc("payment_method") }}'
         data_type: string
 
       - name: percentage_fee
         data_type: float64
-        description: "The percentage fee applied to transactions using the specified payment method."
+        description: '{{ doc("percentage_fee") }}'
 
       - name: fixed_fee
         data_type: float64
-        description: "The fixed fee applied to transactions using the specified payment method."
+        description: '{{ doc("fixed_fee") }}'
 
 
 
 
   - name: stg_seed__products
+    description: >
+      This seed model contains information about the products available for sale. Each 
+      record details the product category, cost, and associated shipping fees. This data 
+      is essential for analyzing product inventory, sales performance, and cost management.
     columns:
       - name: product_category_id
         data_type: int64
-        description: "Unique identifier for the product's category."
+        description: '{{ doc("product_category_id") }}'
 
       - name: product_category
         data_type: string
-        description: "The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets)."
+        description: '{{ doc("product_category") }}'
 
       - name: product_id
         data_type: int64
-        description: "Unique identifier for the product."
+        description: '{{ doc("product_id") }}'
 
       - name: product_name
         data_type: string
-        description: "The name of the product."
+        description: '{{ doc("product_name") }}'
 
       - name: inbound_shipping_cost
         data_type: float64
-        description: "The cost of shipping the product to the warehouse."
+        description: '{{ doc("inbound_shipping_cost") }}'
 
       - name: product_cost
         data_type: float64
-        description: "The cost incurred to acquire or produce the product."
+        description: '{{ doc("product_cost") }}'
 
 
 
 
   - name: stg_seed__taxes
+    description: >
+      This seed model contains tax rate information based on the billing country. Each 
+      record links a country to its respective tax rate, allowing for accurate tax calculations 
+      on customer orders. This data is essential for ensuring tax compliance and analyzing 
+      order totals inclusive of taxes.
     columns:
       - name: country_id
         data_type: int64
-        description: "Identifier for the billing country associated with the order"
+        description: '{{ doc("tax_id") }}'
 
       - name: country
         data_type: string
-        description: "The name of the billing country associated with the order."
+        description: '{{ doc("tax_country") }}'
 
       - name: tax_rate
         data_type: float64
-        description: "The tax rate applied to the order, based on the billing country."
+        description: '{{ doc("tax_rate") }}'

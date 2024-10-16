@@ -2,43 +2,51 @@ version: 2
 
 models:
   - name: stg_raw__customers
+    description: >
+      This staging model captures the raw customer data loaded from the source system. It serves as a 
+      foundational model for customer-related transformations, ensuring data cleanliness and 
+      consistency across subsequent models.
     columns:
       - name: customer_id
         data_type: string
-        description: "Unique identifier for each customer."
+        description: '{{ doc("customer_id") }}'
 
       - name: first_name
         data_type: string
-        description: "The first name of the customer."
+        description: '{{ doc("first_name") }}'
 
       - name: last_name
         data_type: string
-        description: "The last name of the customer."
+        description: '{{ doc("last_name") }}'
 
 
 
 
   - name: stg_raw__nps
+    description: >
+      This staging model holds raw Net Promoter Score (NPS) feedback data provided by customers. It 
+      captures key fields related to customer feedback, which can be used to analyze customer 
+      satisfaction and loyalty.
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for each order in the NPS feedback."
+        description: '{{ doc("order_id") }}'
 
       - name: customer_id
         data_type: string
-        description: "Unique identifier for the customer providing the NPS feedback."
+        description: '{{ doc("customer_id") }}'
 
       - name: is_nps
         data_type: boolean
-        description: "Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise)."
+        description: '{{ doc("is_nps") }}'
 
       - name: nps_score
         data_type: int64
-        description: "The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty."
+        description: '{{ doc("nps_score") }}'
 
       - name: nps_date
         data_type: datetime
-        description: "The date on which the customer provided their Net Promoter Score (NPS)."
+        description: '{{ doc("nps_date") }}'
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -49,14 +57,17 @@ models:
 
 
   - name: stg_raw__orders
+    description: >
+      This staging model captures raw data about customer orders. It serves as the foundational 
+      source for order-related analyses, including order statuses, products, and customer details.
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
 
       - name: customer_id
         data_type: string
-        description: "Unique identifier for the customer placing the order."
+        description: '{{ doc("customer_id") }}'
 
       - name: order_status
         data_type: string
@@ -64,7 +75,7 @@ models:
 
       - name: order_date
         data_type: datetime
-        description: "The date on which the order was created."
+        description: '{{ doc("order_date") }}'
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -73,51 +84,55 @@ models:
 
       - name: product_category_id
         data_type: int64
-        description: "Unique identifier for the product's category."
+        description: '{{ doc("product_category_id") }}'
 
       - name: product_id
         data_type: int64
-        description: "Unique identifier for the product."
+        description: '{{ doc("product_id") }}'
 
 
 
 
   - name: stg_raw__payments
+    description: >
+      This staging model holds raw payment data linked to customer orders. It captures 
+      essential information about payment transactions, methods, and statuses, forming 
+      the foundation for payment-related analysis and reporting.
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
 
       - name: payment_id
         data_type: int64
-        description: "Unique identifier for the payment."
+        description: '{{ doc("payment_id") }}'
 
       - name: order_payment_id
         data_type: string
-        description: "Unique identifier for the specific payment associated with the order."
+        description: '{{ doc("order_payment_id") }}'
         data-tests:
           - unique
           - not_null
 
       - name: payment_method
         data_type: string
-        description: "The payment method used for the order."
+        description: '{{ doc("payment_method") }}'
 
       - name: gross_revenue
         data_type: float64
-        description: "The total gross amount paid by the customer, including tax and shipping."
+        description: '{{ doc("gross_revenue") }}'
 
       - name: country_id
         data_type: string
-        description: "Identifier for the country from which the payment originated."
+        description: '{{ doc("country_id") }}'
 
       - name: payment_status
         data_type: string
-        description: "The current status of the payment (e.g., pending, completed, failed)."
+        description: '{{ doc("payment_status") }}'
 
       - name: created_at
         data_type: datetime
-        description: "The timestamp when the payment was created."
+        description: '{{ doc("created_at") }}'
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -128,22 +143,27 @@ models:
 
 
   - name: stg_raw__returns
+    description: >
+      This staging model captures raw data about product returns. It contains information 
+      about returned orders, reasons for returns, and the date of return. This data is 
+      essential for analyzing return rates and understanding customer behavior around 
+      returns.
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
 
       - name: return_id
         data_type: string
-        description: "Unique identifier for the return."
+        description: '{{ doc("return_id") }}'
 
       - name: is_returned
         data_type: boolean
-        description: "Indicates whether the order was returned (TRUE if returned, FALSE otherwise)."
+        description: '{{ doc("is_returned") }}'
 
       - name: return_date
         data_type: datetime
-        description: "The date on which the order was returned, if applicable."
+        description: '{{ doc("return_date") }}'
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
@@ -158,24 +178,26 @@ models:
 
 
   - name: stg_raw__shipping
+    description: >
+      This staging model contains raw data on shipping transactions for customer orders. 
+      It captures key shipping details, such as shipping status, shipping dates, and 
+      charges, to support order fulfillment and logistics analysis.
     columns:
       - name: order_id
         data_type: string
-        description: "Unique identifier for the order."
+        description: '{{ doc("order_id") }}'
 
       - name: shipping_id
         data_type: string
-        description: >
-          A unique identifier for each shipping transaction. This field ensures that each shipment is 
-          tracked individually and is essential for linking sales orders to their corresponding shipping details.
+        description: '{{ doc("shipping_id") }}'
 
       - name: is_shipped
         data_type: boolean
-        description: "Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise)."
+        description: '{{ doc("is_shipped") }}'
 
       - name: shipping_date
         data_type: datetime
-        description: "The date on which the order was shipped."
+        description: '{{ doc("shipping_date") }}'
         data_tests:
           - dbt_utils.accepted_range:
               name: stg_shipping_unexpected_shipping_date
@@ -185,4 +207,4 @@ models:
 
       - name: shipping_amount
         data_type: float64
-        description: "The total gross amount charged for shipping the order."
+        description: '{{ doc("shipping_amount") }}'

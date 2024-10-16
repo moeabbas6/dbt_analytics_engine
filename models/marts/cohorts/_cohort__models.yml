@@ -19,9 +19,7 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        description: >
-          A unique identifier for each record in the table, ensuring data integrity and facilitating joins with 
-          other tables if necessary.
+        description: '{{ doc("id") }}'
         data_tests:
           - dbt_expectations.expect_column_value_lengths_to_equal:
               name: fct_cohort_retention_unexpected_id_length
@@ -32,9 +30,7 @@ models:
         data_type: date
         constraints: 
           - type: not_null
-        description: >
-          The month in which the customer made their first purchase, representing the starting point of the cohort. 
-          Used to group customers into cohorts based on their initial interaction.
+        description: '{{ doc("cohort_month") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -46,9 +42,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The number of months since the cohort's starting month (`cohort_month`). Indicates the time elapsed for 
-          tracking retention metrics over periods.
+        description: '{{ doc("elapsed_month") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -60,9 +54,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The total number of unique customers in the cohort at `cohort_month`. Serves as the baseline for 
-          calculating retention rates.
+        description: '{{ doc("cohort_size") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -74,9 +66,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The number of customers from the original cohort who have remained active (made at least one purchase) 
-          up to and including the specified `elapsed_month`. Used in calculating the cumulative retention rate.
+        description: '{{ doc("customers_retained") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -91,8 +81,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The number of customers from the original cohort who have churned.
+        description: '{{ doc("churned_users") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -107,9 +96,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: >
-          The cumulative retention rate for the cohort at the given `elapsed_month`, calculated as `customers_retained` 
-          divided by `cohort_size`. Reflects the proportion of the cohort that remains active over time.
+        description: '{{ doc("cumulative_retention_rate") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -124,9 +111,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: >
-          The number of customers from the cohort who made a purchase in the specific `elapsed_month`. Used 
-          in calculating the point-in-time retention rate.
+        description: '{{ doc("active_customers") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -142,9 +127,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: >
-          The point-in-time retention rate for the cohort at the given `elapsed_month`, calculated as `active_customers` 
-          divided by `cohort_size`. Indicates the percentage of the cohort that made a purchase in that specific month.
+        description: '{{ doc("point_in_time_retention_rate") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:

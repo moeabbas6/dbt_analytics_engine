@@ -61,7 +61,7 @@ models:
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        description: "Unique identifier for the customer placing the order."
+        description: '{{ doc("customer_id") }}'
         data_tests:
           - unique
 
@@ -70,7 +70,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Total number of orders placed by the customer."
+        description: '{{ doc("nb_order_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -82,7 +82,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Number of days since the customer's last order."
+        description: '{{ doc("last_order_days") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -94,7 +94,7 @@ models:
         data_type: datetime
         constraints: 
           - type: not_null
-        description: "Timestamp of the first order placed by the customer."
+        description: '{{ doc("first_order_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -106,7 +106,7 @@ models:
         data_type: datetime
         constraints: 
           - type: not_null
-        description: "Timestamp of the most recent order placed by the customer."
+        description: '{{ doc("last_order_date") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
@@ -118,7 +118,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Number of unique shipping identifiers associated with the customer's orders."
+        description: '{{ doc("nb_shipping_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -130,7 +130,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Number of unique return identifiers associated with the customer's orders."
+        description: '{{ doc("nb_return_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -140,7 +140,7 @@ models:
 
       - name: avg_fulfillment_days
         data_type: float64
-        description: "Average number of days it takes to fulfill the customer's orders."
+        description: '{{ doc("avg_fulfillment_days") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -152,7 +152,7 @@ models:
 
       - name: avg_nps_score
         data_type: float64
-        description: "Average Net Promoter Score (NPS) given by the customer based on their orders."
+        description: '{{ doc("avg_nps_score") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -166,7 +166,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total gross revenue generated from the customer's orders before any deductions."
+        description: '{{ doc("total_gross_revenue") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -178,7 +178,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total tax amount paid by the customer on their orders."
+        description: '{{ doc("total_tax_amount") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -190,7 +190,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total net revenue from the customer's orders before tax deductions."
+        description: '{{ doc("total_net_revenue_before_tax") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -202,7 +202,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total net revenue from the customer's orders after tax deductions."
+        description: '{{ doc("total_net_revenue_after_tax") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -214,7 +214,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total cost of goods sold (COGS) associated with the customer's orders."
+        description: '{{ doc("total_cogs") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -226,7 +226,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total cost of goods sold for items returned by the customer."
+        description: '{{ doc("total_returned_cogs") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -238,7 +238,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total amount refunded to the customer for returned or canceled orders."
+        description: total_refund_amount
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -250,7 +250,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total payment processing fees associated with the customer's transactions."
+        description: '{{ doc("total_payment_fee") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
@@ -262,7 +262,7 @@ models:
         data_type: float64
         constraints: 
           - type: not_null
-        description: "Total contribution margin (CM) generated from the customer's orders."
+        description: '{{ doc("total_cm") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -271,7 +271,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "Recency classification of the customer based on the time since their last order."
+        description: '{{ doc("recency") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -280,7 +280,7 @@ models:
         data_type: string
         constraints: 
           - type: not_null
-        description: "Frequency classification of the customer based on how often they place orders."
+        description: '{{ doc("frequency") }}'
         data_tests:
           - dbt_utils.not_constant
 
@@ -301,7 +301,7 @@ models:
         data_type: int64
         constraints: 
           - type: not_null
-        description: "Unique identifier for the rfm customer segment."
+        description: '{{ doc("segment_id") }}'
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
