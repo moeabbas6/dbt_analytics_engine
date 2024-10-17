@@ -6,14 +6,17 @@ models:
       This staging model captures the raw customer data loaded from the source system. It serves as a 
       foundational model for customer-related transformations, ensuring data cleanliness and 
       consistency across subsequent models.
+    
     columns:
       - name: customer_id
         data_type: string
         description: '{{ doc("customer_id") }}'
 
+
       - name: first_name
         data_type: string
         description: '{{ doc("first_name") }}'
+
 
       - name: last_name
         data_type: string
@@ -27,22 +30,27 @@ models:
       This staging model holds raw Net Promoter Score (NPS) feedback data provided by customers. It 
       captures key fields related to customer feedback, which can be used to analyze customer 
       satisfaction and loyalty.
+    
     columns:
       - name: order_id
         data_type: string
         description: '{{ doc("order_id") }}'
 
+
       - name: customer_id
         data_type: string
         description: '{{ doc("customer_id") }}'
+
 
       - name: is_nps
         data_type: boolean
         description: '{{ doc("is_nps") }}'
 
+
       - name: nps_score
         data_type: int64
         description: '{{ doc("nps_score") }}'
+
 
       - name: nps_date
         data_type: datetime
@@ -50,7 +58,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
-              name: stg_nps_unexpected_nps_date
               max_value: "current_datetime()" 
 
 
@@ -60,18 +67,22 @@ models:
     description: >
       This staging model captures raw data about customer orders. It serves as the foundational 
       source for order-related analyses, including order statuses, products, and customer details.
+    
     columns:
       - name: order_id
         data_type: string
         description: '{{ doc("order_id") }}'
 
+
       - name: customer_id
         data_type: string
         description: '{{ doc("customer_id") }}'
 
+
       - name: order_status
         data_type: string
         description: '{{ doc("orders_status") }}'
+
 
       - name: order_date
         data_type: datetime
@@ -79,12 +90,13 @@ models:
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
-              name: stg_orders_unexpected_order_date
               max_value: "current_datetime()"
+
 
       - name: product_category_id
         data_type: int64
         description: '{{ doc("product_category_id") }}'
+
 
       - name: product_id
         data_type: int64
@@ -98,14 +110,17 @@ models:
       This staging model holds raw payment data linked to customer orders. It captures 
       essential information about payment transactions, methods, and statuses, forming 
       the foundation for payment-related analysis and reporting.
+    
     columns:
       - name: order_id
         data_type: string
         description: '{{ doc("order_id") }}'
 
+
       - name: payment_id
         data_type: int64
         description: '{{ doc("payment_id") }}'
+
 
       - name: order_payment_id
         data_type: string
@@ -114,21 +129,26 @@ models:
           - unique
           - not_null
 
+
       - name: payment_method
         data_type: string
         description: '{{ doc("payment_method") }}'
+
 
       - name: gross_revenue
         data_type: float64
         description: '{{ doc("gross_revenue") }}'
 
+
       - name: country_id
         data_type: string
         description: '{{ doc("country_id") }}'
 
+
       - name: payment_status
         data_type: string
         description: '{{ doc("payment_status") }}'
+
 
       - name: created_at
         data_type: datetime
@@ -136,7 +156,6 @@ models:
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
-              name: stg_payments_unexpected_created_at
               max_value: "current_datetime()"
 
 
@@ -148,18 +167,22 @@ models:
       about returned orders, reasons for returns, and the date of return. This data is 
       essential for analyzing return rates and understanding customer behavior around 
       returns.
+    
     columns:
       - name: order_id
         data_type: string
         description: '{{ doc("order_id") }}'
 
+
       - name: return_id
         data_type: string
         description: '{{ doc("return_id") }}'
 
+
       - name: is_returned
         data_type: boolean
         description: '{{ doc("is_returned") }}'
+
 
       - name: return_date
         data_type: datetime
@@ -167,8 +190,8 @@ models:
         data_tests:
           - not_null
           - dbt_utils.accepted_range:
-              name: stg_returns_unexpected_return_date
               max_value: "current_datetime()"
+
 
       - name: return_reason
         data_type: string
@@ -182,28 +205,32 @@ models:
       This staging model contains raw data on shipping transactions for customer orders. 
       It captures key shipping details, such as shipping status, shipping dates, and 
       charges, to support order fulfillment and logistics analysis.
+    
     columns:
       - name: order_id
         data_type: string
         description: '{{ doc("order_id") }}'
 
+
       - name: shipping_id
         data_type: string
         description: '{{ doc("shipping_id") }}'
 
+
       - name: is_shipped
         data_type: boolean
         description: '{{ doc("is_shipped") }}'
+
 
       - name: shipping_date
         data_type: datetime
         description: '{{ doc("shipping_date") }}'
         data_tests:
           - dbt_utils.accepted_range:
-              name: stg_shipping_unexpected_shipping_date
               max_value: "current_datetime()"
               config:
                 where: "shipping_date IS NOT NULL"
+
 
       - name: shipping_amount
         data_type: float64

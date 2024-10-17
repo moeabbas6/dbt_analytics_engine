@@ -8,12 +8,10 @@ models:
     description: "Fact table containing details of payment methods used in customer orders."
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_payment_methods_unequal_agg_gross_revenue
           expression: sum(total_gross_revenue)
           compare_model: ref("int_payments_lvl_joined")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_payment_methods_unequal_agg_payment_fees
           expression: sum(total_payment_fees)
           compare_model: ref("int_payments_lvl_joined")
           compare_expression: sum(payment_fee)
@@ -28,7 +26,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_payment_methods_unexpected_country_id
               min_value: 0
               max_value: 22
 
@@ -64,7 +61,6 @@ models:
         description: '{{ doc("nb_payments") }}'
         data_tests:
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_nb_payments
               expression: "> 0"
 
 
@@ -83,7 +79,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: fct_payment_methods_unexpected_order_date
               max_value: "current_datetime()"
 
 
@@ -94,7 +89,6 @@ models:
         description: '{{ doc("orders_status") }}'
         data_tests:
           - accepted_values:
-              name: fct_payment_methods_unexpected_order_status
               values: ['completed', 'failed']
 
 
@@ -105,7 +99,6 @@ models:
         description: '{{ doc("total_gross_revenue") }}'
         data_tests:
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_total_gross_revenue
               expression: "> 0"
 
 
@@ -116,7 +109,6 @@ models:
         description: '{{ doc("total_payment_fees") }}'
         data_tests:
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_total_payment_fees
               expression: "> 0"
 
 
@@ -128,7 +120,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_amazon_pay_payment_fees
               expression: ">= 0"
 
 
@@ -140,7 +131,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_apple_pay_payment_fees
               expression: ">= 0"
 
 
@@ -152,7 +142,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_bitcoin_payment_fees
               expression: ">= 0"
 
 
@@ -164,7 +153,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_stripe_payment_fees
               expression: ">= 0"
 
 
@@ -176,7 +164,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_amazon_pay_amount
               expression: ">= 0"
 
 
@@ -188,7 +175,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_apple_pay_amount
               expression: ">= 0"
 
 
@@ -200,7 +186,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_bitcoin_amount
               expression: ">= 0"
 
 
@@ -212,7 +197,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_payment_methods_assert_positive_stripe_amount
               expression: ">= 0"
 
 
