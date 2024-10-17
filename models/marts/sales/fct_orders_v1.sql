@@ -21,46 +21,6 @@ WITH
       {%- endif -%})
 
 
-  ,orders_payments AS (
-      SELECT country_id
-            ,country
-            ,order_id
-            ,order_status
-            ,customer_id
-            ,nb_payments
-            ,shipping_id
-            ,is_shipped
-            ,shipping_amount
-            ,payment_method
-            ,gross_revenue
-            ,tax_rate
-            ,tax_amount
-            ,net_revenue_before_tax
-            ,net_revenue_after_tax
-            ,order_date
-            ,shipping_date
-            ,fulfillment_days
-            ,is_nps
-            ,nps_score
-            ,nps_date
-            ,product_category_id
-            ,product_category
-            ,product_id
-            ,product_name
-            ,cogs
-            ,return_id
-            ,is_returned
-            ,return_date
-            ,return_reason
-            ,returned_cogs
-            ,refund_amount
-            ,payment_fee
-            ,first_order_date
-            ,customer_order_nb
-            ,customer_type
-        FROM int_orders_payments_joined)
-
-
     ,contribution_margin AS (
       SELECT *
             ,COALESCE(net_revenue_after_tax, 0)
@@ -68,7 +28,7 @@ WITH
                 - COALESCE(refund_amount, 0)
                   - COALESCE(payment_fee, 0)
                     + COALESCE(returned_cogs, 0) AS cm
-        FROM orders_payments)
+        FROM int_orders_payments_joined)
 
 
     ,cumulative_revenue AS (
@@ -86,7 +46,47 @@ WITH
 
 
     ,final AS (
-      SELECT *
+      SELECT country_id
+            ,country
+            ,order_id
+            ,order_status
+            ,customer_id
+            ,nb_payments
+            ,is_shipped
+            ,shipping_id
+            ,shipping_amount
+            ,payment_method
+            ,gross_revenue
+            ,tax_rate
+            ,tax_amount
+            ,net_revenue_before_tax
+            ,net_revenue_after_tax
+            ,order_date
+            ,shipping_date
+            ,is_returned
+            ,return_id
+            ,return_date
+            ,return_reason
+            ,fulfillment_days
+            ,is_nps
+            ,nps_score
+            ,nps_date
+            ,product_category_id
+            ,product_category
+            ,product_id
+            ,product_name
+            ,cogs
+            ,returned_cogs
+            ,refund_amount
+            ,payment_fee
+            ,cm
+            ,customer_order_nb
+            ,first_order_date
+            ,customer_type
+            ,customer_cumulative_net_revenue
+            ,customer_orders_to_100_net_revenue
+            ,customer_orders_to_250_net_revenue
+            ,customer_orders_to_500_net_revenue
         FROM customer_orders_to)
 
 
