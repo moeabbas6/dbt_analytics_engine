@@ -474,7 +474,6 @@ models:
       market volatility, and smoothing out fluctuations in daily sales data."
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_timeseries_unequal_agg_sales
           expression: sum(sales)
           compare_model: ref("fct_orders")
           compare_expression: sum(net_revenue_after_tax)
@@ -498,7 +497,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales
               expression: ">= 0"
 
 
@@ -510,7 +508,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_wma_7
               expression: ">= 0"
 
 
@@ -522,7 +519,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_7
               expression: ">= 0"
 
 
@@ -534,7 +530,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_14
               expression: ">= 0"
 
 
@@ -546,7 +541,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_30
               expression: ">= 0"
 
 
@@ -558,7 +552,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_60
               expression: ">= 0"
 
 
@@ -570,7 +563,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_120
               expression: ">= 0"
 
 
@@ -582,7 +574,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_upper_7
               expression: ">= 0"
 
 
@@ -594,7 +585,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_lower_7
               expression: ">= 0"
 
 
@@ -606,7 +596,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_upper_14
               expression: ">= 0"
 
 
@@ -618,7 +607,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_lower_14
               expression: ">= 0"
 
 
@@ -630,7 +618,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_upper_30
               expression: ">= 0"
 
 
@@ -642,7 +629,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_lower_30
               expression: ">= 0"
 
 
@@ -654,7 +640,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_upper_60
               expression: ">= 0"
 
 
@@ -666,7 +651,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_lower_60
               expression: ">= 0"
 
 
@@ -678,7 +662,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_upper_120
               expression: ">= 0"
 
 
@@ -690,7 +673,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: fct_sales_timeseries_assert_positive_sales_sma_lower_120
               expression: ">= 0"
 
 
@@ -709,37 +691,30 @@ models:
       market volatility, and smoothing out fluctuations in daily sales data."
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales
           expression: sum(sales)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_wma_7
           expression: sum(sales_wma_7)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_wma_7)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_sma_7
           expression: sum(sales_sma_7)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_sma_7)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_sma_14
           expression: sum(sales_sma_14)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_sma_14)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_sma_30
           expression: sum(sales_sma_30)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_sma_30)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_sma_60
           expression: sum(sales_sma_60)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_sma_60)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: fct_sales_forecast_unequal_agg_sales_sma_120
           expression: sum(sales_sma_120)
           compare_model: ref("fct_sales_timeseries")
           compare_expression: sum(sales_sma_120)

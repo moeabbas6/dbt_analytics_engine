@@ -14,8 +14,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_customers_unexpected_customer_id_length
                   value: 36
+
 
           - name: first_name
             data_type: string
@@ -24,13 +24,13 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_be_between:
-                  name: source_customers_unexpected_first_name_length
                   min_value: 1
                   max_value: 16
                   config: 
                     severity: warn
                     error_if: ">20"
                     warn_if: ">10"
+
 
           - name: last_name
             data_type: string
@@ -39,7 +39,6 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_be_between:
-                  name: source_customers_unexpected_last_name_length
                   min_value: 1
                   max_value: 16
                   config: 
@@ -61,8 +60,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_nps_unexpected_order_id_length
                   value: 36
+
 
           - name: customer_id
             data_type: string
@@ -71,8 +70,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_nps_unexpected_customer_id_length
                   value: 36
+
 
           - name: is_nps
             data_type: boolean
@@ -81,9 +80,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_nps_unexpected_is_nps_bool
                   values: [TRUE, FALSE]
                   quote: false
+
 
           - name: nps_score
             data_type: int64
@@ -92,9 +91,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_utils.accepted_range:
-                  name: source_nps_unexpected_nps_score
                   min_value: 0
                   max_value: 10
+
 
           - name: nps_date
             data_type: datetime
@@ -119,8 +118,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_orders_unexpected_order_id_length
                   value: 36
+
 
           - name: customer_id
             data_type: string
@@ -129,8 +128,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_orders_unexpected_custoemr_id_length
                   value: 36
+
 
           - name: order_status
             data_type: string
@@ -139,8 +138,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_orders_unexpected_order_status
                   values: ['completed', 'failed']
+
 
           - name: order_date
             data_type: datetime
@@ -149,6 +148,7 @@ sources:
               - not_null
               - dbt_utils.not_constant
 
+
           - name: product_category_id
             data_type: int64
             description: '{{ doc("product_category_id") }}'
@@ -156,9 +156,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_utils.accepted_range:
-                  name: source_orders_unexpected_product_category_id
                   min_value: 0
                   max_value: 5
+
 
           - name: product_id
             data_type: int64
@@ -167,7 +167,6 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_utils.accepted_range:
-                  name: source_orders_unexpected_product__id
                   min_value: 0
                   max_value: 5
 
@@ -187,8 +186,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_payments_unexpected_order_id_length
                   value: 36
+
 
           - name: payment_id
             data_type: int64
@@ -197,6 +196,7 @@ sources:
               - not_null
               - dbt_utils.not_constant
 
+
           - name: payment_method
             data_type: string
             description: '{{ doc("payment_method") }}'
@@ -204,8 +204,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_payments_unexpected_payment_method
                   values: ['amazon_pay', 'stripe', 'apple_pay', 'bitcoin']
+
 
           - name: payment_amount
             data_type: float64
@@ -213,8 +213,8 @@ sources:
             data_tests:
               - not_null
               - dbt_utils.expression_is_true:
-                  name: source_payments_assert_positive_payment_amount
                   expression: "> 0"
+
 
           - name: payment_country_id
             data_type: string
@@ -223,9 +223,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - dbt_utils.accepted_range:
-                  name: source_payments_unexpected_country_id
                   min_value: 0
                   max_value: 10
+
 
           - name: payment_status
             data_type: string
@@ -234,8 +234,8 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_payments_unexpected_payment_status
                   values: ['successful', 'failed']
+
 
           - name: created_at
             data_type: datetime
@@ -260,8 +260,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_returns_unexpected_order_id_length
                   value: 36
+
 
           - name: return_id
             data_type: string
@@ -270,8 +270,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_returns_unexpected_return_id_length
                   value: 36
+
 
           - name: is_returned
             data_type: boolean
@@ -280,9 +280,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_returns_unexpected_is_returned_bool
                   values: [TRUE, FALSE]
                   quote: false
+
 
           - name: return_date
             data_type: datetime
@@ -291,6 +291,7 @@ sources:
               - not_null
               - dbt_utils.not_constant
 
+
           - name: return_reason
             data_type: string
             description: '{{ doc("return_reason") }}'
@@ -298,7 +299,6 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_returns_unexpected_return_reason
                   values: ['Not as Described', 'Compatibility Issues', 'Quality Concerns', 'Technical Difficulties']
 
 
@@ -317,8 +317,8 @@ sources:
               - unique
               - not_null
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_shipping_unexpected_order_id_length
                   value: 36
+
 
           - name: shipping_id
             data_type: string
@@ -327,8 +327,8 @@ sources:
               - unique
               - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
-                  name: source_shipping_unexpected_shipping_id_length
                   value: 36
+
 
           - name: is_shipped
             data_type: boolean
@@ -337,9 +337,9 @@ sources:
               - not_null
               - dbt_utils.not_constant
               - accepted_values:
-                  name: source_shipping_unexpected_is_shipped_bool
                   values: [TRUE, FALSE]
                   quote: false
+
 
           - name: shipping_date
             data_type: datetime
@@ -347,13 +347,13 @@ sources:
             data_tests:
               - dbt_utils.not_constant
 
+
           - name: shipping_amount
             data_type: float64
             description: '{{ doc("shipping_amount") }}'
             data_tests:
               - dbt_utils.not_constant
               - dbt_utils.expression_is_true:
-                  name: source_shipping_assert_positive_shipping_amount
                   expression: "> 0"
                   config:
                     where: "shipping_amount IS NOT NULL"

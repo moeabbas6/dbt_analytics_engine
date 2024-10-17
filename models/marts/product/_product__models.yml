@@ -12,47 +12,38 @@ models:
       analysis and sales strategy optimization.
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_gross_revenue
           expression: sum(total_gross_revenue)
           compare_model: ref("fct_orders")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_tax_amount
           expression: sum(total_tax_amount)
           compare_model: ref("fct_orders")
           compare_expression: sum(tax_amount)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_net_revenue_before_tax
           expression: sum(total_net_revenue_before_tax)
           compare_model: ref("fct_orders")
           compare_expression: sum(net_revenue_before_tax)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_net_revenue_after_tax
           expression: sum(total_net_revenue_after_tax)
           compare_model: ref("fct_orders")
           compare_expression: sum(net_revenue_after_tax)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_cogs
           expression: sum(total_cogs)
           compare_model: ref("fct_orders")
           compare_expression: sum(cogs)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_returned_cogs
           expression: sum(total_returned_cogs)
           compare_model: ref("fct_orders")
           compare_expression: sum(returned_cogs)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_refund_amount
           expression: sum(total_refund_amount)
           compare_model: ref("fct_orders")
           compare_expression: sum(refund_amount)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_payment_fee
           expression: sum(total_payment_fee)
           compare_model: ref("fct_orders")
           compare_expression: sum(payment_fee)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          name: dim_products_unequal_agg_total_cm
           expression: sum(total_cm)
           compare_model: ref("fct_orders")
           compare_expression: sum(cm)
@@ -76,7 +67,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: dim_products_unexpected_date
               max_value: "current_datetime()"
 
 
@@ -88,7 +78,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.accepted_range:
-              name: dim_products_unexpected_country_id
               min_value: 0
               max_value: 10
 
@@ -110,7 +99,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - accepted_values:
-              name: dim_products_unexpected_product_category
               values: ['Design Templates', 'Fonts & Typography', 'Graphic Assets', 'Stock Photography', 'Video & Animation']
 
 
@@ -156,7 +144,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_avg_fulfillment_days
               expression: "> 0"
               config:
                 where: avg_fulfillment_days IS NOT NULL
@@ -168,7 +155,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_avg_nps_score
               expression: "> 0"
               config:
                 where: avg_nps_score IS NOT NULL
@@ -182,7 +168,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_gross_revenue
               expression: "> 0"
 
 
@@ -194,7 +179,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_tax_amount
               expression: "> 0"
 
 
@@ -206,7 +190,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_net_revenue_before_tax
               expression: "> 0"
 
 
@@ -218,7 +201,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_net_revenue_after_tax
               expression: "> 0"
 
 
@@ -230,7 +212,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_cogs
               expression: "> 0"
 
 
@@ -260,7 +241,6 @@ models:
         data_tests:
           - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
-              name: dim_products_assert_positive_total_payment_fee
               expression: "> 0"
 
 

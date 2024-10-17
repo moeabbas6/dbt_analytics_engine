@@ -7,18 +7,22 @@ models:
       defines both a percentage-based fee and a fixed fee that is applied to transactions 
       using the respective payment method. This data is essential for calculating payment 
       processing costs across different platforms.
+
     columns:
       - name: payment_method_id
         data_type: int64
         description: '{{ doc("payment_method_id") }}'
 
+
       - name: payment_method
         description: '{{ doc("payment_method") }}'
         data_type: string
 
+
       - name: percentage_fee
         data_type: float64
         description: '{{ doc("percentage_fee") }}'
+
 
       - name: fixed_fee
         data_type: float64
@@ -32,26 +36,32 @@ models:
       This seed model contains information about the products available for sale. Each 
       record details the product category, cost, and associated shipping fees. This data 
       is essential for analyzing product inventory, sales performance, and cost management.
+
     columns:
       - name: product_category_id
         data_type: int64
         description: '{{ doc("product_category_id") }}'
 
+
       - name: product_category
         data_type: string
         description: '{{ doc("product_category") }}'
+
 
       - name: product_id
         data_type: int64
         description: '{{ doc("product_id") }}'
 
+
       - name: product_name
         data_type: string
         description: '{{ doc("product_name") }}'
 
+
       - name: inbound_shipping_cost
         data_type: float64
         description: '{{ doc("inbound_shipping_cost") }}'
+
 
       - name: product_cost
         data_type: float64
@@ -66,14 +76,17 @@ models:
       record links a country to its respective tax rate, allowing for accurate tax calculations 
       on customer orders. This data is essential for ensuring tax compliance and analyzing 
       order totals inclusive of taxes.
+
     columns:
       - name: country_id
         data_type: int64
         description: '{{ doc("tax_id") }}'
 
+
       - name: country
         data_type: string
         description: '{{ doc("tax_country") }}'
+
 
       - name: tax_rate
         data_type: float64
