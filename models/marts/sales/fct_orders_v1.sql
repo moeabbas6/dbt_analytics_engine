@@ -34,12 +34,12 @@ WITH
             ,payment_method
             ,gross_revenue
             ,tax_rate
-            ,SAFE_MULTIPLY(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), SAFE_DIVIDE(tax_rate, 100)) AS tax_amount
-            ,SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)) AS net_revenue_before_tax
-            ,SAFE_DIVIDE(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), (1 + SAFE_DIVIDE(tax_rate, 100))) AS net_revenue_after_tax
+            ,tax_amount
+            ,net_revenue_before_tax
+            ,net_revenue_after_tax
             ,order_date
             ,shipping_date
-            ,DATE_DIFF(shipping_date, order_date, DAY) AS fulfillment_days
+            ,fulfillment_days
             ,is_nps
             ,nps_score
             ,nps_date
@@ -47,17 +47,17 @@ WITH
             ,product_category
             ,product_id
             ,product_name
-            ,SAFE_ADD(inbound_shipping_cost, product_cost) AS cogs
+            ,cogs
             ,return_id
             ,is_returned
             ,return_date
             ,return_reason
-            ,IF(is_returned IS TRUE, SAFE_ADD(inbound_shipping_cost, product_cost), 0) AS returned_cogs
-            ,IF(is_returned IS TRUE, SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), 0) AS refund_amount
+            ,returned_cogs
+            ,refund_amount
             ,payment_fee
             ,first_order_date
             ,customer_order_nb
-            ,IF(customer_order_nb > 1, 'Returning', 'New') AS customer_type
+            ,customer_type
         FROM int_orders_payments_joined)
 
 
