@@ -11,7 +11,7 @@ models:
             exclude: [product_id, product_category_id]
     config:
       contract:
-        enforced: true 
+        enforced: true
     description: >
        Fact table capturing detailed information about customer orders, including order details, payment methods, 
        shipping, returns, and customer feedback. This table provides a comprehensive view of each order's lifecycle, 
