@@ -6,8 +6,6 @@ models:
     versions:
       - v: 1
       - v: 2
-        config:
-          alias: fct_orders
         columns:
           - include: all
             exclude: [product_id, product_category_id]

@@ -49,6 +49,8 @@ models:
         +schema: 'product'
       sales:
         +schema: 'sales'
+        post-hook:
+          - "{{ create_latest_version_view() }}"
 
 
 seeds:
