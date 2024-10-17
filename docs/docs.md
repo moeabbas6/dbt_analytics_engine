@@ -1,25 +1,25 @@
 {% docs customer_id %}
-Unique identifier for each customer.
+Unique identifier for each customer. Each `customer_id` is a 36-character long string.
 {% enddocs %}
 
 {% docs first_name %}
-The first name of the customer.
+The first name of the customer. This field should be omitted from marts models to protect customer privacy.
 {% enddocs %}
 
 {% docs last_name %}
-The last name of the customer.
+The last name of the customer. This field should be omitted from marts models to protect customer privacy.
 {% enddocs %}
 
 {% docs order_id %}
-Unique identifier for the order.
+Unique identifier for the order. Each `order_id` is a 36-character long string.
 {% enddocs %}
 
 {% docs is_nps %}
-Indicates whether the customer provided an NPS (Net Promoter Score) score (TRUE if provided, FALSE otherwise).
+A boolean field that indicates whether the customer provided a Net Promoter Score (NPS). It returns TRUE if the NPS score was provided and FALSE if not.
 {% enddocs %}
 
 {% docs nps_score %}
-The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty.
+The Net Promoter Score (NPS) provided by the customer, ranging from 0 to 10, which indicates customer satisfaction and loyalty. Customers are classified into three categories based on their score: Detractors (0-6), Passives (7-8), and Promoters (9-10).
 {% enddocs %}
 
 {% docs nps_date %}
@@ -31,19 +31,19 @@ The date on which the order was created.
 {% enddocs %}
 
 {% docs product_category_id %}
-Unique identifier for the product's category.
+An identifier for the product's category, ranging from 1 to 5. This integer value is used to categorize products into predefined groups.
 {% enddocs %}
 
 {% docs product_category %}
-The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets).
-{% enddocs %}
-
-{% docs product_name %}
-The name of the product associated with the order, used for product-level reporting and analysis.
+The category of the product (e.g., Design Templates, Fonts & Typography, Graphic Assets). The `product_category` is inferred from the corresponding `product_category_id` field, which assigns each product to a predefined category.
 {% enddocs %}
 
 {% docs product_id %}
-Unique identifier for the product.
+An identifier for the product, ranging from 1 to 5. This integer value is used to uniquely identify products within predefined groups.
+{% enddocs %}
+
+{% docs product_name %}
+The name of the product associated with the order, used for product-level reporting and analysis. The `product_name` is inferred from the corresponding `product_id` field.
 {% enddocs %}
 
 {% docs inbound_shipping_cost %}
@@ -55,23 +55,23 @@ The cost incurred to acquire or produce the product, essential for margin analys
 {% enddocs %}
 
 {% docs tax_id %}
-Unique identifier for the tax record.
+An identifier for the tax record, ranging from 0 to 22. This integer is used to determine the applicable tax rate for each country.
 {% enddocs %}
 
 {% docs payment_id %}
-Unique identifier for the payment.
+A count of the number of payments associated with each `order_id`. This field is used to track the number of payment transactions for an order but is not unique across the dataset.
 {% enddocs %}
 
 {% docs payment_method %}
-The payment method used for transactions (e.g., amazon_pay, stripe, apple_pay, bitcoin).
+The payment method used for transactions. Acceptable values are: `amazon_pay`, `stripe`, `apple_pay`, and `bitcoin`. Note that payments made using `bitcoin` are converted to dollars.
 {% enddocs %}
 
 {% docs return_id %}
-A unique identifier for each return associated with an order. This field is populated only if the order has been returned, and remains null for non-returned orders.
+A unique identifier for each return associated with an order. This field is populated only if the order has been returned and remains null for non-returned orders. It is useful for counting the number of returns in BI tools and analyzing return rates.
 {% enddocs %}
 
 {% docs is_returned %}
-Indicates whether the order was returned (TRUE if returned, FALSE otherwise).
+A boolean field that indicates whether the order was returned. It returns TRUE if the order was returned and FALSE if not.
 {% enddocs %}
 
 {% docs return_date %}
@@ -79,15 +79,15 @@ The date on which the order was returned, useful for return rate analysis and id
 {% enddocs %}
 
 {% docs shipping_id %}
-A unique identifier for each shipping transaction. This field ensures that each shipment is tracked individually and is essential for linking sales orders to their corresponding shipping details.
+A unique identifier for each shipping transaction. This field ensures that each shipment is tracked individually and is essential for linking sales orders to their corresponding shipping details. It is also useful for counting the number of shipments in BI tools and analyzing shipping activity.
 {% enddocs %}
 
 {% docs is_shipped %}
-Indicates whether the order has been shipped (TRUE if shipped, FALSE otherwise).
+A boolean field that indicates whether the order has been shipped. It returns TRUE if the order has been shipped and FALSE if not.
 {% enddocs %}
 
 {% docs shipping_date %}
-The date on which the order was shipped.
+The date on which the order was shipped. This field is useful for calculating fulfillment days, which is the difference between the shipping date and the order date, and is important for tracking order fulfillment performance.
 {% enddocs %}
 
 {% docs shipping_amount %}
@@ -95,7 +95,7 @@ The total gross amount charged for shipping the order.
 {% enddocs %}
 
 {% docs order_payment_id %}
-Unique identifier for the specific payment associated with the order.
+An identifier for the specific payment associated with the order. It is generated by combining the `order_id` and `payment_id` fields to create a unique identifier for each payment related to an order.
 {% enddocs %}
 
 {% docs gross_revenue %}
@@ -103,7 +103,7 @@ The total gross revenue generated by the order, including product price, taxes, 
 {% enddocs %}
 
 {% docs country_id %}
-Identifier for the country from which the payment originated.
+An integer identifier for the country from which the payment originated, ranging from 0 to 22. This field is also used to partition tables in marts models, improving query performance and reducing costs by organizing data more efficiently.
 {% enddocs %}
 
 {% docs payment_status %}
@@ -114,16 +114,12 @@ The current status of the payment (e.g., pending, completed, failed).
 The timestamp when the payment was created.
 {% enddocs %}
 
-{% docs payment_country_id %}
-Identifier for the country from which the payment originated.
-{% enddocs %}
-
 {% docs payment_amount %}
 The total gross amount paid by the customer, including tax and shipping.
 {% enddocs %}
 
 {% docs payment_method_id %}
-Unique identifier for the payment method.
+An identifier for the payment method, represented as an integer ranging from 0 to 10. This field is used to categorize payment methods.
 {% enddocs %}
 
 {% docs percentage_fee %}
@@ -155,7 +151,7 @@ The date when the customer placed their last order.
 {% enddocs %}
 
 {% docs last_order_days %}
-Number of days since the customer's last order.
+The number of days since the customer's last order. This metric is used to assess customer recency as part of RFM (Recency, Frequency, Monetary) customer segmentation.
 {% enddocs %}
 
 {% docs customer_order_nb %}

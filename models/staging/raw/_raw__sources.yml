@@ -218,7 +218,7 @@ sources:
 
           - name: payment_country_id
             data_type: string
-            description: '{{ doc("payment_country_id") }}'
+            description: '{{ doc("country_id") }}'
             data_tests:
               - not_null
               - dbt_utils.not_constant
