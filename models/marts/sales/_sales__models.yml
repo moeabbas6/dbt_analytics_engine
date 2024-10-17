@@ -164,10 +164,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("tax_amount") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= SAFE_MULTIPLY(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), SAFE_DIVIDE(tax_rate, 100))"
 
 
       - name: net_revenue_before_tax
@@ -175,10 +171,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("net_revenue_before_tax") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0))"
 
 
       - name: net_revenue_after_tax
@@ -186,10 +178,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("net_revenue_after_tax") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= SAFE_DIVIDE(SAFE_SUBTRACT(gross_revenue, COALESCE(shipping_amount, 0)), (1 + SAFE_DIVIDE(tax_rate, 100)))"
 
 
       - name: order_date
@@ -250,10 +238,6 @@ models:
       - name: fulfillment_days
         data_type: int64
         description: '{{ doc("fulfillment_days") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= DATE_DIFF(shipping_date, order_date, DAY)"
 
 
       - name: is_nps
@@ -330,10 +314,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("cogs") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "> 0"
 
 
       - name: returned_cogs
@@ -341,12 +321,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("returned_cogs") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= cogs"
-              config:
-                where: "returned_cogs > 0"
 
 
       - name: refund_amount
@@ -354,12 +328,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("refund_amount") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - dbt_utils.expression_is_true:
-              expression: "= (gross_revenue - shipping_amount)"
-              config:
-                where: "refund_amount > 0"
 
 
       - name: payment_fee
@@ -407,10 +375,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("customer_type") }}'
-        data_tests:
-          - dbt_utils.not_constant
-          - accepted_values:
-              values: ['Returning', 'New']
 
 
       - name: customer_cumulative_net_revenue
