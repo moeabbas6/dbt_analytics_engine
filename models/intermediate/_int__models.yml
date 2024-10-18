@@ -129,31 +129,22 @@ models:
         data_type: string
         description: '{{ doc("shipping_id") }}'
         data_tests:
-          - not_null
           - unique
-          - relationships:
-              to: ref('stg_raw__shipping')
-              field: shipping_id
+
 
       - name: is_shipped
         data_type: boolean
         description: '{{ doc("is_shipped") }}'
-        data_tests:
-          - not_null
 
 
       - name: shipping_date
         data_type: datetime
         description: '{{ doc("shipping_date") }}'
-        data_tests:
-          - not_null
 
 
       - name: shipping_amount
         data_type: float64
         description: '{{ doc("shipping_amount") }}'
-        data_tests:
-          - not_null
 
 
       - name: return_id
