@@ -1,7 +1,14 @@
 version: 2
 
+groups:
+  - name: marketing
+    owner: 
+      name: Moe Abbas
+
+
 models:
   - name: fct_cohort_retention
+    access: public
     latest_version: 1
     versions:
       - v: 1

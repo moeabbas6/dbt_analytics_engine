@@ -1,7 +1,13 @@
 version: 2
 
+groups:
+  - name: customer_success
+    owner: 
+      name: Moe Abbas
+
 models:
   - name: fct_customers_orders
+    access: public
     latest_version: 1
     versions:
       - v: 1
