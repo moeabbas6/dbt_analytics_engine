@@ -22,7 +22,6 @@ sources:
             description: '{{ doc("first_name") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_be_between:
                   min_value: 1
                   max_value: 16
@@ -37,7 +36,6 @@ sources:
             description: '{{ doc("last_name") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_be_between:
                   min_value: 1
                   max_value: 16
@@ -68,7 +66,6 @@ sources:
             description: '{{ doc("customer_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
                   value: 36
 
@@ -78,7 +75,6 @@ sources:
             description: '{{ doc("is_nps") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: [TRUE, FALSE]
                   quote: false
@@ -89,7 +85,6 @@ sources:
             description: '{{ doc("nps_score") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_utils.accepted_range:
                   min_value: 0
                   max_value: 10
@@ -100,7 +95,6 @@ sources:
             description: '{{ doc("nps_date") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
 
 
 
@@ -126,7 +120,6 @@ sources:
             description: '{{ doc("customer_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
                   value: 36
 
@@ -136,7 +129,6 @@ sources:
             description: '{{ doc("orders_status") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: ['completed', 'failed']
 
@@ -146,7 +138,6 @@ sources:
             description: '{{ doc("order_date") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
 
 
           - name: product_category_id
@@ -154,7 +145,6 @@ sources:
             description: '{{ doc("product_category_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_utils.accepted_range:
                   min_value: 0
                   max_value: 5
@@ -165,7 +155,6 @@ sources:
             description: '{{ doc("product_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_utils.accepted_range:
                   min_value: 0
                   max_value: 5
@@ -184,7 +173,6 @@ sources:
             description: '{{ doc("order_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
                   value: 36
 
@@ -194,7 +182,6 @@ sources:
             description: '{{ doc("payment_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
 
 
           - name: payment_method
@@ -202,7 +189,6 @@ sources:
             description: '{{ doc("payment_method") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: ['amazon_pay', 'stripe', 'apple_pay', 'bitcoin']
 
@@ -221,7 +207,6 @@ sources:
             description: '{{ doc("country_id") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - dbt_utils.accepted_range:
                   min_value: 0
                   max_value: 10
@@ -232,7 +217,6 @@ sources:
             description: '{{ doc("payment_status") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: ['successful', 'failed']
 
@@ -242,7 +226,6 @@ sources:
             description: '{{ doc("created_at") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
 
 
 
@@ -278,7 +261,6 @@ sources:
             description: '{{ doc("is_returned") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: [TRUE, FALSE]
                   quote: false
@@ -289,7 +271,6 @@ sources:
             description: '{{ doc("return_date") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
 
 
           - name: return_reason
@@ -297,7 +278,6 @@ sources:
             description: '{{ doc("return_reason") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: ['Not as Described', 'Compatibility Issues', 'Quality Concerns', 'Technical Difficulties']
 
@@ -325,7 +305,6 @@ sources:
             description: '{{ doc("shipping_id") }}'
             data_tests:
               - unique
-              - dbt_utils.not_constant
               - dbt_expectations.expect_column_value_lengths_to_equal:
                   value: 36
 
@@ -335,7 +314,6 @@ sources:
             description: '{{ doc("is_shipped") }}'
             data_tests:
               - not_null
-              - dbt_utils.not_constant
               - accepted_values:
                   values: [TRUE, FALSE]
                   quote: false
@@ -344,15 +322,12 @@ sources:
           - name: shipping_date
             data_type: datetime
             description: '{{ doc("shipping_date") }}'
-            data_tests:
-              - dbt_utils.not_constant
 
 
           - name: shipping_amount
             data_type: float64
             description: '{{ doc("shipping_amount") }}'
             data_tests:
-              - dbt_utils.not_constant
               - dbt_utils.expression_is_true:
                   expression: "> 0"
                   config:

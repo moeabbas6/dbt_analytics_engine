@@ -20,8 +20,8 @@ WITH
   ,nps_returns_shipping AS (
     SELECT *
       FROM stg_shipping
-      LEFT JOIN stg_returns USING (order_id)
-      LEFT JOIN stg_nps USING (order_id))
+      FULL JOIN stg_returns USING (order_id)
+      FULL JOIN stg_nps USING (order_id))
 
 
   ,final AS (

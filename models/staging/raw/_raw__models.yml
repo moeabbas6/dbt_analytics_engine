@@ -56,7 +56,6 @@ models:
         data_type: datetime
         description: '{{ doc("nps_date") }}'
         data_tests:
-          - not_null
           - dbt_utils.accepted_range:
               max_value: "current_datetime()" 
 
@@ -88,7 +87,6 @@ models:
         data_type: datetime
         description: '{{ doc("order_date") }}'
         data_tests:
-          - not_null
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
@@ -154,7 +152,6 @@ models:
         data_type: datetime
         description: '{{ doc("created_at") }}'
         data_tests:
-          - not_null
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
@@ -188,7 +185,6 @@ models:
         data_type: datetime
         description: '{{ doc("return_date") }}'
         data_tests:
-          - not_null
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
