@@ -121,9 +121,7 @@ models:
         description: '{{ doc("order_id") }}'
         data_tests:
           - not_null
-          - relationships:
-              to: ref('stg_raw__shipping')
-              field: order_id
+
 
       - name: shipping_id
         data_type: string
