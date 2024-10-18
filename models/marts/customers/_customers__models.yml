@@ -1,6 +1,11 @@
 version: 2
 
 models:
+  - name: fct_customers_orders
+    latest_version: 1
+    versions:
+      - v: 1
+
   - name: dim_customers
     config:
       contract:
