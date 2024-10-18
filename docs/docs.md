@@ -493,3 +493,24 @@ The total amount paid using Bitcoin for the order.
 {% docs stripe_amount %}
 The total amount paid using Stripe for the order.
 {% enddocs %}
+
+{% docs customer_lifespan %}
+The total number of months a customer has been active with the business, calculated as the difference between their first order date and last order date, inclusive. This value represents the customer’s lifespan in terms of their purchasing relationship with the company.
+{% enddocs %}
+
+
+{% docs avg_customer_lifespan %}
+The average number of months a customer has been active with the business, calculated by taking the average of all customer lifespans. It represents the typical length of time customers remain in a purchasing relationship with the company.
+{% enddocs %}
+
+{% docs avg_orders_per_month %}
+The average number of orders placed by each customer per month. This metric is calculated by dividing the total number of orders a customer has placed by the number of months they have been active, providing insight into individual customer purchase frequency.
+{% enddocs %}
+
+{% docs aov %}
+The Average Order Value (AOV) represents the average amount spent per order. It is calculated by dividing the total revenue by the number of orders and is used to understand typical transaction sizes.
+{% enddocs %}
+
+{% docs ltv %}
+Customer Lifetime Value (LTV) estimates the total net revenue a customer will generate over their relationship with the business. It takes into account the customer’s average spending, how frequently they place orders, and how long they remain active. LTV helps businesses understand the long-term value of each customer and is essential for making strategic decisions related to customer acquisition and retention.
+{% enddocs %}

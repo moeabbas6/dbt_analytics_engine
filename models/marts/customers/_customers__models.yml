@@ -5,8 +5,6 @@ models:
     latest_version: 1
     versions:
       - v: 1
-
-  - name: dim_customers
     config:
       contract:
         enforced: true 
@@ -14,69 +12,29 @@ models:
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           expression: sum(total_gross_revenue)
-          compare_model: ref("fct_orders")
+          compare_model: ref("int_orders_payments_joined")
           compare_expression: sum(gross_revenue)
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_tax_amount)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(tax_amount)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_net_revenue_before_tax)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(net_revenue_before_tax)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
           expression: sum(total_net_revenue_after_tax)
-          compare_model: ref("fct_orders")
+          compare_model: ref("int_orders_payments_joined")
           compare_expression: sum(net_revenue_after_tax)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_cogs)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(cogs)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_returned_cogs)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(returned_cogs)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_refund_amount)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(refund_amount)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_payment_fee)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(payment_fee)
-      - dbt_expectations.expect_table_aggregation_to_equal_other_table:
-          expression: sum(total_cm)
-          compare_model: ref("fct_orders")
-          compare_expression: sum(cm)
-
-
     columns:
       - name: customer_id
         data_type: string
+        description: '{{ doc("customer_id") }}'
         constraints: 
           - type: not_null
           - type: primary_key
             warn_unenforced: false
-        description: '{{ doc("customer_id") }}'
         data_tests:
           - unique
 
 
-      - name: nb_order_id
-        data_type: int64
-        constraints: 
-          - type: not_null
-        description: '{{ doc("nb_order_id") }}'
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: "> 0"
-
-
       - name: last_order_days
         data_type: int64
+        description: '{{ doc("last_order_days") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("last_order_days") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               expression: ">= 0"
@@ -84,9 +42,9 @@ models:
 
       - name: first_order_date
         data_type: datetime
+        description: '{{ doc("first_order_date") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("first_order_date") }}'
         data_tests:
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
@@ -94,29 +52,48 @@ models:
 
       - name: last_order_date
         data_type: datetime
+        description: '{{ doc("last_order_date") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("last_order_date") }}'
         data_tests:
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
 
-      - name: nb_shipping_id
+      - name: customer_lifespan
         data_type: int64
+        description: '{{ doc("customer_lifespan") }}'
         constraints: 
           - type: not_null
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+
+      - name: nb_order_ids
+        data_type: int64
+        description: '{{ doc("nb_order_id") }}'
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+
+
+      - name: nb_shipping_ids
+        data_type: int64
         description: '{{ doc("nb_shipping_id") }}'
+        constraints: 
+          - type: not_null
         data_tests:
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
 
-      - name: nb_return_id
+      - name: nb_return_ids
         data_type: int64
+        description: '{{ doc("nb_return_id") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("nb_return_id") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               expression: ">= 0"
@@ -144,29 +121,9 @@ models:
 
       - name: total_gross_revenue
         data_type: float64
-        constraints: 
-          - type: not_null
         description: '{{ doc("total_gross_revenue") }}'
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: "> 0"
-
-
-      - name: total_tax_amount
-        data_type: float64
         constraints: 
           - type: not_null
-        description: '{{ doc("total_tax_amount") }}'
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: "> 0"
-
-
-      - name: total_net_revenue_before_tax
-        data_type: float64
-        constraints: 
-          - type: not_null
-        description: '{{ doc("total_net_revenue_before_tax") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               expression: "> 0"
@@ -174,79 +131,75 @@ models:
 
       - name: total_net_revenue_after_tax
         data_type: float64
-        constraints: 
-          - type: not_null
         description: '{{ doc("total_net_revenue_after_tax") }}'
+        constraints: 
+          - type: not_null
         data_tests:
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
 
-      - name: total_cogs
+      - name: avg_customer_lifespan
         data_type: float64
+        description: '{{ doc("avg_customer_lifespan") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("total_cogs") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
 
-      - name: total_returned_cogs
+      - name: avg_orders_per_month
         data_type: float64
+        description: '{{ doc("avg_orders_per_month") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("total_returned_cogs") }}'
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-
-
-      - name: total_refund_amount
-        data_type: float64
-        constraints: 
-          - type: not_null
-        description: total_refund_amount
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: ">= 0"
-
-
-      - name: total_payment_fee
-        data_type: float64
-        constraints: 
-          - type: not_null
-        description: '{{ doc("total_payment_fee") }}'
         data_tests:
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
 
-      - name: total_cm
+      - name: aov
         data_type: float64
+        description: '{{ doc("aov") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("total_cm") }}'
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
+
+
+      - name: ltv
+        data_type: float64
+        description: '{{ doc("ltv") }}'
+        constraints: 
+          - type: not_null
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "> 0"
 
 
       - name: recency
         data_type: string
+        description: '{{ doc("recency") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("recency") }}'
+        data_tests:
+          - accepted_values:
+              values: ['<90 days', '180-90 days', '180-365 days', '>365 days']
 
 
       - name: frequency
         data_type: string
+        description: '{{ doc("frequency") }}'
         constraints: 
           - type: not_null
-        description: '{{ doc("frequency") }}'
-
+        data_tests:
+          - accepted_values:
+              values: ['1 order', '2 orders', '3+ orders']
 
       - name: segment
         data_type: string
-        constraints: 
-          - type: not_null
         description: '{{ doc("segment") }}'
         data_tests:
           - accepted_values:
@@ -255,8 +208,6 @@ models:
 
       - name: segment_id
         data_type: int64
-        constraints: 
-          - type: not_null
         description: '{{ doc("segment_id") }}'
         data_tests:
           - dbt_utils.accepted_range:
