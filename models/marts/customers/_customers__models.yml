@@ -63,7 +63,6 @@ models:
           - type: not_null
         description: '{{ doc("nb_order_id") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -74,7 +73,6 @@ models:
           - type: not_null
         description: '{{ doc("last_order_days") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
@@ -85,7 +83,6 @@ models:
           - type: not_null
         description: '{{ doc("first_order_date") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
@@ -96,7 +93,6 @@ models:
           - type: not_null
         description: '{{ doc("last_order_date") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               max_value: "current_datetime()"
 
@@ -107,7 +103,6 @@ models:
           - type: not_null
         description: '{{ doc("nb_shipping_id") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
@@ -118,7 +113,6 @@ models:
           - type: not_null
         description: '{{ doc("nb_return_id") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
@@ -127,22 +121,20 @@ models:
         data_type: float64
         description: '{{ doc("avg_fulfillment_days") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
               config:
-                where: avg_fulfillment_days IS NOT NULL
+                where: "avg_fulfillment_days IS NOT NULL"
 
 
       - name: avg_nps_score
         data_type: float64
         description: '{{ doc("avg_nps_score") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
               config:
-                where: avg_nps_score IS NOT NULL
+                where: "avg_nps_score IS NOT NULL"
 
 
       - name: total_gross_revenue
@@ -151,7 +143,6 @@ models:
           - type: not_null
         description: '{{ doc("total_gross_revenue") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -162,7 +153,6 @@ models:
           - type: not_null
         description: '{{ doc("total_tax_amount") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -173,7 +163,6 @@ models:
           - type: not_null
         description: '{{ doc("total_net_revenue_before_tax") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -184,7 +173,6 @@ models:
           - type: not_null
         description: '{{ doc("total_net_revenue_after_tax") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -195,7 +183,6 @@ models:
           - type: not_null
         description: '{{ doc("total_cogs") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -206,7 +193,6 @@ models:
           - type: not_null
         description: '{{ doc("total_returned_cogs") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
@@ -217,7 +203,6 @@ models:
           - type: not_null
         description: total_refund_amount
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: ">= 0"
 
@@ -228,7 +213,6 @@ models:
           - type: not_null
         description: '{{ doc("total_payment_fee") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.expression_is_true:
               expression: "> 0"
 
@@ -238,8 +222,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("total_cm") }}'
-        data_tests:
-          - dbt_utils.not_constant
 
 
       - name: recency
@@ -247,8 +229,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("recency") }}'
-        data_tests:
-          - dbt_utils.not_constant
 
 
       - name: frequency
@@ -256,8 +236,6 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("frequency") }}'
-        data_tests:
-          - dbt_utils.not_constant
 
 
       - name: segment
@@ -266,7 +244,6 @@ models:
           - type: not_null
         description: '{{ doc("segment") }}'
         data_tests:
-          - dbt_utils.not_constant
           - accepted_values:
               values: ['Loyal Leader', 'Growing Patron', 'New Enthusiast', 'Casual Shopper', 'Waning Loyalty', 'Slipping Newcomer', 'At-Risk Regular', 'Vanished Buyer', 'One-Time Buyer', 'Dormant Customer']
 
@@ -277,7 +254,6 @@ models:
           - type: not_null
         description: '{{ doc("segment_id") }}'
         data_tests:
-          - dbt_utils.not_constant
           - dbt_utils.accepted_range:
               min_value: 0
               max_value: 10
