@@ -5,6 +5,7 @@ models:
     config:
       contract:
         enforced: true
+      enabled: false
     description: >
       This table contains dimensional data for products across different categories, regions, and timeframes. 
       It provides aggregated insights into sales, returns, shipping, and revenue performance, along with key 
