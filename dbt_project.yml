@@ -43,14 +43,17 @@ models:
         node_color: '#000000'
       cohorts:
         +schema: 'cohorts'
+        +group: 'marketing'
       customers:
         +schema: 'customers'
+        +group: 'customer_success'
       finance:
         +schema: 'finance'
       product:
         +schema: 'product'
       sales:
         +schema: 'sales'
+        +group: 'sales'
 
 
 seeds:

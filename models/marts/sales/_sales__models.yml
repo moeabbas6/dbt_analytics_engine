@@ -1,7 +1,14 @@
 version: 2
 
+groups:
+  - name: sales
+    owner: 
+      name: Moe Abbas
+
+
 models:
   - name: fct_orders
+    access: public
     latest_version: 2
     versions:
       - v: 1
@@ -386,12 +393,14 @@ models:
 
 
   - name: ml_sales_arima
+    access: private
     config:
       tags: "forecasting"
 
 
 
   - name: fct_sales_timeseries
+    access: private
     latest_version: 1
     versions:
       - v: 1
@@ -595,6 +604,7 @@ models:
 
 
   - name: fct_sales_forecast
+    access: public
     latest_version: 1
     versions:
       - v: 1
