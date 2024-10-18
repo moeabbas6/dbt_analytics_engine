@@ -392,6 +392,9 @@ models:
 
 
   - name: fct_sales_timeseries
+    latest_version: 1
+    versions:
+      - v: 1
     config:
       contract:
         enforced: true
@@ -592,6 +595,9 @@ models:
 
 
   - name: fct_sales_forecast
+    latest_version: 1
+    versions:
+      - v: 1
     config:
       contract:
         enforced: true
