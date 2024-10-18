@@ -792,3 +792,13 @@ models:
           - not_null
           - accepted_values:
               values: ['Returning', 'New']
+
+
+      - name: cm
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: '{{ doc("cm") }}'
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: "< gross_revenue"
