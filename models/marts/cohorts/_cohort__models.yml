@@ -1,8 +1,10 @@
 version: 2
 
 models:
-
   - name: fct_cohort_retention
+    latest_version: 1
+    versions:
+      - v: 1
     config:
       contract:
         enforced: true
@@ -10,8 +12,6 @@ models:
       A fact table that provides cohort analysis data, including both cumulative and point-in-time retention rates 
       for customer cohorts over elapsed months. This table enables insights into customer retention patterns and 
       behavior over time.
-
-
     columns:
       - name: id
         data_type: string
