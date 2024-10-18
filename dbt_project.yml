@@ -58,7 +58,7 @@ seeds:
     +persist_docs:
       relation: true
       columns: true
-    +schema: 'seeds'
+    +schema: 'staging'
     +docs:
       node_color: '#60BC24'
 
