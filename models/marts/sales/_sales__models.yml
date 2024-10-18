@@ -386,9 +386,6 @@ models:
 
 
   - name: ml_sales_arima
-    latest_version: 1
-    versions:
-      - v: 1
     config:
       tags: "forecasting"
 
