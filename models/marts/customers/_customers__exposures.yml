@@ -10,6 +10,6 @@ exposures:
       customers, based on their purchasing behavior. The dashboard leverages data from the `dim_customers` table and is designed 
       to provide actionable insights for marketing and sales strategies.
     depends_on:
-      - ref('dim_customers')
+      - ref('fct_customers_orders')
     maturity: high
     url: "https://lookerstudio.google.com/s/n57qnjA82Tc"

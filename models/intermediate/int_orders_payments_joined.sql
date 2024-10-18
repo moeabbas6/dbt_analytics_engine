@@ -19,7 +19,7 @@ WITH
       GROUP BY order_id)
 
 
-  ,final AS (
+  ,metrics AS (
     SELECT country_id
           ,country
           ,order_id
@@ -62,5 +62,15 @@ WITH
       JOIN int_payments_lvl_joined USING (order_id))
 
 
+    ,contribution_margin AS (
+      SELECT *
+            ,COALESCE(net_revenue_after_tax, 0)
+              - COALESCE(cogs, 0)
+                - COALESCE(refund_amount, 0)
+                  - COALESCE(payment_fee, 0)
+                    + COALESCE(returned_cogs, 0) AS cm
+        FROM metrics)
+
+
   SELECT *
-    FROM final
+    FROM contribution_margin

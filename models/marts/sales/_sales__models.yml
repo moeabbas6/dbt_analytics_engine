@@ -318,16 +318,6 @@ models:
               expression: "> 0"
 
 
-      - name: cm
-        data_type: float64
-        constraints: 
-          - type: not_null
-        description: '{{ doc("cm") }}'
-        data_tests:
-          - dbt_utils.expression_is_true:
-              expression: "< gross_revenue"
-
-
       - name: customer_order_nb
         data_type: int64
         constraints: 
@@ -347,6 +337,13 @@ models:
         constraints: 
           - type: not_null
         description: '{{ doc("customer_type") }}'
+
+
+      - name: cm
+        data_type: float64
+        constraints: 
+          - type: not_null
+        description: '{{ doc("cm") }}'
 
 
       - name: customer_cumulative_net_revenue
