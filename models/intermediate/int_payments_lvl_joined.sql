@@ -1,22 +1,22 @@
 
 
 WITH
-  stg_payments AS (
+  stg_raw__payments AS (
     SELECT *
       FROM {{ ref('stg_raw__payments') }})
 
 
-  ,stg_taxes AS (
+  ,stg_seed__taxes AS (
     SELECT * 
       FROM {{ ref('stg_seed__taxes') }})
 
 
-  ,stg_payment_fees AS (
+  ,stg_seed__payment_fees AS (
     SELECT * 
       FROM {{ ref('stg_seed__payment_fees') }})
 
 
-  ,final AS (
+  ,int_payments_lvl_joined AS (
     SELECT order_id
           ,payment_id
           ,order_payment_id
@@ -30,10 +30,10 @@ WITH
           ,percentage_fee
           ,fixed_fee
           ,ROUND((gross_revenue * (percentage_fee / 100)) + fixed_fee, 2) AS payment_fee
-      FROM stg_payments
-      LEFT JOIN stg_taxes USING (country_id)
-      LEFT JOIN stg_payment_fees USING (payment_method))
+      FROM stg_raw__payments
+      LEFT JOIN stg_seed__taxes USING (country_id)
+      LEFT JOIN stg_seed__payment_fees USING (payment_method))
 
 
   SELECT *
-    FROM final
+    FROM int_payments_lvl_joined

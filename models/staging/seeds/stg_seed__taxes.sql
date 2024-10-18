@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_taxes AS (
+  seed_taxes AS (
     SELECT tax_id AS country_id
           ,tax_country AS country
           ,tax_rate
@@ -9,4 +9,4 @@ WITH
 
 
   SELECT *
-    FROM stg_taxes
+    FROM seed_taxes

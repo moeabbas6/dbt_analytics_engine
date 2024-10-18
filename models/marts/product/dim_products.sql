@@ -9,13 +9,15 @@
     cluster_by = 'date'
 )}}
 
+
 {% set count_fields = ['order_id', 'shipping_id', 'return_id'] %}
 {% set avg_fields = ['fulfillment_days', 'nps_score'] %}
 {% set sum_fields = ['gross_revenue', 'tax_amount', 'net_revenue_before_tax', 'net_revenue_after_tax',
                      'cogs', 'returned_cogs', 'refund_amount', 'payment_fee', 'cm'] %}
 
+
 WITH
-  dim_products AS (
+  fct_orders AS (
     SELECT GENERATE_UUID() AS dim_product_id
           ,DATE(order_date) AS date
           ,country_id
@@ -42,4 +44,4 @@ WITH
               ,product_name)
 
   SELECT *
-    FROM dim_products
+    FROM fct_orders

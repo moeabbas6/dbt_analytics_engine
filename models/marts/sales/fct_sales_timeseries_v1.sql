@@ -5,11 +5,13 @@
     cluster_by = 'date'
 )}}
 
+
 {% set periods = [7, 14, 30, 60, 120] %}
 {% set weights = [0.4, 0.2, 0.15, 0.1, 0.075, 0.05, 0.025] %}
 
+
 WITH
-  daily_sales AS (
+  fct_orders AS (
     SELECT DATE(order_date) AS date
           ,SUM(net_revenue_after_tax) AS sales
       FROM {{ ref('fct_orders') }}
@@ -29,7 +31,7 @@ WITH
                 {{ weights[lag_value] }} * LAG(sales, {{ lag_value }}) OVER (ORDER BY date)
                 {% if not loop.last %} + {% endif %}
               {%- endfor -%}), sales) AS sales_wma_7
-      FROM daily_sales)
+      FROM fct_orders)
 
 
   ,simple_moving_averages AS (
@@ -39,7 +41,7 @@ WITH
           {%- endfor %}
       FROM weighted_moving_average)
 
-  
+
   ,standard_deviations AS (
     SELECT *
           {%- for period in periods %}
@@ -60,10 +62,5 @@ WITH
       FROM standard_deviations)
 
 
-  ,final AS (
-    SELECT *
-      FROM bollinger_bands)
-
-
   SELECT *
-    FROM final
+    FROM bollinger_bands

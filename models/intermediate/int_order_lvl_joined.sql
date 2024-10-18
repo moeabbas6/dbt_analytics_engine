@@ -1,17 +1,17 @@
 
 
 WITH
-  orders_customers AS (
+  int_customers_orders_products_joined AS (
     SELECT *
       FROM {{ ref('int_customers_orders_products_joined') }})
 
 
-  ,nps_returns_shipping AS (
+  ,int_nps_returns_shipping_joined AS (
     SELECT *
       FROM {{ ref('int_nps_returns_shipping_joined') }})
 
 
-  ,final AS (
+  ,int_order_lvl_joined AS (
     SELECT product_category_id
           ,product_id
           ,order_id
@@ -35,9 +35,9 @@ WITH
           ,product_name
           ,inbound_shipping_cost
           ,product_cost
-      FROM orders_customers
-      LEFT JOIN nps_returns_shipping USING (order_id))
+      FROM int_customers_orders_products_joined
+      LEFT JOIN int_nps_returns_shipping_joined USING (order_id))
 
 
   SELECT *
-    FROM final
+    FROM int_order_lvl_joined

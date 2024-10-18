@@ -19,7 +19,7 @@ WITH
       GROUP BY order_id)
 
 
-  ,metrics AS (
+  ,int_orders_payments_joined AS (
     SELECT country_id
           ,country
           ,order_id
@@ -69,7 +69,7 @@ WITH
                 - COALESCE(refund_amount, 0)
                   - COALESCE(payment_fee, 0)
                     + COALESCE(returned_cogs, 0) AS cm
-        FROM metrics)
+        FROM int_orders_payments_joined)
 
 
   SELECT *

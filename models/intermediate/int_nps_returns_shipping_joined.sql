@@ -1,30 +1,22 @@
 
 
 WITH
-  stg_nps AS (
+  stg_raw__nps AS (
     SELECT *
       FROM {{ ref('stg_raw__nps') }})
 
 
-  ,stg_returns AS (
+  ,stg_raw__returns AS (
     SELECT *
       FROM {{ ref('stg_raw__returns') }})
 
 
-  ,stg_shipping AS (
+  ,stg_raw__shipping AS (
     SELECT *
       FROM {{ ref('stg_raw__shipping') }})
 
 
-
-  ,nps_returns_shipping AS (
-    SELECT *
-      FROM stg_shipping
-      FULL JOIN stg_returns USING (order_id)
-      FULL JOIN stg_nps USING (order_id))
-
-
-  ,final AS (
+  ,int_nps_returns_shipping_joined AS (
     SELECT order_id
           ,shipping_id
           ,is_shipped
@@ -37,8 +29,10 @@ WITH
           ,is_nps
           ,nps_score
           ,nps_date
-      FROM nps_returns_shipping)
+      FROM stg_raw__shipping
+      FULL JOIN stg_raw__returns USING (order_id)
+      FULL JOIN stg_raw__nps USING (order_id))
 
 
   SELECT *
-    FROM final
+    FROM int_nps_returns_shipping_joined

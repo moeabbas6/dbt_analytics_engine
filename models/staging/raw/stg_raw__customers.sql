@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_customers AS (
+  stg_raw__customers AS (
     SELECT customer_id
           ,first_name
           ,last_name
@@ -9,4 +9,4 @@ WITH
 
 
   SELECT *
-    FROM stg_customers
+    FROM stg_raw__customers

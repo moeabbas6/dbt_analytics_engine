@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_payments AS (
+  stg_raw__payments AS (
     SELECT order_id
           ,payment_id
           ,{{ dbt_utils.generate_surrogate_key(['order_id', 'payment_id']) }} AS order_payment_id
@@ -18,4 +18,4 @@ WITH
 
 
   SELECT *
-    FROM stg_payments
+    FROM stg_raw__payments

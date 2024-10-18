@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_orders AS (
+  stg_raw__orders AS (
     SELECT order_id
           ,customer_id
           ,order_status
@@ -16,4 +16,4 @@ WITH
 
 
   SELECT *
-    FROM stg_orders
+    FROM stg_raw__orders

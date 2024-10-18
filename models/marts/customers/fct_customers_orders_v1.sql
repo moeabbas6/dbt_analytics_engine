@@ -6,13 +6,14 @@
     cluster_by = 'last_order_date'
 )}}
 
+
 {% set count_fields = ['order_id', 'shipping_id', 'return_id'] %}
 {% set avg_fields = ['fulfillment_days', 'nps_score'] %}
 {% set sum_fields = ['gross_revenue', 'net_revenue_after_tax'] %}
 
 
 WITH
-  orders AS (
+  int_orders_payments_joined AS (
     SELECT *
       FROM {{ ref('int_orders_payments_joined') }})
 
@@ -32,7 +33,7 @@ WITH
           {% for sum_field in sum_fields -%}
           ,SUM({{ sum_field }}) AS total_{{ sum_field }}
           {% endfor %}
-      FROM orders
+      FROM int_orders_payments_joined
       GROUP BY customer_id)
 
 
@@ -49,7 +50,7 @@ WITH
       FROM (SELECT customer_id
                   ,DATE_TRUNC(order_date, MONTH) AS month
                   ,COUNT(order_id) AS orders_per_month
-              FROM orders
+              FROM int_orders_payments_joined
             GROUP BY customer_id, month)
       GROUP BY customer_id)
 
@@ -92,7 +93,7 @@ WITH
         FROM customer_metrics)
 
 
-  ,final AS (
+  ,fct_customers_orders AS (
     SELECT *
           ,CASE segment
             WHEN "Loyal Leader" THEN 1
@@ -110,4 +111,4 @@ WITH
 
 
   SELECT *
-    FROM final
+    FROM fct_customers_orders
