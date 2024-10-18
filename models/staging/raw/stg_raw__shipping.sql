@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_shipping AS (
+  stg_raw__shipping AS (
     SELECT order_id
           ,shipping_id
           ,is_shipped
@@ -15,4 +15,4 @@ WITH
 
 
   SELECT *
-    FROM stg_shipping
+    FROM stg_raw__shipping

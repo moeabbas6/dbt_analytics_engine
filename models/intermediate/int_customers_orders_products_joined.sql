@@ -1,25 +1,25 @@
 
 
 WITH
-  stg_orders AS (
+  stg_raw__orders AS (
     SELECT *
       FROM {{ ref('stg_raw__orders') }})
 
 
-  ,stg_customers AS (
+  ,stg_raw__customers AS (
     SELECT *
       FROM {{ ref('stg_raw__customers') }})
 
 
-  ,stg_products AS (
+  ,stg_seed__products AS (
     SELECT *
       FROM {{ ref('stg_seed__products') }})
 
 
-  ,orders_customers AS (
+  ,int_orders_customers AS (
     SELECT *
-      FROM stg_orders
-      LEFT JOIN stg_customers USING (customer_id))
+      FROM stg_raw__orders
+      LEFT JOIN stg_raw__customers USING (customer_id))
 
 
   ,customers_window_functions AS (
@@ -27,17 +27,10 @@ WITH
           ,order_id
           ,MIN(DATE(order_date)) OVER (PARTITION BY customer_id) AS first_order_date
           ,ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date) AS customer_order_nb
-      FROM orders_customers)
+      FROM int_orders_customers)
 
 
-  ,joins AS (
-    SELECT *
-      FROM orders_customers
-      LEFT JOIN customers_window_functions USING (order_id, customer_id)
-      LEFT JOIN stg_products USING (product_category_id, product_id))
-
-
-  ,final AS (
+  ,int_customers_orders_products_joined AS (
     SELECT order_id
           ,order_status
           ,order_date
@@ -50,8 +43,10 @@ WITH
           ,product_name
           ,inbound_shipping_cost
           ,product_cost
-      FROM joins)
+      FROM int_orders_customers
+      LEFT JOIN customers_window_functions USING (order_id, customer_id)
+      LEFT JOIN stg_seed__products USING (product_category_id, product_id))
 
 
   SELECT *
-    FROM final
+    FROM int_customers_orders_products_joined

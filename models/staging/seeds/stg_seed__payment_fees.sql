@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_payment_fees AS (
+  seed_payment_fees AS (
     SELECT payment_method_id
           ,payment_method
           ,percentage_fee
@@ -10,4 +10,4 @@ WITH
 
 
   SELECT *
-    FROM stg_payment_fees
+    FROM seed_payment_fees

@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_products AS (
+  seed_products AS (
     SELECT product_category_id
           ,product_category
           ,product_id
@@ -12,4 +12,4 @@ WITH
 
 
   SELECT *
-    FROM stg_products
+    FROM seed_products

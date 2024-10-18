@@ -2,6 +2,7 @@
     cluster_by = 'cohort_month'
 )}}
 
+
 WITH 
   customer_cohorts AS (
     SELECT customer_id
@@ -20,7 +21,7 @@ WITH
       JOIN customer_cohorts USING (customer_id)
       WHERE DATE_DIFF(DATE_TRUNC(order_date, MONTH), cohort_month, MONTH) >= 0)
 
-  
+
   ,cohort_activity AS (
     SELECT cohort_month
           ,elapsed_month
@@ -49,7 +50,7 @@ WITH
               GROUP BY cohort_month
                       ,elapsed_month))
 
-  
+
   ,cohort_sizes AS (
     SELECT cohort_month
           ,COUNT(DISTINCT customer_id) AS cohort_size
@@ -71,7 +72,7 @@ WITH
               ,cem.elapsed_month
               ,cs.cohort_size)
 
-  
+
   ,point_in_time_activity AS (
     SELECT cohort_month
           ,elapsed_month
@@ -107,7 +108,7 @@ WITH
               ,ctr.elapsed_month)
 
 
-  ,final AS (
+  ,fct_cohort_retention AS (
     SELECT {{ dbt_utils.generate_surrogate_key(['cohort_month', 'elapsed_month']) }} AS id
           ,cohort_month
           ,elapsed_month
@@ -121,4 +122,4 @@ WITH
 
 
   SELECT *
-    FROM final
+    FROM fct_cohort_retention

@@ -3,22 +3,24 @@
     cluster_by = 'date'
 )}}
 
-WITH actuals AS (
-  SELECT *
-    FROM {{ ref('fct_sales_timeseries') }})
+
+WITH 
+  fct_sales_timeseries AS (
+    SELECT *
+      FROM {{ ref('fct_sales_timeseries') }})
 
 
-  ,forecasts AS (
+  ,ml_sales_arima AS (
     SELECT DATE(forecast_timestamp) AS date
           ,forecast_value AS sales_forecast
       FROM ML.FORECAST(MODEL {{ ref('ml_sales_arima') }}, STRUCT(30 AS horizon)))
 
 
-  ,final AS (
+  ,fct_sales_forecast AS (
     SELECT *
-      FROM actuals
-      FULL JOIN forecasts USING (date))
+      FROM fct_sales_timeseries
+      FULL JOIN ml_sales_arima USING (date))
 
 
   SELECT *
-    FROM final
+    FROM fct_sales_forecast

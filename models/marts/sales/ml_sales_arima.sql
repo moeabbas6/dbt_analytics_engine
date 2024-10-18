@@ -8,6 +8,13 @@
         }
 )}}
 
-  SELECT date
-        ,sales
-    FROM {{ ref('fct_sales_timeseries') }}
+
+WITH
+  fct_sales_timeseries AS (
+    SELECT date
+          ,sales
+      FROM {{ ref('fct_sales_timeseries') }})
+
+
+  SELECT *
+    FROM fct_sales_timeseries

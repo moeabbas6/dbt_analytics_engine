@@ -9,10 +9,12 @@
     cluster_by = 'order_date'
 )}}
 
+
 {% set payment_methods = ['amazon_pay', 'apple_pay', 'bitcoin', 'stripe'] %}
 
+
 WITH
-  int_payments AS (
+  int_payments_joined AS (
     SELECT *
       FROM {{ ref('int_payments_joined') }}
       {%- if is_incremental() %}
@@ -38,7 +40,7 @@ WITH
           {% for payment_method in payment_methods -%}
           ,SUM(CASE WHEN payment_method = '{{ payment_method }}' THEN gross_revenue ELSE 0 END) AS {{ payment_method }}_amount
           {% endfor -%}
-      FROM int_payments
+      FROM int_payments_joined
       GROUP BY country_id
               ,country
               ,order_id)

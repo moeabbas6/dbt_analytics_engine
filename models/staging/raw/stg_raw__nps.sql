@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_nps AS (
+  stg_raw__nps AS (
     SELECT order_id
           ,customer_id
           ,is_nps
@@ -15,4 +15,4 @@ WITH
 
 
   SELECT *
-    FROM stg_nps
+    FROM stg_raw__nps

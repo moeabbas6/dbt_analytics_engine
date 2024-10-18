@@ -1,7 +1,7 @@
 
 
 WITH
-  stg_returns AS (
+  stg_raw__returns AS (
     SELECT order_id
           ,return_id
           ,is_returned
@@ -15,4 +15,4 @@ WITH
 
 
   SELECT *
-    FROM stg_returns
+    FROM stg_raw__returns
