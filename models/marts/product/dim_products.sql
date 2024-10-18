@@ -6,8 +6,7 @@
       "field": "country_id",
       "data_type": "int64",
       "range": { "start": 0, "end": 100, "interval": 1}},
-    cluster_by = 'date',
-    enabled = false
+    cluster_by = 'date'
 )}}
 
 {% set count_fields = ['order_id', 'shipping_id', 'return_id'] %}

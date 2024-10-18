@@ -5,6 +5,7 @@ models:
     config:
       contract:
         enforced: true
+      enabled: false
     description: "Fact table containing details of payment methods used in customer orders."
     data_tests:
       - dbt_expectations.expect_table_aggregation_to_equal_other_table:

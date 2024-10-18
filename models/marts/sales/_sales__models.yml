@@ -5,6 +5,8 @@ models:
     latest_version: 2
     versions:
       - v: 1
+        config:
+          enabled: false
       - v: 2
         columns:
           - include: all
@@ -783,4 +785,3 @@ models:
       - name: sales_forecast
         data_type: float64
         description: '{{ doc("sales_forecast") }}'
-
