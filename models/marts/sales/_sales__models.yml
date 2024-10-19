@@ -392,13 +392,6 @@ models:
 
 
 
-  - name: ml_sales_arima
-    access: private
-    config:
-      tags: "forecasting"
-
-
-
   - name: fct_sales_timeseries
     access: private
     latest_version: 1

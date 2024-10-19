@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: ml_sales_arima
+    access: private
+    config:
+      tags: "forecasting"
