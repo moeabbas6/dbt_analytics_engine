@@ -1,7 +1,9 @@
 name: 'dbt_analytics_engine'
 version: '1.0.0'
 
+
 profile: 'dbt_analytics_engine'
+
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -10,10 +12,12 @@ seed-paths: ["models"]
 macro-paths: ["macros"]
 docs-paths: ["docs"]
 
+
 clean-targets:
   - "target"
   - "dbt_packages"
   - "logs"
+
 
 models:
   dbt_analytics_engine:
@@ -65,6 +69,7 @@ seeds:
     +docs:
       node_color: '#60BC24'
 
+
 data_tests:
   dbt_analytics_engine:
     +severity: error
@@ -74,7 +79,8 @@ data_tests:
     +store_failures: "{{ true if target.name in ['prod', 'ci'] else false }}"
     +schema: 'zzz_failures'
 
+
 flags:
-  printer_width: 95
+  printer_width: 100
   send_anonymous_usage_stats: false
   indirect_selection: cautious
