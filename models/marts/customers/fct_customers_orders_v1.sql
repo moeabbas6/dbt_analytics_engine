@@ -1,4 +1,7 @@
 {{ config(
+    materialized = "incremental",
+    unique_key = "customer_id",
+    on_schema_change = 'append_new_columns',
     partition_by = {
       "field": "segment_id",
       "data_type": "int64",
@@ -15,7 +18,10 @@
 WITH
   int_orders_payments_joined AS (
     SELECT *
-      FROM {{ ref('int_orders_payments_joined') }})
+      FROM {{ ref('int_orders_payments_joined') }}
+      {%- if is_incremental() %}
+      WHERE order_date >= (SELECT DATE_SUB(MAX(order_date), INTERVAL 3 DAY) FROM {{ this }})
+      {%- endif -%})
 
 
   ,customers AS (
